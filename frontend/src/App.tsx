@@ -1,8 +1,7 @@
 import React from 'react';
-import './App.css';
+import './css/App.css';
 import {BrowserRouter as Router} from 'react-router-dom'
 import routes from './routes';
-console.log(routes)
 
 function App() {
   return (
