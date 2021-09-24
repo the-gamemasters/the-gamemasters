@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Route, Switch } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './components/Login/Login';
 import Combat from './components/Combat';
 import CharacterCreation from './components/CharacterCreation';
 
