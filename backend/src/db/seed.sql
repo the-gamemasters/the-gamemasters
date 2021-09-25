@@ -80,3 +80,11 @@ CREATE TABLE items (
     item_effect_value INT,
     item_cost INT
 );
+
+CREATE TABLE spells (
+    spell_key SERIAL PRIMARY KEY,
+    spell_name varchar(100),
+    spell_type varchar(100),
+    base_damage INT,
+    mana_cost INT
+);
