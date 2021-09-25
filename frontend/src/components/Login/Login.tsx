@@ -3,7 +3,7 @@ import AccountCreation from './AccountCreation';
 
 interface Props {}
 
-export default function Login({}: Props): ReactElement {
+export default function Login(props: Props): ReactElement {
   const [newUser, setNewUser] = useState<boolean>(false);
 
   console.log(newUser);
