@@ -3,6 +3,7 @@ DROP TABLE IF EXISTS equipment, monsters;
 DROP TABLE IF EXISTS characters;
 DROP TABLE IF EXISTS avatars;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS items;
 
 CREATE TABLE users (
     user_key SERIAL PRIMARY KEY,
@@ -70,4 +71,20 @@ CREATE TABLE monstersEquipment (
     monstersEquipment_key SERIAL PRIMARY KEY,
     monster_key INT REFERENCES monsters(monster_key),
     equipment_key INT REFERENCES equipment(equipment_key)
+);
+
+CREATE TABLE items (
+    item_key SERIAL PRIMARY KEY,
+    item_name varchar(100),
+    item_effect varchar(100),
+    item_effect_value INT,
+    item_cost INT
+);
+
+CREATE TABLE spells (
+    spell_key SERIAL PRIMARY KEY,
+    spell_name varchar(100),
+    spell_type varchar(100),
+    base_damage INT,
+    mana_cost INT
 );
