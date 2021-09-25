@@ -10,7 +10,7 @@ export default function CharacterCreation(props: Props): ReactElement {
 
   return (
     <div>
-      <div> Avatar Pictures </div>
+      <h1>Enter Character Name!!</h1>
       <input
         type="string"
         value={charName}
@@ -20,9 +20,9 @@ export default function CharacterCreation(props: Props): ReactElement {
       />
       <h2>Pick a class </h2>
       <div>
-        {CLASSES.classList.map((val) => {
+        {CLASSES.classList.map((val, i) => {
           return (
-            <div>
+            <div key={i}>
               <input
                 type="radio"
                 value={val.class}
@@ -35,6 +35,7 @@ export default function CharacterCreation(props: Props): ReactElement {
         })}
       </div>
       <CharacterInfo currentClass={currentClass} />
+      <button>Select</button>
     </div>
   );
 }
