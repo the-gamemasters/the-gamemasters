@@ -1,5 +1,6 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import AccountCreation from './AccountCreation';
+import Music from './Music';
 import { Link } from 'react-router-dom';
 import '../../css/Login.css';
 import 'nes.css/css/nes.min.css';
@@ -44,6 +45,7 @@ export default function Login(props: Props): ReactElement {
           <AccountCreation />
         </div>
       ) : null}
+      <Music />
     </div>
   );
 }
