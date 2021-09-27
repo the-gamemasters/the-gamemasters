@@ -1,12 +1,13 @@
 import React, { ReactElement, useState } from 'react';
-import * as CLASSES from './classes';
 import CharacterInfo from './CharacterInfo';
 
 interface Props {}
 
 export default function CharacterCreation(props: Props): ReactElement {
   const [charName, setCharName] = useState<string>('');
-  const [currentClass, setCurrentClass] = useState<string>('');
+  const [currentClass, setCurrentClass] = useState<
+    'KNIGHT' | 'ROGUE' | 'BARBARIAN' | 'MAGE' | 'NONE'
+  >('NONE');
 
   return (
     <div>
@@ -20,19 +21,42 @@ export default function CharacterCreation(props: Props): ReactElement {
       />
       <h2>Pick a class </h2>
       <div>
-        {CLASSES.classList.map((val, i) => {
-          return (
-            <div key={i}>
-              <input
-                type="radio"
-                value={val.class}
-                name="class"
-                onChange={(e) => setCurrentClass(e.target.value)}
-              />
-              {val.class}
-            </div>
-          );
-        })}
+        <div>
+          <input
+            type="radio"
+            value="KNIGHT"
+            name="class"
+            onChange={() => setCurrentClass('KNIGHT')}
+          />
+          Knight
+        </div>
+        <div>
+          <input
+            type="radio"
+            value="ROGUE"
+            name="class"
+            onChange={() => setCurrentClass('ROGUE')}
+          />
+          Rogue
+        </div>
+        <div>
+          <input
+            type="radio"
+            value="BARBARIAN"
+            name="class"
+            onChange={(e) => setCurrentClass('BARBARIAN')}
+          />
+          Barbarian
+        </div>
+        <div>
+          <input
+            type="radio"
+            value="MAGE"
+            name="class"
+            onChange={(e) => setCurrentClass('MAGE')}
+          />
+          Mage
+        </div>
       </div>
       <CharacterInfo currentClass={currentClass} />
       <button>Select</button>

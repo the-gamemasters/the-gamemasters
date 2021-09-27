@@ -1,1 +1,3 @@
-export const SKILLS = ['str', 'dex', 'con', 'int'];
+type skills = string;
+
+export const SKILLS: skills[] = ['str', 'dex', 'con', 'int'];

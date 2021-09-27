@@ -1,30 +1,16 @@
 import React, { ReactElement } from 'react';
-import * as CLASSES from './classes';
-// Need to look into how i'm importing.  I think doing it this way is making it harder.
+import { classList } from './classes';
 import { SKILLS } from './skills';
 
 interface Props {
-  currentClass: string;
+  currentClass: 'KNIGHT' | 'ROGUE' | 'BARBARIAN' | 'MAGE' | 'NONE';
 }
 
 function CharacterInfo(props: Props): ReactElement {
   // the lines below, Current class should be an object (Record), the keys should be strings, and the values should be string or number
-
-  let currentClass: Record<string, string | number> = {
-    class: '',
-    str: 0,
-    dex: 0,
-    con: 0,
-    int: 0,
-    passive: '',
-    img: '',
-  };
-
-  if (props.currentClass) {
-    currentClass = CLASSES.classList.filter(
-      (val) => val.class === props.currentClass
-    )[0];
-  }
+  let currentClass = classList.filter((val) => {
+    return val.class.toUpperCase() === props.currentClass;
+  })[0];
 
   return (
     <div>
