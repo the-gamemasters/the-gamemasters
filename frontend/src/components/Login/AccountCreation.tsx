@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 interface Props {}
 
-export default function App(props: Props) {
+export default function AccountCreation(props: Props): ReactElement {
   const [email, setEmail] = useState<string>('');
   const [userName, setUserName] = useState<string>('');
   const [password, setPassword] = useState<string>('');
