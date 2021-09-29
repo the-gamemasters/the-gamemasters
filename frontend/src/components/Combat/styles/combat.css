@@ -110,3 +110,17 @@ div.combat-top {
 .hp-text {
     font-size: 1.25em;
 }
+
+.dialog-btn {
+    font-size: 0.7rem;
+    width: 8rem;
+}
+
+.flex-dialog-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-grow: 0;
+    padding: 0.25em;
+}

@@ -38,7 +38,8 @@ export class CombatRoom extends Room<CombatRoomState> {
                     if (this.state.currentTurn === 'party1') {
                         let damageDealt = Math.floor(((this.state.party1.stats.strength + this.state.party1.weaponBonus) * (Math.random() * (1.2 - .8) + .8)))
                         console.log('P1 Attack:', damageDealt)
-                        this.state.party2.currentHp -= damageDealt;
+                        this.broadcast('attack', [this.state.party1.displayName, damageDealt + 50])
+                        this.state.party2.currentHp -= damageDealt + 50;
 
                         if (this.state.party2.currentHp <= 0) {
                             this.state.party2.currentHp = 0;
@@ -48,6 +49,7 @@ export class CombatRoom extends Room<CombatRoomState> {
                     } else {
                         let damageDealt = Math.floor(((this.state.party2.stats.strength + this.state.party2.weaponBonus) * (Math.random() * (1.2 - .8) + .8)))
                         console.log('P2 Attack:', damageDealt)
+                        this.broadcast('attack', [this.state.party2.displayName, damageDealt])
                         this.state.party1.currentHp -= damageDealt;
 
                         if (this.state.party1.currentHp <= 0) {
@@ -68,7 +70,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
                 case 'item':
                     if (this.state.currentTurn === 'party1') {
-
+                        this.state.currentTurn = 'party2'
                     } else {
 
                     }
