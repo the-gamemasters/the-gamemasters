@@ -1,11 +1,12 @@
 import http from 'http';
-import express from 'express';
+import express, { application } from 'express';
 import cors from "cors";
 import { Server } from 'colyseus';
 import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from 'bcrypt';
 import session from 'express-session';
 import massive from 'massive';
+import {createCharacter} from './controllers/characters'
 
 
 const app = express();
@@ -34,6 +35,10 @@ app.post('/api/test', (req, res) => {
     console.log('Test POST endpoint hit. req.body=', req.body);
     res.status(200).send('Success')
 })
+
+// Post endpoint to add character data to the DB
+app.post(`/api/character`, createCharacter)
+
 
 //Test PUT Endpoint
 app.put('/api/test', (req, res) => {
