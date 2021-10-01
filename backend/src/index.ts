@@ -19,7 +19,7 @@ process.env[`NODE_TLS_REJECT_UNAUTHORIZED`] = 0;
 
 
 const app = express();
-const port = Number(process.env.PORT || 3553);
+const port = Number(PORT || 3553);
 
 
 app.use(
@@ -44,7 +44,7 @@ app.use(
     .then((dbInstance) => {
       app.set('db', dbInstance);
       console.log('Database running, cool game is coming!!!',);
-      console.log(dbInstance)
+
     })
     .catch((err) => console.log('Database error', err));
 
