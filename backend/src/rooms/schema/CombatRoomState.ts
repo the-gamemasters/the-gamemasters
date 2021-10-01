@@ -1,4 +1,5 @@
 import { Schema, ArraySchema, type } from "@colyseus/schema";
+import { party } from "../CombatRoom";
 
 class Stats extends Schema {
     @type("number") strength: number;
@@ -7,9 +8,9 @@ class Stats extends Schema {
     @type("number") intelligence: number;
 }
 
-class Spells extends Schema { }
+class Spells extends Schema {}
 
-class Items extends Schema { }
+class Items extends Schema {}
 
 class Player extends Schema {
     @type("string") id: string;
@@ -17,12 +18,14 @@ class Player extends Schema {
     @type("number") maxHp: number;
     @type("number") currentHp: number;
     @type("number") weaponBonus: number;
+    @type("number") baseDodgeChance: number;
+    @type("number") currentDodgeChance: number;
     @type([Items]) items = new ArraySchema<Items>();
     @type([Spells]) spells = new ArraySchema<Spells>();
     @type(Stats) stats = new Stats();
 }
 export class CombatRoomState extends Schema {
-    @type("string") currentTurn: string = "party1";
+    @type("string") currentTurn: party = "party1";
     @type(Player) party1 = new Player();
     @type(Player) party2 = new Player();
 }

@@ -9,7 +9,7 @@ interface Props {}
 interface State {
     roomInstance: Colyseus.Room;
     stateInstance: any;
-    lastMove: string;
+    combatLog: string;
     loading: boolean;
     p1Ready: boolean;
     p2Ready: boolean;
@@ -38,7 +38,7 @@ const modalStyles = {
 ReactModal.setAppElement("#root");
 export default class Combat extends Component<Props, State> {
     componentWillMount() {
-        this.setState({ lastMove: "", loading: true });
+        this.setState({ combatLog: "", loading: true });
     }
     componentDidMount() {
         let client = new Colyseus.Client("ws://localhost:3553");
@@ -62,7 +62,19 @@ export default class Combat extends Component<Props, State> {
 
             room.onMessage("attack", (message) => {
                 this.setState({
-                    lastMove: `${message[0]} attacked for ${message[1]} damage!`,
+                    combatLog: `${message[0]} attacked for ${message[1]} damage!`,
+                });
+            });
+
+            room.onMessage("evade", (message) => {
+                this.setState({
+                    combatLog: `${message} prepared to evade!`,
+                });
+            });
+
+            room.onMessage("miss", (message) => {
+                this.setState({
+                    combatLog: `${message[0]} attacked but ${message[1]} dodged it!`,
                 });
             });
 
@@ -93,7 +105,7 @@ export default class Combat extends Component<Props, State> {
 
         room.send("turn", message);
 
-        this.setState({ lastMove: move });
+        this.setState({ combatLog: move });
     };
 
     handleDebug = (party: string) => {
@@ -163,14 +175,17 @@ export default class Combat extends Component<Props, State> {
                                     </menu>
                                 </div>
                             </ReactModal>
-                            <span>{this.state.lastMove}</span>
+                            <span>{this.state.combatLog}</span>
                         </div>
+
                         <div className="party2-sprite-box">
-                            <img
-                                src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/3c1fb523717421.56327b1b5db32.gif"
-                                alt="giant rat"
-                                className="party2-sprite"
-                            />
+                            {this.state.p2Ready ? (
+                                <img
+                                    src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/3c1fb523717421.56327b1b5db32.gif"
+                                    alt="giant rat"
+                                    className="party2-sprite"
+                                />
+                            ) : null}
                         </div>
                     </div>
                     <div className="combat-bottom">
@@ -204,12 +219,15 @@ export default class Combat extends Component<Props, State> {
                         ) : (
                             <div></div>
                         )}
-                        <MoveBox
-                            handleAction={this.handleAction}
-                            currentTurn={this.state.currentTurn}
-                            myParty={this.state.myParty}
-                            loading={this.state.loading}
-                        />
+                        {this.state.p1Ready === true &&
+                        this.state.p2Ready === true ? (
+                            <MoveBox
+                                handleAction={this.handleAction}
+                                currentTurn={this.state.currentTurn}
+                                myParty={this.state.myParty}
+                                loading={this.state.loading}
+                            />
+                        ) : null}
 
                         {this.state.p2Ready ? (
                             <div className="party-info-box party2-info">
