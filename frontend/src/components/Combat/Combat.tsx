@@ -4,6 +4,7 @@ import "./styles/combat.css";
 import MoveBox from "./MoveBox";
 import ReactModal from "react-modal";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 interface Props {}
 interface State {
@@ -34,6 +35,18 @@ const modalStyles = {
         width: "30%",
     },
 };
+
+const PartyIndicator = styled.i`
+    display: inline;
+`;
+
+const CombatLogContainer = styled.div`
+    background-color: white;
+`;
+
+const CombatLogText = styled.span`
+    color: black;
+`;
 
 ReactModal.setAppElement("#root");
 export default class Combat extends Component<Props, State> {
@@ -175,7 +188,6 @@ export default class Combat extends Component<Props, State> {
                                     </menu>
                                 </div>
                             </ReactModal>
-                            <span>{this.state.combatLog}</span>
                         </div>
 
                         <div className="party2-sprite-box">
@@ -192,10 +204,20 @@ export default class Combat extends Component<Props, State> {
                         {this.state.p1Ready ? (
                             <div className="party-info-box party1-info">
                                 <span className="party-name">
-                                    {
-                                        this.state.stateInstance.party1
-                                            .displayName
-                                    }
+                                    <span
+                                        className={
+                                            this.state.currentTurn === "party1"
+                                                ? "party-name-turn"
+                                                : undefined
+                                        }>
+                                        {
+                                            this.state.stateInstance.party1
+                                                .displayName
+                                        }
+                                    </span>
+                                    {this.state.myParty === "party1" ? (
+                                        <PartyIndicator className="nes-icon is-medium star" />
+                                    ) : null}
                                 </span>
                                 <progress
                                     className="nes-progress is-error hp-bar"
@@ -221,21 +243,39 @@ export default class Combat extends Component<Props, State> {
                         )}
                         {this.state.p1Ready === true &&
                         this.state.p2Ready === true ? (
-                            <MoveBox
-                                handleAction={this.handleAction}
-                                currentTurn={this.state.currentTurn}
-                                myParty={this.state.myParty}
-                                loading={this.state.loading}
-                            />
+                            <div className="bottom-center">
+                                <MoveBox
+                                    handleAction={this.handleAction}
+                                    currentTurn={this.state.currentTurn}
+                                    myParty={this.state.myParty}
+                                    loading={this.state.loading}
+                                />
+                                <CombatLogContainer className="nes-container combat-log-container">
+                                    <CombatLogText className="nes-text combat-log-text">
+                                        {this.state.combatLog}
+                                    </CombatLogText>
+                                </CombatLogContainer>
+                            </div>
                         ) : null}
 
                         {this.state.p2Ready ? (
                             <div className="party-info-box party2-info">
                                 <span className="party-name">
-                                    {
-                                        this.state.stateInstance.party2
-                                            .displayName
-                                    }
+                                    {this.state.myParty === "party2" ? (
+                                        <PartyIndicator className="nes-icon is-medium star" />
+                                    ) : null}
+
+                                    <span
+                                        className={
+                                            this.state.currentTurn === "party2"
+                                                ? "party-name-turn"
+                                                : undefined
+                                        }>
+                                        {
+                                            this.state.stateInstance.party2
+                                                .displayName
+                                        }
+                                    </span>
                                 </span>
                                 <progress
                                     className="nes-progress is-error hp-bar flipped-hp"

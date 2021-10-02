@@ -72,6 +72,10 @@ div.combat-top {
     grid-row-gap: 0px;
 }
 
+.bottom-center {
+    display: grid;
+}
+
 .attack-btn {
     color: #eb393c;
 }
@@ -90,6 +94,15 @@ div.combat-top {
 
 .party-name {
     font-size: 1.5em;
+}
+
+.party-name-turn {
+    animation: blink 1s infinite;
+    @keyframes blink {
+        50% {
+            opacity: 0;
+        }
+    }
 }
 
 .party-info-box {

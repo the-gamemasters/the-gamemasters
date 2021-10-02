@@ -26,6 +26,44 @@ interface mockBattle {
     };
 }
 
+const testSpellList = [
+    {
+        name: "Fireball",
+        spellSchool: "fire",
+        effectType: "damage",
+        effectBase: 10,
+        cooldownTurns: 2,
+    },
+    {
+        name: "Frostbite",
+        spellSchool: "ice",
+        effectType: "damage",
+        effectBase: 7,
+        cooldownTurns: 1,
+    },
+    {
+        name: "Reviving Jolt",
+        spellSchool: "lightning",
+        effectType: "heal",
+        effectBase: 20,
+        cooldownTurns: 3,
+    },
+    {
+        name: "Flame On",
+        spellSchool: "fire",
+        effectType: "buff-con",
+        effectBase: 3,
+        cooldownTurns: 7,
+    },
+    {
+        name: "Draining Zap",
+        spellSchool: "lightning",
+        effectType: "debuff-dex",
+        effectBase: 2,
+        cooldownTurns: 5,
+    },
+];
+
 export type party = "party1" | "party2";
 export class CombatRoom extends Room<CombatRoomState> {
     maxClients = 2;
@@ -40,11 +78,14 @@ export class CombatRoom extends Room<CombatRoomState> {
 
             switch (message.action) {
                 case "attack":
-                    let randomChance = Math.random();
+                    let randomChanceDodge = Math.random();
 
-                    if (this.state[forceZ].currentDodgeChance >= randomChance) {
+                    if (
+                        this.state[forceZ].currentDodgeChance >=
+                        randomChanceDodge
+                    ) {
                         this.broadcast("miss", [
-                            this.state.party1.displayName,
+                            this.state[forceA].displayName,
                             this.state[forceZ].displayName,
                         ]);
                     } else {
@@ -72,36 +113,10 @@ export class CombatRoom extends Room<CombatRoomState> {
 
                 case "spell":
                     //TODO This spell list will be pulled from the DB
-                    let spellList = [
-                        {
-                            name: "Fireball",
-                            spellSchool: "fire",
-                            effectType: "damage",
-                            effectBase: 10,
-                        },
-                        {
-                            name: "Frostbite",
-                            spellSchool: "ice",
-                            effectType: "damage",
-                            effectBase: 8,
-                        },
-                        {
-                            name: "Reviving Jolt",
-                            spellSchool: "lightning",
-                            effectType: "heal",
-                            effectBase: 20,
-                        },
-                    ];
-                    if (this.state.currentTurn === "party1") {
-                        // if (spellList.includes(ele => ele.effectType === 'damage')) {
 
-                        // }
-                        this.broadcast("spell", [message.spell]);
-                        this.state.currentTurn = "party2";
-                    } else {
-                        this.broadcast("spell", [message.spell]);
-                        this.state.currentTurn = "party1";
-                    }
+                    this.broadcast("spell", [message.spell]);
+
+                    this.state.currentTurn = forceZ;
                     break;
 
                 case "item":
@@ -146,7 +161,6 @@ export class CombatRoom extends Room<CombatRoomState> {
             console.log(client.sessionId, "joined as P1!");
             this.state.party1.id = client.sessionId;
             client.send("assignment", 1);
-            //TODO if class is rogue, add a dodge chance
             //Mock Party1 "Charles"
             this.state.party1.displayName = "Charles";
             this.state.party1.weaponBonus = 1;
