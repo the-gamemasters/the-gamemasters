@@ -24,7 +24,7 @@ CREATE TABLE characters (
     char_name VARCHAR(80),
     description VARCHAR(255),
     user_key INT REFERENCES users(user_key),
-    avater_key INT REFERENCES avatars(avatar_key),
+    avatar_key INT REFERENCES avatars(avatar_key),
     gold INT,
     experience INT,
     level INT
