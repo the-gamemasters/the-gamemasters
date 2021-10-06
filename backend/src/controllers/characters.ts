@@ -32,7 +32,7 @@ async function createCharacter(req: any, res: any) {
 
 
 
-  const characterStats = await db.Character.createCharacterStats([characterKey, strength, constitution, intelligence, dexterity])
+  const characterStats = await db.Characters.createCharacterStats([characterKey, strength, constitution, intelligence, dexterity])
 
   res.status(200).json({characterInfo, characterStats})
 }

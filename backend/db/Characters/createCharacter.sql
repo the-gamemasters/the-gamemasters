@@ -2,7 +2,7 @@ INSERT INTO characters
 (char_name,
     description,
     user_key ,
-    avater_key ,
+    avatar_key ,
     gold ,
     experience ,
     level)

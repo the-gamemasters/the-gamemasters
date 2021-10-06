@@ -1,4 +1,4 @@
-INSERT INTO characters
+INSERT INTO charstats
 (character_key,
    strength,
     constitution,
