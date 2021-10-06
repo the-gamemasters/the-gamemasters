@@ -17,9 +17,11 @@ interface State {
     myParty: string;
     currentTurn: string;
     result: string | undefined;
+    selectOpen: boolean;
+    selectType?: "spell" | "item";
 }
 
-const modalStyles = {
+const combatEndModalStyles = {
     overlay: {
         backgroundColor: "rgba(39, 39, 39, 0.6)",
     },
@@ -48,6 +50,23 @@ const CombatLogText = styled.span`
     color: black;
 `;
 
+const selectModalStyles = {
+    overlay: {
+        backgroundColor: "rgba(39, 39, 39, 0.6)",
+    },
+    content: {
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        border: "none",
+        background: "none",
+        outline: "none",
+        padding: "20px",
+        height: "50%",
+        width: "30%",
+    },
+};
+
 ReactModal.setAppElement("#root");
 export default class Combat extends Component<Props, State> {
     componentWillMount() {
@@ -58,7 +77,7 @@ export default class Combat extends Component<Props, State> {
         client.joinOrCreate("combat").then((room) => {
             //* Function to handle handing out party1 or party2 status
             room.onMessage("assignment", (message) => {
-                if (message === 1) {
+                if (message === "party1") {
                     this.setState({ myParty: "party1", p1Ready: true });
                 } else {
                     this.setState({ myParty: "party2", p2Ready: true });
@@ -76,6 +95,18 @@ export default class Combat extends Component<Props, State> {
             room.onMessage("attack", (message) => {
                 this.setState({
                     combatLog: `${message[0]} attacked for ${message[1]} damage!`,
+                });
+            });
+
+            room.onMessage("spell", (message) => {
+                this.setState({
+                    combatLog: `${message[0]} used spell ${message[1]}!`,
+                });
+            });
+
+            room.onMessage("item", (message) => {
+                this.setState({
+                    combatLog: `${message[0]} used ${message[1]}!`,
                 });
             });
 
@@ -106,14 +137,11 @@ export default class Combat extends Component<Props, State> {
         });
     }
 
-    handleAction = (move: string) => {
+    handleAction = (move: string, moveData: string) => {
         let room = this.state.roomInstance;
         let message = {
             action: move,
-            moveData: {
-                item: null,
-                spell: "fireball",
-            },
+            moveData: moveData,
         };
 
         room.send("turn", message);
@@ -147,17 +175,25 @@ export default class Combat extends Component<Props, State> {
                         <h6>Room ID: {this.state.roomInstance.id}</h6>
                     </div>
                     <div className="combat-mid">
-                        <div className="party1-sprite-box">
-                            <img
-                                src="https://cdn2.scratch.mit.edu/get_image/gallery/25124327_170x100.png"
-                                alt="donkey-kong-6065405-640"
-                                className="party1-sprite"
-                            />
-                        </div>
+                        {this.state.p1Ready ? (
+                            <div className="party1-sprite-box">
+                                <img
+                                    src={
+                                        this.state.stateInstance.party1
+                                            .spriteUrl
+                                    }
+                                    alt={
+                                        this.state.stateInstance.party1
+                                            .displayName
+                                    }
+                                    className="party1-sprite"
+                                />
+                            </div>
+                        ) : undefined}
 
                         <div className="mid-center">
                             <ReactModal
-                                style={modalStyles}
+                                style={combatEndModalStyles}
                                 isOpen={this.state.result !== undefined}>
                                 <div
                                     className="nes-dialog is-dark is-rounded"
@@ -188,13 +224,68 @@ export default class Combat extends Component<Props, State> {
                                     </menu>
                                 </div>
                             </ReactModal>
+                            {/* SelectModal */}
+                            {this.state.p1Ready === true &&
+                            this.state.p2Ready === true ? (
+                                <ReactModal
+                                    style={selectModalStyles}
+                                    isOpen={this.state.selectOpen}>
+                                    <div
+                                        className="nes-dialog is-dark is-rounded"
+                                        id="dialog-dark-rounded">
+                                        <p className="title nes-text is-success">
+                                            {this.state.selectType === "spell"
+                                                ? "Spells"
+                                                : "Items"}
+                                        </p>
+                                        <menu className="dialog-menu flex-dialog-menu">
+                                            <ul>
+                                                {this.state.selectType ===
+                                                "spell"
+                                                    ? this.state.stateInstance[
+                                                          this.state.myParty
+                                                      ].spells.map(
+                                                          (
+                                                              ele: any,
+                                                              i: number
+                                                          ) => {
+                                                              <li key={i}>
+                                                                  {
+                                                                      ele.spellName
+                                                                  }
+                                                              </li>;
+                                                          }
+                                                      )
+                                                    : this.state.stateInstance[
+                                                          this.state.myParty
+                                                      ].items.map(
+                                                          (
+                                                              ele: any,
+                                                              i: number
+                                                          ) => {
+                                                              <li key={i}>
+                                                                  {ele.itemName}
+                                                              </li>;
+                                                          }
+                                                      )}
+                                            </ul>
+                                        </menu>
+                                    </div>
+                                </ReactModal>
+                            ) : null}
                         </div>
 
                         <div className="party2-sprite-box">
                             {this.state.p2Ready ? (
                                 <img
-                                    src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/3c1fb523717421.56327b1b5db32.gif"
-                                    alt="giant rat"
+                                    src={
+                                        this.state.stateInstance.party2
+                                            .spriteUrl
+                                    }
+                                    alt={
+                                        this.state.stateInstance.party2
+                                            .displayName
+                                    }
                                     className="party2-sprite"
                                 />
                             ) : null}
@@ -222,14 +313,13 @@ export default class Combat extends Component<Props, State> {
                                 <progress
                                     className="nes-progress is-error hp-bar"
                                     value={
-                                        this.state.stateInstance.party1
-                                            .currentHp
+                                        this.state.stateInstance.party1.tempHp
                                     }
-                                    max={this.state.stateInstance.party1.maxHp}
+                                    max={this.state.stateInstance.party1.baseHp}
                                 />
                                 <span className="hp-text">
-                                    {this.state.stateInstance.party1.currentHp}{" "}
-                                    / {this.state.stateInstance.party1.maxHp}
+                                    {this.state.stateInstance.party1.tempHp} /{" "}
+                                    {this.state.stateInstance.party1.baseHp}
                                 </span>
                                 <button
                                     type="button"
@@ -280,14 +370,13 @@ export default class Combat extends Component<Props, State> {
                                 <progress
                                     className="nes-progress is-error hp-bar flipped-hp"
                                     value={
-                                        this.state.stateInstance.party2
-                                            .currentHp
+                                        this.state.stateInstance.party2.tempHp
                                     }
-                                    max={this.state.stateInstance.party2.maxHp}
+                                    max={this.state.stateInstance.party2.baseHp}
                                 />
                                 <span className="hp-text">
-                                    {this.state.stateInstance.party2.currentHp}{" "}
-                                    / {this.state.stateInstance.party2.maxHp}
+                                    {this.state.stateInstance.party2.tempHp} /{" "}
+                                    {this.state.stateInstance.party2.baseHp}
                                 </span>
                                 <button
                                     type="button"

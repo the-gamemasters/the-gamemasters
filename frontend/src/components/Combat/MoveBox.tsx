@@ -25,7 +25,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn attack-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("attack")
+                        ? () => props.handleAction("attack", "")
                         : undefined
                 }>
                 Attack
@@ -35,7 +35,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn spells-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("spell")
+                        ? () => props.handleAction("spell", "Fireball")
                         : undefined
                 }>
                 Spells
@@ -45,7 +45,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn item-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("item")
+                        ? () => props.handleAction("item", "Potion")
                         : undefined
                 }>
                 Items
@@ -55,7 +55,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn evade-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("evade")
+                        ? () => props.handleAction("evade", "")
                         : undefined
                 }>
                 Evade
