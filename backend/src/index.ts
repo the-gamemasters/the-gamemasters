@@ -47,7 +47,7 @@ massive({
 })
     .then((dbInstance) => {
         app.set("db", dbInstance);
-        console.log("Database running, cool game is coming!!!");
+        console.log("Database instance initialized!");
     })
     .catch((err) => console.log("Database ", err));
 

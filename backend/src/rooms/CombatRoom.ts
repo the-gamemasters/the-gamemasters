@@ -1,66 +1,55 @@
 import { Room, Client } from "colyseus";
-import { CombatRoomState } from "./schema/CombatRoomState";
-
-interface mockBattle {
-    party1: {
-        id: string;
-        displayName: string;
-        hp: number;
-        stats: {
-            strength: number;
-            dexterity: number;
-            constitution: number;
-            intelligence: number;
-        };
-    };
-    party2: {
-        id: string;
-        displayName: string;
-        hp: number;
-        stats: {
-            strength: number;
-            dexterity: number;
-            constitution: number;
-            intelligence: number;
-        };
-    };
-}
+import CombatRoomState from "./schema/CombatRoomState";
+import { encountersList } from "./encounters";
 
 const testSpellList = [
     {
-        name: "Fireball",
+        spellName: "Fireball",
         spellSchool: "fire",
         effectType: "damage",
         effectBase: 10,
+        effectDuration: 0,
         cooldownTurns: 2,
     },
     {
-        name: "Frostbite",
+        spellName: "Frostbite",
         spellSchool: "ice",
         effectType: "damage",
         effectBase: 7,
+        effectDuration: 0,
         cooldownTurns: 1,
     },
     {
-        name: "Reviving Jolt",
+        spellName: "Reviving Jolt",
         spellSchool: "lightning",
         effectType: "heal",
         effectBase: 20,
+        effectDuration: 0,
         cooldownTurns: 3,
     },
     {
-        name: "Flame On",
+        spellName: "Flame On",
         spellSchool: "fire",
         effectType: "buff-con",
         effectBase: 3,
+        effectDuration: 4,
         cooldownTurns: 7,
     },
     {
-        name: "Draining Zap",
+        spellName: "Draining Zap",
         spellSchool: "lightning",
         effectType: "debuff-dex",
         effectBase: 2,
+        effectDuration: 2,
         cooldownTurns: 5,
+    },
+    {
+        spellName: "Scurry",
+        spellSchool: "none",
+        effectType: "buff-dex",
+        effectBase: 2,
+        effectDuration: 3,
+        cooldownTurns: 7,
     },
 ];
 
@@ -81,8 +70,7 @@ export class CombatRoom extends Room<CombatRoomState> {
                     let randomChanceDodge = Math.random();
 
                     if (
-                        this.state[forceZ].currentDodgeChance >=
-                        randomChanceDodge
+                        this.state[forceZ].tempDodgeChance >= randomChanceDodge
                     ) {
                         this.broadcast("miss", [
                             this.state[forceA].displayName,
@@ -90,7 +78,7 @@ export class CombatRoom extends Room<CombatRoomState> {
                         ]);
                     } else {
                         let damageDealt = Math.floor(
-                            (this.state[forceA].stats.strength +
+                            (this.state[forceA].tempStats.strength +
                                 this.state[forceA].weaponBonus) *
                                 (Math.random() * (1.2 - 0.8) + 0.8)
                         );
@@ -98,51 +86,46 @@ export class CombatRoom extends Room<CombatRoomState> {
                             this.state[forceA].displayName,
                             damageDealt,
                         ]);
-                        this.state[forceZ].currentHp -= damageDealt;
+                        this.state[forceZ].tempHp -= damageDealt;
 
-                        if (this.state[forceZ].currentHp <= 0) {
-                            this.state[forceZ].currentHp = 0;
+                        if (this.state[forceZ].tempHp <= 0) {
+                            this.state[forceZ].tempHp = 0;
                             this.broadcast("victory", forceA);
                         }
                     }
-                    this.state[forceZ].currentDodgeChance =
+                    this.state[forceZ].tempDodgeChance =
                         this.state[forceZ].baseDodgeChance;
                     this.state.currentTurn = forceZ;
 
                     break;
-
                 case "spell":
-                    //TODO This spell list will be pulled from the DB
-
-                    this.broadcast("spell", [message.spell]);
-
+                    let currentSpell = testSpellList.find(
+                        (ele) => ele.spellName === message.moveData
+                    );
+                    console.log(currentSpell);
+                    this.broadcast("spell", [
+                        this.state[forceA].displayName,
+                        message.moveData,
+                    ]);
                     this.state.currentTurn = forceZ;
-                    break;
 
+                    break;
                 case "item":
-                    if (this.state.currentTurn === "party1") {
-                        this.state.currentTurn = "party2";
-                    } else {
-                        this.state.currentTurn = "party1";
-                    }
-                    break;
+                    this.broadcast("item", [
+                        this.state[forceA].displayName,
+                        message.moveData,
+                    ]);
+                    this.state.currentTurn = forceZ;
 
+                    break;
                 case "evade":
-                    if (this.state.currentTurn === "party1") {
-                        this.state.party1.currentDodgeChance =
-                            (this.state.party1.stats.dexterity * 5 +
-                                this.state.party1.baseDodgeChance) /
-                            100;
-                        this.broadcast("evade", this.state.party1.displayName);
-                        this.state.currentTurn = "party2";
-                    } else {
-                        this.state.party2.currentDodgeChance =
-                            (this.state.party2.stats.dexterity * 5 +
-                                this.state.party2.baseDodgeChance) /
-                            100;
-                        this.broadcast("evade", this.state.party2.displayName);
-                        this.state.currentTurn = "party1";
-                    }
+                    this.state[forceA].tempDodgeChance =
+                        (this.state[forceA].tempStats.dexterity * 5 +
+                            this.state[forceA].baseDodgeChance) /
+                        100;
+                    this.broadcast("evade", this.state[forceA].displayName);
+                    this.state.currentTurn = forceZ;
+
                     break;
             }
         });
@@ -157,37 +140,30 @@ export class CombatRoom extends Room<CombatRoomState> {
     }
 
     onJoin(client: Client, options: any) {
-        if (this.clients.length === 1) {
-            console.log(client.sessionId, "joined as P1!");
-            this.state.party1.id = client.sessionId;
-            client.send("assignment", 1);
-            //Mock Party1 "Charles"
-            this.state.party1.displayName = "Charles";
-            this.state.party1.weaponBonus = 1;
-            this.state.party1.baseDodgeChance = 0;
-            this.state.party1.stats.strength = 15;
-            this.state.party1.stats.dexterity = 6;
-            this.state.party1.stats.constitution = 11;
-            this.state.party1.maxHp = this.state.party1.stats.constitution * 10;
-            this.state.party1.currentHp = this.state.party1.maxHp;
-            this.state.party1.stats.intelligence = 8;
-        } else if (this.clients.length === 2) {
-            console.log(client.sessionId, "joined as P2!");
-            this.state.party2.id = client.sessionId;
-            client.send("assignment", 2);
-            //Mock Party2 "Giant Rat"
-            this.state.party2.displayName = "Giant Rat";
-            this.state.party2.weaponBonus = 4;
-            this.state.party2.baseDodgeChance = 0.5;
-            this.state.party2.stats.strength = 5;
-            this.state.party2.stats.dexterity = 9;
-            this.state.party2.stats.constitution = 13;
-            this.state.party2.maxHp = this.state.party2.stats.constitution * 10;
-            this.state.party2.currentHp = this.state.party2.maxHp;
-            this.state.party2.stats.intelligence = 0;
+        let force: party = this.clients.length > 1 ? "party2" : "party1";
+        console.log(`${client.sessionId} joined as ${force}!`);
+        let randomEncounter = Math.floor((Math.random() / 2.5) * 10);
+
+        let encounter = encountersList[randomEncounter];
+        let party = this.state[force];
+
+        party.id = client.sessionId;
+        party.displayName = encounter.displayName;
+        party.spriteUrl = encounter.spriteUrl;
+        party.items.push(...encounter.items);
+        party.spells.push(...encounter.spells);
+        party.baseStats = encounter.baseStats;
+        party.tempStats = encounter.tempStats;
+        party.baseHp = party.baseStats.constitution * 10;
+        party.tempHp = party.baseHp;
+        party.weaponBonus = encounter.weaponBonus;
+        party.baseDodgeChance = encounter.baseDodgeChance;
+        party.tempDodgeChance = party.baseDodgeChance;
+
+        client.send("assignment", force);
+        if (this.clients.length > 1) {
             this.broadcast("ready");
         }
-
         //TODO Connect to backend, which connects to DB, to get player stats, items, and spells
     }
 
@@ -199,3 +175,41 @@ export class CombatRoom extends Room<CombatRoomState> {
         console.log("room", this.roomId, "disposing...");
     }
 }
+
+// {
+//     id: "",
+//     displayName: "Giant Rat",
+//     items: [
+//         {
+//             itemName: "Cheese",
+//             effectType: "heal",
+//             effectBase: 20,
+//             inventoryQuantity: 1,
+//         },
+//     ],
+//     spells: [
+//         {
+//             spellName: "Scurry",
+//             spellSchool: "none",
+//             effectType: "buff-dex",
+//             effectBase: 2,
+//             effectDuration: 3,
+//             cooldownTurns: 7,
+//         },
+//     ],
+//     baseStats: {
+//         strength: 5,
+//         dexterity: 9,
+//         constitution: 13,
+//         intelligence: 3,
+//     },
+//     tempStats: {
+//         strength: 5,
+//         dexterity: 9,
+//         constitution: 13,
+//         intelligence: 3,
+//     },
+//     weaponBonus: 4,
+//     baseDodgeChance: 0.5,
+//     tempDodgeChance: 0,
+// }
