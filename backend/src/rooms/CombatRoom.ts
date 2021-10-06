@@ -30,7 +30,8 @@ const testSpellList = [
     {
         spellName: "Flame On",
         spellSchool: "fire",
-        effectType: "buff-con",
+        effectType: "buff",
+        effectStat: "con",
         effectBase: 3,
         effectDuration: 4,
         cooldownTurns: 7,
@@ -50,6 +51,30 @@ const testSpellList = [
         effectBase: 2,
         effectDuration: 3,
         cooldownTurns: 7,
+    },
+    {
+        spellName: "Massive Chomp",
+        spellSchool: "none",
+        effectType: "damage",
+        effectBase: 30,
+        effectDuration: 0,
+        cooldownTurns: 6,
+    },
+    {
+        spellName: "Reviving Jolt",
+        spellSchool: "lightning",
+        effectType: "heal",
+        effectBase: 20,
+        effectDuration: 0,
+        cooldownTurns: 3,
+    },
+    {
+        spellName: "Yawn",
+        spellSchool: "none",
+        effectType: "debuff-dex",
+        effectBase: 3,
+        effectDuration: 2,
+        cooldownTurns: 5,
     },
 ];
 
@@ -73,6 +98,7 @@ export class CombatRoom extends Room<CombatRoomState> {
                         this.state[forceZ].tempDodgeChance >= randomChanceDodge
                     ) {
                         this.broadcast("miss", [
+                            "attack",
                             this.state[forceA].displayName,
                             this.state[forceZ].displayName,
                         ]);
@@ -102,11 +128,47 @@ export class CombatRoom extends Room<CombatRoomState> {
                     let currentSpell = testSpellList.find(
                         (ele) => ele.spellName === message.moveData
                     );
-                    console.log(currentSpell);
-                    this.broadcast("spell", [
-                        this.state[forceA].displayName,
-                        message.moveData,
-                    ]);
+                    let broadcastMessage = "";
+                    switch (currentSpell.effectType) {
+                        case "damage":
+                            let randomChanceDodge = Math.random();
+
+                            if (
+                                this.state[forceZ].tempDodgeChance >=
+                                randomChanceDodge
+                            ) {
+                                this.broadcast("miss", [
+                                    currentSpell.spellName,
+                                    this.state[forceA].displayName,
+                                    this.state[forceZ].displayName,
+                                ]);
+                            } else {
+                                let damageDealt = Math.floor(
+                                    (this.state[forceA].tempStats.intelligence +
+                                        currentSpell.effectBase) *
+                                        (Math.random() * (1.3 - 0.7) + 0.7)
+                                );
+                                broadcastMessage = `${this.state[forceA].displayName} casts ${currentSpell.spellName} for ${damageDealt} damage!`;
+
+                                this.state[forceZ].tempHp -= damageDealt;
+
+                                if (this.state[forceZ].tempHp <= 0) {
+                                    this.state[forceZ].tempHp = 0;
+                                    this.broadcast("victory", forceA);
+                                }
+                            }
+
+                            break;
+                        case "heal":
+                            let damageHealed = currentSpell.effectBase;
+
+                            this.state[forceA].tempHp += damageHealed;
+                            broadcastMessage = `${this.state[forceA].displayName} casts ${currentSpell.spellName} for ${damageHealed} damage!`;
+                            break;
+                            broadcastMessage = `${this.state[forceA].displayName} casts ${currentSpell.spellName}!`;
+                        default:
+                    }
+                    this.broadcast("spell", broadcastMessage);
                     this.state.currentTurn = forceZ;
 
                     break;

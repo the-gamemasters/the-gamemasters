@@ -3,6 +3,7 @@ import * as Colyseus from "colyseus.js";
 import "./styles/combat.css";
 import MoveBox from "./MoveBox";
 import ReactModal from "react-modal";
+import SelectModal from "./SelectModal";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
@@ -50,23 +51,6 @@ const CombatLogText = styled.span`
     color: black;
 `;
 
-const selectModalStyles = {
-    overlay: {
-        backgroundColor: "rgba(39, 39, 39, 0.6)",
-    },
-    content: {
-        top: "50%",
-        left: "50%",
-        transform: "translate(-50%, -50%)",
-        border: "none",
-        background: "none",
-        outline: "none",
-        padding: "20px",
-        height: "50%",
-        width: "30%",
-    },
-};
-
 ReactModal.setAppElement("#root");
 export default class Combat extends Component<Props, State> {
     componentWillMount() {
@@ -94,32 +78,38 @@ export default class Combat extends Component<Props, State> {
 
             room.onMessage("attack", (message) => {
                 this.setState({
-                    combatLog: `${message[0]} attacked for ${message[1]} damage!`,
+                    combatLog: `${message[0]} attacks for ${message[1]} damage!`,
                 });
             });
 
             room.onMessage("spell", (message) => {
                 this.setState({
-                    combatLog: `${message[0]} used spell ${message[1]}!`,
+                    combatLog: message,
                 });
             });
 
             room.onMessage("item", (message) => {
                 this.setState({
-                    combatLog: `${message[0]} used ${message[1]}!`,
+                    combatLog: `${message[0]} uses ${message[1]}!`,
                 });
             });
 
             room.onMessage("evade", (message) => {
                 this.setState({
-                    combatLog: `${message} prepared to evade!`,
+                    combatLog: `${message} prepares to evade!`,
                 });
             });
 
             room.onMessage("miss", (message) => {
-                this.setState({
-                    combatLog: `${message[0]} attacked but ${message[1]} dodged it!`,
-                });
+                if (message[0] === "attack") {
+                    this.setState({
+                        combatLog: `${message[1]} attacked but ${message[2]} dodged it!`,
+                    });
+                } else {
+                    this.setState({
+                        combatLog: `${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`,
+                    });
+                }
             });
 
             room.onMessage("victory", (message) => {
@@ -145,8 +135,6 @@ export default class Combat extends Component<Props, State> {
         };
 
         room.send("turn", message);
-
-        this.setState({ combatLog: move });
     };
 
     handleDebug = (party: string) => {
@@ -162,6 +150,14 @@ export default class Combat extends Component<Props, State> {
                 return `You were defeated by ${this.state.stateInstance.party1.displayName}!`;
             }
         }
+    };
+
+    openSelectModal = (selectType: "spell" | "item") => {
+        this.setState({ selectOpen: true, selectType: selectType });
+    };
+
+    closeSelectModal = () => {
+        this.setState({ selectOpen: false });
     };
 
     render() {
@@ -224,54 +220,19 @@ export default class Combat extends Component<Props, State> {
                                     </menu>
                                 </div>
                             </ReactModal>
-                            {/* SelectModal */}
                             {this.state.p1Ready === true &&
                             this.state.p2Ready === true ? (
-                                <ReactModal
-                                    style={selectModalStyles}
-                                    isOpen={this.state.selectOpen}>
-                                    <div
-                                        className="nes-dialog is-dark is-rounded"
-                                        id="dialog-dark-rounded">
-                                        <p className="title nes-text is-success">
-                                            {this.state.selectType === "spell"
-                                                ? "Spells"
-                                                : "Items"}
-                                        </p>
-                                        <menu className="dialog-menu flex-dialog-menu">
-                                            <ul>
-                                                {this.state.selectType ===
-                                                "spell"
-                                                    ? this.state.stateInstance[
-                                                          this.state.myParty
-                                                      ].spells.map(
-                                                          (
-                                                              ele: any,
-                                                              i: number
-                                                          ) => {
-                                                              <li key={i}>
-                                                                  {
-                                                                      ele.spellName
-                                                                  }
-                                                              </li>;
-                                                          }
-                                                      )
-                                                    : this.state.stateInstance[
-                                                          this.state.myParty
-                                                      ].items.map(
-                                                          (
-                                                              ele: any,
-                                                              i: number
-                                                          ) => {
-                                                              <li key={i}>
-                                                                  {ele.itemName}
-                                                              </li>;
-                                                          }
-                                                      )}
-                                            </ul>
-                                        </menu>
-                                    </div>
-                                </ReactModal>
+                                <SelectModal
+                                    selectOpen={this.state.selectOpen}
+                                    selectType={this.state.selectType}
+                                    partyInstance={
+                                        this.state.stateInstance[
+                                            this.state.myParty
+                                        ]
+                                    }
+                                    closeModal={this.closeSelectModal}
+                                    handleAction={this.handleAction}
+                                />
                             ) : null}
                         </div>
 
@@ -339,6 +300,7 @@ export default class Combat extends Component<Props, State> {
                                     currentTurn={this.state.currentTurn}
                                     myParty={this.state.myParty}
                                     loading={this.state.loading}
+                                    openSelectModal={this.openSelectModal}
                                 />
                                 <CombatLogContainer className="nes-container combat-log-container">
                                     <CombatLogText className="nes-text combat-log-text">

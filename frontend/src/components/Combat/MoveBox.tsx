@@ -5,6 +5,7 @@ interface Props {
     currentTurn?: any;
     myParty?: string;
     loading?: boolean;
+    openSelectModal: any;
 }
 
 //TODO Need to optimize this function heavily
@@ -35,7 +36,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn spells-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("spell", "Fireball")
+                        ? () => props.openSelectModal("spell")
                         : undefined
                 }>
                 Spells
@@ -45,7 +46,7 @@ export default function MoveBox(props: Props): ReactElement {
                 className={`nes-btn item-btn ${setDisabledButtonClass()}`}
                 onClick={
                     props.currentTurn === props.myParty
-                        ? () => props.handleAction("item", "Potion")
+                        ? () => props.openSelectModal("item")
                         : undefined
                 }>
                 Items

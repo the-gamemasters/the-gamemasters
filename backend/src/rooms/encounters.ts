@@ -117,9 +117,9 @@ export const encountersList = [
             "https://cdna.artstation.com/p/assets/images/images/024/414/460/original/ruben-van-zijst-wizard-idle-animation-1280x1280px.gif?1582326963",
         items: [
             new Items({
-                itemName: "Cheese",
-                effectType: "heal",
-                effectBase: 20,
+                itemName: "Magic Power",
+                effectType: "buff-con",
+                effectBase: 1,
                 inventoryQuantity: 1,
             }),
         ],
@@ -164,20 +164,20 @@ export const encountersList = [
             "https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/84cdf098-db0b-422d-9048-92471e64ea7f/de8f10r-28e18490-cff5-411b-af39-51c583988101.gif?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiJcL2ZcLzg0Y2RmMDk4LWRiMGItNDIyZC05MDQ4LTkyNDcxZTY0ZWE3ZlwvZGU4ZjEwci0yOGUxODQ5MC1jZmY1LTQxMWItYWYzOS01MWM1ODM5ODgxMDEuZ2lmIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.yIRhqdRRDm4e14MxilCeQz1-4jipXe9kRPm6yUVEF9M",
         items: [
             new Items({
-                itemName: "Cheese",
+                itemName: "Chunk of Brain",
                 effectType: "heal",
-                effectBase: 20,
+                effectBase: 50,
                 inventoryQuantity: 1,
             }),
         ],
         spells: [
             new Spells({
-                spellName: "Scurry",
+                spellName: "Massive Chomp",
                 spellSchool: "none",
-                effectType: "buff-dex",
-                effectBase: 2,
-                effectDuration: 3,
-                cooldownTurns: 7,
+                effectType: "damage",
+                effectBase: 30,
+                effectDuration: 0,
+                cooldownTurns: 6,
             }),
         ],
         baseStats: new Stats({
