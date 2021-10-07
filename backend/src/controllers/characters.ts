@@ -21,14 +21,16 @@ interface CharStats {
 async function createCharacter(req: any, res: any) {
   const db = req.app.get('db')
 
-  const {charName, description, userKey, avatarKey, gold = 0, experience = 0, level = 0}: Character = req.body
+
+  // probably need to test that I can set default values like this.
+
+  const {charName = '', description = '', userKey = 1, avatarKey = null, gold = 0, experience = 0, level = 0}: Character = req.body
 
   const {strength, constitution, intelligence, dexterity}: CharStats = req.body
 
 
-
   const characterInfo = await db.Characters.createCharacter([charName, description, userKey, avatarKey, gold, experience, level])
-  const {characterKey} = characterInfo
+  const {characterKey = 1} = characterInfo
 
 
 

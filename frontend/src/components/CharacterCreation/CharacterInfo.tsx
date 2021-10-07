@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import { ReactElement } from 'react';
 import { classList } from './classes';
 import { SKILLS } from './skills';
 
@@ -7,10 +7,7 @@ interface Props {
 }
 
 function CharacterInfo(props: Props): ReactElement {
-  // the lines below, Current class should be an object (Record), the keys should be strings, and the values should be string or number
-  let currentClass = classList.filter((val) => {
-    return val.class.toUpperCase() === props.currentClass;
-  })[0];
+  let currentClass = classList[props.currentClass];
 
   return (
     <div>
@@ -27,10 +24,10 @@ function CharacterInfo(props: Props): ReactElement {
 
           {SKILLS.map((val, i) => {
             return (
-              <>
+              <div key={i}>
                 <p key={i}>{val.toUpperCase()}</p>
                 <span>{currentClass[val]}</span>
-              </>
+              </div>
             );
           })}
           <h3>Passive Skill</h3>
