@@ -1,5 +1,6 @@
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import CharacterInfo from './CharacterInfo';
+import { Link } from 'react-router-dom';
 
 interface Props {}
 
@@ -59,7 +60,9 @@ export default function CharacterCreation(props: Props): ReactElement {
         </div>
       </div>
       <CharacterInfo currentClass={currentClass} />
-      <button>Select</button>
+      <Link to="/combat">
+        <button>Select</button>
+      </Link>
     </div>
   );
 }
