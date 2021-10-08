@@ -9,6 +9,7 @@ import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
 import { createCharacter } from "./controllers/characters"
+import { register } from "./controllers/users"
 const {
 	MASSIVE_HOST,
 	MASSIVE_PORT,
@@ -91,6 +92,8 @@ app.delete("/api/test", (req, res) => {
 	console.log("Test DELETE endpoint hit.")
 	res.status(200).send("Success")
 })
+
+app.post('/api/register', register)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)
