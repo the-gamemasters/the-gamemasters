@@ -93,7 +93,7 @@ app.delete("/api/test", (req, res) => {
 	res.status(200).send("Success")
 })
 
-app.post('/api/register', register)
+app.post("/api/register", register)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)
