@@ -56,6 +56,6 @@ const NONE: classType = {
   img: '',
 };
 
-const classList = [KNIGHT, ROGUE, BARBARIAN, MAGE, NONE];
+const classList = { KNIGHT, ROGUE, BARBARIAN, MAGE, NONE };
 
 export { classList };

@@ -1,5 +1,8 @@
-import React, { ReactElement, useState } from 'react';
+import { ReactElement, useState } from 'react';
 import CharacterInfo from './CharacterInfo';
+import { classList } from './classes';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface Props {}
 
@@ -8,6 +11,7 @@ export default function CharacterCreation(props: Props): ReactElement {
   const [currentClass, setCurrentClass] = useState<
     'KNIGHT' | 'ROGUE' | 'BARBARIAN' | 'MAGE' | 'NONE'
   >('NONE');
+  const [description, setDescription] = useState<string>('');
 
   return (
     <div>
@@ -17,7 +21,16 @@ export default function CharacterCreation(props: Props): ReactElement {
         value={charName}
         name="character name"
         onChange={(e) => setCharName(e.target.value)}
-        placeholder="Please enter your character name"
+        placeholder="Character name"
+      />
+      <h1>Enter Character Description</h1>
+      <textarea
+        name="Character description"
+        placeholder="Please enter a description of your character"
+        value={description}
+        cols={50}
+        rows={5}
+        onChange={(e) => setDescription(e.target.value)}
       />
       <h2>Pick a class </h2>
       <div>
@@ -59,7 +72,24 @@ export default function CharacterCreation(props: Props): ReactElement {
         </div>
       </div>
       <CharacterInfo currentClass={currentClass} />
-      <button>Select</button>
+      <Link to="/combat">
+        <button
+          onClick={async () => {
+            const result = await axios.post('/api/character', {
+              charName,
+              description,
+              strength: classList[currentClass].str,
+              constitution: classList[currentClass].con,
+              intelligence: classList[currentClass].int,
+              dexterity: classList[currentClass].dex,
+            });
+
+            console.log(result, 'from the submit');
+          }}
+        >
+          Select
+        </button>
+      </Link>
     </div>
   );
 }
