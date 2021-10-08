@@ -20,9 +20,9 @@ export default function User(props: Props): ReactElement {
 	return (
 		<UserContainer>
 			<UserAvatar
-				className="nes-avatar is-large is-rounded"
+				className="nes-avatar is-large "
 				alt="User avatar"
-				src="https://www.gravatar.com/avatar?s=15"
+				src="https://www.usdairy.com/optimize/getmedia/6ab03180-cc90-4a03-a339-13b540ecc8a5/american.jpg.jpg.aspx"
 			/>
 		</UserContainer>
 	)

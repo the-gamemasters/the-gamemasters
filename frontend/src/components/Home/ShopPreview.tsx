@@ -17,7 +17,7 @@ const ShopPreviewDiv = styled.div`
 	background-color: white;
 `
 const ShopPreviewImg = styled.img`
-	height: 10em;
+	height: 5em;
 	width: auto;
 `
 

@@ -18,7 +18,7 @@ const HomeContainer = styled.div`
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr;
-	grid-template-rows: 70% 30%;
+	grid-template-rows: 60% 40%;
 `
 
 const HomeTop = styled.div`
