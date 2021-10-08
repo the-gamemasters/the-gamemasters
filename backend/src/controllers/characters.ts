@@ -45,4 +45,8 @@ async function createCharacter(req: any, res: any) {
 
 // }
 
-export {createCharacter}
+function mochaTest() {
+  return 'hello'
+}
+
+export {createCharacter, mochaTest}
