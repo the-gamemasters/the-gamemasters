@@ -2,6 +2,7 @@ import { ReactElement, useState } from 'react';
 import CharacterInfo from './CharacterInfo';
 import { classList } from './classes';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 interface Props {}
 
@@ -11,17 +12,6 @@ export default function CharacterCreation(props: Props): ReactElement {
     'KNIGHT' | 'ROGUE' | 'BARBARIAN' | 'MAGE' | 'NONE'
   >('NONE');
   const [description, setDescription] = useState<string>('');
-
-  console.log(
-    charName,
-    'charName',
-    description,
-    'description',
-    currentClass,
-    'currentClass',
-    classList[currentClass],
-    'stats and stuff'
-  );
 
   return (
     <div>
@@ -82,22 +72,24 @@ export default function CharacterCreation(props: Props): ReactElement {
         </div>
       </div>
       <CharacterInfo currentClass={currentClass} />
-      <button
-        onClick={async () => {
-          const result = await axios.post('/api/character', {
-            charName,
-            description,
-            strength: classList[currentClass].str,
-            constitution: classList[currentClass].con,
-            intelligence: classList[currentClass].int,
-            dexterity: classList[currentClass].dex,
-          });
+      <Link to="/combat">
+        <button
+          onClick={async () => {
+            const result = await axios.post('/api/character', {
+              charName,
+              description,
+              strength: classList[currentClass].str,
+              constitution: classList[currentClass].con,
+              intelligence: classList[currentClass].int,
+              dexterity: classList[currentClass].dex,
+            });
 
-          console.log(result, 'from the submit');
-        }}
-      >
-        Select
-      </button>
+            console.log(result, 'from the submit');
+          }}
+        >
+          Select
+        </button>
+      </Link>
     </div>
   );
 }
