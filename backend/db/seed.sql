@@ -77,10 +77,12 @@ CREATE TABLE items (
     item_key SERIAL PRIMARY KEY,
     item_name varchar(100),
     item_effect varchar(100),
+    item_effect_stat varchar(100),
     item_effect_value INT,
-    item_cost INT
+    item_effect_duration INT,
+    item_cost INT,
+    world INT
 );
-
 CREATE TABLE spells (
     spell_key SERIAL PRIMARY KEY,
     spell_name varchar(100),
