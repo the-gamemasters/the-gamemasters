@@ -1,51 +1,45 @@
 import { Schema, ArraySchema, type } from "@colyseus/schema";
 import { party } from "../CombatRoom";
 
-class Stats extends Schema {
+export class Stats extends Schema {
     @type("number") strength: number;
     @type("number") dexterity: number;
     @type("number") constitution: number;
     @type("number") intelligence: number;
 }
 
-class Spells extends Schema {}
+export class Spells extends Schema {
+    @type("string") spellName: string;
+    @type("string") spellSchool: string;
+    @type("string") effectType: string;
+    @type("number") effectBase: number;
+    @type("number") effectDuration: number;
+    @type("number") cooldownTurns: number;
+}
 
-class Items extends Schema {}
+export class Items extends Schema {
+    @type("string") itemName: string;
+    @type("string") effectType: string;
+    @type("number") effectBase: number;
+    @type("number") inventoryQuantity: number;
+}
 
-class Player extends Schema {
+export class Player extends Schema {
     @type("string") id: string;
     @type("string") displayName: string;
-    @type("number") maxHp: number;
-    @type("number") currentHp: number;
-    @type("number") weaponBonus: number;
-    @type("number") baseDodgeChance: number;
-    @type("number") currentDodgeChance: number;
+    @type("string") spriteUrl: string;
     @type([Items]) items = new ArraySchema<Items>();
     @type([Spells]) spells = new ArraySchema<Spells>();
-    @type(Stats) stats = new Stats();
+    @type(Stats) baseStats = new Stats();
+    @type(Stats) tempStats = new Stats();
+    @type("number") baseHp: number = this.baseStats.constitution * 10;
+    @type("number") tempHp: number = this.baseHp;
+    @type("number") weaponBonus: number;
+    @type("number") baseDodgeChance: number;
+    @type("number") tempDodgeChance: number;
 }
-export class CombatRoomState extends Schema {
+export default class CombatRoomState extends Schema {
     @type("string") currentTurn: party = "party1";
     @type(Player) party1 = new Player();
     @type(Player) party2 = new Player();
 }
-
-/*
-party1 = {
-    id: '',
-    displayName: '',
-    hp: 30,
-    items: [
-
-    ],
-    spells: [
-
-    ]
-    stats: {
-        strength: number;
-        dexterity: number;
-        constitution: number;
-        intelligence: number;
-    }
-}
-*/

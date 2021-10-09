@@ -1,13 +1,7 @@
 import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
 
-const CloseButton = styled.button`
-	float: right;
-	margin-bottom: 5px;
-	position: absolute;
-	left: 89%;
-	bottom: 85%;
-`
+import CloseButton from "../General/CloseButton"
 
 interface Props {
 	closeModal: () => void
@@ -21,12 +15,7 @@ export default function AccountCreation(props: Props): ReactElement {
 
 	return (
 		<div>
-			<CloseButton
-				onClick={() => props.closeModal()}
-				type="button"
-				className="nes-btn is-error">
-				<i className="nes-icon close is-small"></i>
-			</CloseButton>
+			<CloseButton closeModal={() => props.closeModal()} />
 
 			<form onSubmit={() => alert("Yeah you did it")}>
 				<label>Email</label>
