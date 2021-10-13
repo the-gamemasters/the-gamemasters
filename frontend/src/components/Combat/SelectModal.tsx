@@ -41,7 +41,6 @@ interface Props {
 }
 
 export default function SelectModal(props: Props): ReactElement {
-	console.log(props.partyInstance.items[0])
 	return (
 		<div>
 			<ReactModal style={selectModalStyles} isOpen={props.selectOpen}>

@@ -1,4 +1,4 @@
-import { Player, Stats, Spells, Items } from "./schema/CombatRoomState";
+import { Player, Stats, Spells, Items } from "./schema/CombatRoomState"
 
 export const encountersList = [
 	{
@@ -233,4 +233,4 @@ export const encountersList = [
 		baseDodgeChance: 0.5,
 		tempDodgeChance: 0,
 	},
-];
+]

@@ -66,7 +66,6 @@ export default class Combat extends Component<Props, State> {
 				} else {
 					this.setState({ myParty: "party2", p2Ready: true })
 				}
-				console.log(message)
 			})
 
 			room.onMessage("ready", () => {
