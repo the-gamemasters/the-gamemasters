@@ -209,7 +209,32 @@ export class CombatRoom extends Room<CombatRoomState> {
 							case "buff-int":
 								this.state[forceA].tempStats.intelligence +=
 									effectBase
-								broadcastMessage = `user ${itemName} to increase their Intelligence by ${effectBase}`
+								broadcastMessage = `uses ${itemName} to increase their Intelligence by ${effectBase}`
+								break
+							case "buff-str":
+								this.state[forceA].tempStats.strength +=
+									effectBase
+								broadcastMessage = `uses ${itemName} to increase their Strength by ${effectBase}`
+								break
+							case "buff-dex":
+								this.state[forceA].tempStats.dexterity +=
+									effectBase
+								broadcastMessage = `uses ${itemName} to increase their Dexterity by ${effectBase}`
+								break
+							case "debuff-int":
+								this.state[forceZ].tempStats.intelligence -=
+									effectBase
+								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Intelligence by ${effectBase}`
+								break
+							case "debuff-str":
+								this.state[forceZ].tempStats.intelligence -=
+									effectBase
+								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Strength by ${effectBase}`
+								break
+							case "debuff-dex":
+								this.state[forceZ].tempStats.intelligence -=
+									effectBase
+								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Dexterity by ${effectBase}`
 								break
 						}
 
