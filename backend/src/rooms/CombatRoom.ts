@@ -174,6 +174,9 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 				case "item":
 					let itemIndexNumber: number
+
+					// When a player picks an item from the front end, all of that item information is saved into playerItem
+
 					const playerItem = this.state[forceA].items.find(
 						(val, i) => {
 							itemIndexNumber = i
@@ -189,6 +192,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 					} = playerItem
 
 					if (inventoryQuantity > 0) {
+						// Will need to add more effect type but most will just be a similar to buff-int
 						switch (effectType) {
 							case "heal":
 								this.state[forceA].tempHp += effectBase
@@ -209,6 +213,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 								break
 						}
 
+						// reduces the number of items by one
 						this.state[forceA].items[
 							itemIndexNumber
 						].inventoryQuantity -= 1
@@ -219,6 +224,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						])
 						this.state.currentTurn = forceZ
 					} else {
+						//If you have 0 items
 						this.broadcast("item", [
 							"",
 							`You don't have enough of that item please try again`,
