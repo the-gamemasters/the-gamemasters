@@ -22,25 +22,25 @@ export default function AccountCreation(props: Props): ReactElement {
 
 	function submitNewUser() {
 		if(password !== passwordConfirm){
-			alert("Passwords do not match")
-		}else{
-			axios.post('/api/register', {userName, email, password})
+			return(alert("Passwords do not match"))
+		}
+		axios.post('/api/register', {userName, email, password})
 			.then(res => {
-
 				if (typeof res.data === "string"){
+				//If account is properly created, post message, and close modal, otherwise just post message\\
 					if (res.data === "Account Created"){
 						props.closeModal();
 					}
 					alert(res.data)
 
 				}else{
+				//If I somehow get a response that isn't text, log it -- might tie in here for additional functionality\\
 					console.log(res.data);
 				}
 			})
 			.catch( e => {
 				console.log(e);
 			})
-		}
 	}
 
 	return (
