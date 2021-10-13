@@ -42,7 +42,9 @@ export default function SelectItem(props: Props): ReactElement {
 			onMouseLeave={(e) => setNotHovered(e)}
 			onClick={() => handleClick()}>
 			{props.objectName}{" "}
-			{props.objectQuantity ? `x${props.objectQuantity}` : null}
+			{props.objectQuantity === undefined
+				? null
+				: `x${props.objectQuantity}`}
 		</Item>
 	)
 }
