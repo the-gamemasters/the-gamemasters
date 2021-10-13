@@ -11,7 +11,13 @@ export const encountersList = [
                 itemName: "Potion",
                 effectType: "heal",
                 effectBase: 10,
-                inventoryQuantity: 3,
+                inventoryQuantity: 30,
+            }),
+            new Items({
+                itemName: "Super Potion",
+                effectType: "heal",
+                effectBase: 10,
+                inventoryQuantity: 30,
             }),
         ],
         spells: [
@@ -49,7 +55,13 @@ export const encountersList = [
                 itemName: "Cheese",
                 effectType: "heal",
                 effectBase: 20,
-                inventoryQuantity: 1,
+                inventoryQuantity: 10,
+            }),
+            new Items({
+                itemName: "Potion",
+                effectType: "heal",
+                effectBase: 10,
+                inventoryQuantity: 30,
             }),
         ],
         spells: [
@@ -83,7 +95,20 @@ export const encountersList = [
         displayName: "Snorlax",
         spriteUrl:
             "https://thumbs.gfycat.com/LimitedHilariousFruitbat-size_restricted.gif",
-        items: [],
+        items: [
+            new Items({
+            itemName: "Cheese",
+            effectType: "heal",
+            effectBase: 20,
+            inventoryQuantity: 10,
+        }),
+        new Items({
+            itemName: "Potion",
+            effectType: "heal",
+            effectBase: 10,
+            inventoryQuantity: 30,
+        }),
+    ],
         spells: [
             new Spells({
                 spellName: "Yawn",
@@ -120,7 +145,13 @@ export const encountersList = [
                 itemName: "Magic Power",
                 effectType: "buff-con",
                 effectBase: 1,
-                inventoryQuantity: 1,
+                inventoryQuantity: 10,
+            }),
+            new Items({
+                itemName: "Potion",
+                effectType: "heal",
+                effectBase: 10,
+                inventoryQuantity: 30,
             }),
         ],
         spells: [
@@ -167,7 +198,13 @@ export const encountersList = [
                 itemName: "Chunk of Brain",
                 effectType: "heal",
                 effectBase: 50,
-                inventoryQuantity: 1,
+                inventoryQuantity: 10,
+            }),
+            new Items({
+                itemName: "Potion",
+                effectType: "heal",
+                effectBase: 10,
+                inventoryQuantity: 30,
             }),
         ],
         spells: [

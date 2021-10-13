@@ -173,9 +173,29 @@ export class CombatRoom extends Room<CombatRoomState> {
 
                     break;
                 case "item":
+                    // console.log(this.state[forceA].items[0], 'current state', message, 'message')
+                    let itemIndexNumber : number
+                    const playerItem = this.state[forceA].items.find((val, i) => {
+                        itemIndexNumber = i
+                        return val.itemName === message.moveData})
+
+                    console.log(playerItem.itemName, playerItem.effectType, playerItem.effectBase, playerItem.inventoryQuantity)
+                    if(playerItem.inventoryQuantity > 0) {
+
+                        switch(playerItem.effectType) {
+                            case 'heal':
+                                this.state[forceA].tempHp += playerItem.effectBase;
+                                if (this.state[forceA].tempHp > this.state[forceA].baseHp) this.state[forceA].tempHp = this.state[forceA].baseHp
+
+                            }
+                    }
+
+                    this.state[forceA].items[itemIndexNumber].inventoryQuantity -= 1;
+
+
                     this.broadcast("item", [
                         this.state[forceA].displayName,
-                        message.moveData,
+                        `uses ${playerItem.itemName} and healed for ${playerItem.effectBase}`,
                     ]);
                     this.state.currentTurn = forceZ;
 
@@ -203,11 +223,11 @@ export class CombatRoom extends Room<CombatRoomState> {
 
     onJoin(client: Client, options: any) {
         let force: party = this.clients.length > 1 ? "party2" : "party1";
-        console.log(`${client.sessionId} joined as ${force}!`);
         let randomEncounter = Math.floor((Math.random() / 2.5) * 10);
 
         let encounter = encountersList[randomEncounter];
         let party = this.state[force];
+        console.log(`${client.sessionId} joined as ${force} as a ${encounter.displayName}`);
 
         party.id = client.sessionId;
         party.displayName = encounter.displayName;
@@ -221,6 +241,7 @@ export class CombatRoom extends Room<CombatRoomState> {
         party.weaponBonus = encounter.weaponBonus;
         party.baseDodgeChance = encounter.baseDodgeChance;
         party.tempDodgeChance = party.baseDodgeChance;
+
 
         client.send("assignment", force);
         if (this.clients.length > 1) {
