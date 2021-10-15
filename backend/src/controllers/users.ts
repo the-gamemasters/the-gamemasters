@@ -75,19 +75,15 @@ function login(req: any, res: any) {
 			if (!(dbUser.length > 0)) {
 				res.status(200).json("username or password do not match")
 			} else {
-				console.log("This is my dbUser:", dbUser[0].password)
 				const salt = bcrypt.genSaltSync(10)
 				const hash = bcrypt.hashSync(password, salt)
-				const isValid = bcrypt.compareSync(
-					password,
-					dbUser[0].password.hash
-				)
+				const isValid = bcrypt.compareSync(password, dbUser[0].password)
 
 				if (!isValid) {
 					res.status(200).json("username or password do not match")
 				} else {
 					req.session.user = {
-						username: dbUser.username,
+						username: dbUser[0].username,
 					}
 					res.status(200).send(req.session.user)
 				}
