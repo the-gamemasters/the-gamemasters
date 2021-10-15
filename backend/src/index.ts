@@ -5,11 +5,14 @@ import express, { application } from "express"
 import cors from "cors"
 import { Server } from "colyseus"
 import { CombatRoom } from "./rooms/CombatRoom"
-import bcrypt from "bcrypt"
+import bcrypt from "bcryptjs"
 import session from "express-session"
 import massive from "massive"
 import { createCharacter } from "./controllers/characters"
-import { register } from "./controllers/users"
+import { register, login } from "./controllers/users"
+
+//require("./controllers/passport/passportConfig")
+
 const {
 	MASSIVE_HOST,
 	MASSIVE_PORT,
@@ -29,16 +32,20 @@ process.env[`NODE_TLS_REJECT_UNAUTHORIZED`] = 0
 const app = express()
 const port = Number(PORT || 3553)
 
+//----------Session setup----------\\
 app.use(
 	session({
 		resave: false,
 		saveUninitialized: true,
 		secret: SECRET,
 		cookie: {
-			maxAge: 1000 * 60 * 60 * 24 * 7,
+			maxAge: 1000 * 60 * 60 * 24 * 7, //1000 ms = 1 second, 60 sec = 1 min, 60 min = 1 hour, 24 hour = day, 7 days = week
 		},
 	})
 )
+
+//app.use(passport.initialize())
+//app.use(passport.session())
 
 massive({
 	host: MASSIVE_HOST,
@@ -94,6 +101,8 @@ app.delete("/api/test", (req, res) => {
 })
 
 app.post("/api/register", register)
+
+app.put("/api/login", login)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)
