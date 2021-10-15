@@ -4,6 +4,7 @@ import Music from './Music';
 import { Link } from 'react-router-dom';
 import '../../css/Login.css';
 import 'nes.css/css/nes.min.css';
+import axios from 'axios';
 
 interface Props {}
 
@@ -11,6 +12,25 @@ export default function Login(props: Props): ReactElement {
   const [newUser, setNewUser] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+
+  function submitLogin(){
+    if(email.length === 0){
+      alert('Please enter email and password, or create a new user');
+    } else {
+      axios.put('/api/login', {email, password})
+        .then(res => {
+          if (typeof res.data === "string"){
+              alert(res.data)
+          }else{
+              console.log(res.data);
+              window.location.hash = "#Char";
+            }
+        })
+        .catch( e => {
+          console.log(e);
+        })
+    }
+  }
 
   return (
     <div className="">
@@ -30,11 +50,11 @@ export default function Login(props: Props): ReactElement {
           onChange={(e) => setPassword(e.target.value)}
           className="nes-input"
         />
-        <Link to="/char">
-          <button className="nes-btn">
-            Login (This goes to the character creation page right now)
-          </button>
-        </Link>
+
+        <button className="nes-btn" onClick={() => submitLogin()} >
+          Login
+        </button>
+
       </section>
       <button className="nes-btn" onClick={() => setNewUser(!newUser)}>
         Create a new User

@@ -70,24 +70,32 @@ function findUser(req: any, res: any) {
 function login(req: any, res: any) {
 	const { email, password } = req.body
 	const db = req.app.get("db")
-	db.find_user_by_email(email).then((dbUser: any) => {
-		if (!(dbUser.length > 0)) {
-			res.status(200).json("username or password do not match")
-		} else {
-			const salt = bcrypt.genSaltSync(10)
-			const hash = bcrypt.hashSync(password, salt)
-			const isValid = bcrypt.compareSync(password, dbUser.password.hash)
-
-			if (!isValid) {
+	db.Users.find_user_by_email(email)
+		.then((dbUser: any) => {
+			if (!(dbUser.length > 0)) {
 				res.status(200).json("username or password do not match")
 			} else {
-				req.session.user = {
-					username: dbUser.username,
+				console.log("This is my dbUser:", dbUser[0].password)
+				const salt = bcrypt.genSaltSync(10)
+				const hash = bcrypt.hashSync(password, salt)
+				const isValid = bcrypt.compareSync(
+					password,
+					dbUser[0].password.hash
+				)
+
+				if (!isValid) {
+					res.status(200).json("username or password do not match")
+				} else {
+					req.session.user = {
+						username: dbUser.username,
+					}
+					res.status(200).send(req.session.user)
 				}
-				res.status(200).send(req.session.user)
 			}
-		}
-	})
+		})
+		.catch((e: any) => {
+			console.log(e)
+		})
 }
 
 export { register, findUser, login }
