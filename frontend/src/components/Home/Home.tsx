@@ -1,17 +1,17 @@
-import React, { ReactElement } from "react"
-import styled from "styled-components"
-import Community from "./Community"
-import User from "./User"
-import ShopPreview from "./ShopPreview"
-import Character from "./Character"
-import HomeAction from "./HomeAction"
+import React, { ReactElement } from "react";
+import styled from "styled-components";
+import Community from "./Community";
+import User from "./User";
+import ShopPreview from "./ShopPreview";
+import Character from "./Character";
+import HomeAction from "./HomeAction";
 
 interface Props {}
 
 const PageContainer = styled.div`
 	height: 100vh;
 	width: 100vw;
-`
+`;
 
 const HomeContainer = styled.div`
 	height: 100%;
@@ -19,7 +19,7 @@ const HomeContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 60% 40%;
-`
+`;
 
 const HomeTop = styled.div`
 	height: 100%;
@@ -27,7 +27,7 @@ const HomeTop = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 3fr;
 	grid-template-rows: 1fr;
-`
+`;
 
 const HomeBottom = styled.div`
 	height: 100%;
@@ -35,7 +35,7 @@ const HomeBottom = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 2fr;
 	grid-template-rows: 1fr;
-`
+`;
 
 const TopRight = styled.div`
 	height: 100%;
@@ -47,7 +47,7 @@ const TopRight = styled.div`
 	background-position: bottom;
 	background-size: contain;
 	color: white;
-`
+`;
 
 export default function Home(props: Props): ReactElement {
 	return (
@@ -68,5 +68,5 @@ export default function Home(props: Props): ReactElement {
 				</HomeBottom>
 			</HomeContainer>
 		</PageContainer>
-	)
+	);
 }
