@@ -47,7 +47,7 @@ export default function ShopModal(props: Props): ReactElement {
 			<ReactModal style={shopModalStyles} isOpen={props.shopOpen}>
 				<div className="nes-dialog" id="dialog-default">
 					<XButton closeModal={props.closeModal} />
-					<p className="title nes-text is-success">Shop</p>
+					<p className="title nes-text is-primary">Shop</p>
 					<menu className="dialog-menu flex-dialog-menu">
 						<MenuList>
 							{/* {props.selectType === "spell"
