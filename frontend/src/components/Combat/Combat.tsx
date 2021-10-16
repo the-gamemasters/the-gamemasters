@@ -66,7 +66,6 @@ export default class Combat extends Component<Props, State> {
 				} else {
 					this.setState({ myParty: "party2", p2Ready: true });
 				}
-				console.log(message);
 			});
 
 			room.onMessage("ready", () => {
@@ -90,7 +89,7 @@ export default class Combat extends Component<Props, State> {
 
 			room.onMessage("item", (message) => {
 				this.setState({
-					combatLog: `${message[0]} uses ${message[1]}!`,
+					combatLog: `${message[0]} ${message[1]}`,
 				});
 			});
 
@@ -126,6 +125,8 @@ export default class Combat extends Component<Props, State> {
 			this.setState({ roomInstance: room, loading: false });
 		});
 	}
+
+	// This might have to be changed if we want to be able to have multiple items and spells -Nathan
 
 	handleAction = (move: string, moveData: string) => {
 		let room = this.state.roomInstance;

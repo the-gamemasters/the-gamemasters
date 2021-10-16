@@ -24,8 +24,6 @@ const {
 // @ts-ignore
 process.env[`NODE_TLS_REJECT_UNAUTHORIZED`] = 0
 
-// test
-
 const app = express()
 const port = Number(PORT || 3553)
 
