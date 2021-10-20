@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import styled from "styled-components";
-import { Item } from "./ShopModal";
+import { Item } from "./InventoryModal";
 
 interface Props {
 	item: Item;

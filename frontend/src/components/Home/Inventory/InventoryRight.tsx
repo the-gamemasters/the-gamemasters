@@ -1,15 +1,14 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
-import { Item } from "./ShopModal";
+import { Item } from "./InventoryModal";
 
 import ShopItemPreview from "./ShopItemPreview";
 
 interface Props {
 	activeItem: Item;
-	shopMode: string;
 }
 
-const ShopRightContainer = styled.div`
+const InventoryRightContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 4fr 1fr;
@@ -23,13 +22,10 @@ const ShopRightContainer = styled.div`
 
 export default function ShopRight(props: Props): ReactElement {
 	return (
-		<ShopRightContainer>
+		<InventoryRightContainer>
 			<ShopItemPreview activeItem={props.activeItem} />
-			{props.shopMode === "buy" ? (
-				<button className={"nes-btn is-success"}>Buy</button>
-			) : (
-				<button className={"nes-btn is-error"}>Sell</button>
-			)}
-		</ShopRightContainer>
+
+			<button className={"nes-btn is-success"}>Equip</button>
+		</InventoryRightContainer>
 	);
 }

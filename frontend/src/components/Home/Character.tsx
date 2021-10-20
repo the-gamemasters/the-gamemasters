@@ -1,8 +1,9 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useState } from "react";
 import styled from "styled-components";
+import InventoryModal from "./Inventory/InventoryModal";
 
 const CharacterContainer = styled.div`
-	background-color: rgb(110, 136, 173);
+	background-color: #a0a0a0;
 	display: grid;
 	grid-template-columns: 3fr 4fr;
 	grid-template-rows: 1fr;
@@ -55,6 +56,15 @@ const CharacterStatsContainer = styled.div`
 interface Props {}
 
 export default function Character(props: Props): ReactElement {
+	const [inventoryOpen, setInventoryOpen] = useState(false);
+
+	const handleOpenInventory = () => {
+		setInventoryOpen(true);
+	};
+
+	const handleCloseInventory = () => {
+		setInventoryOpen(false);
+	};
 	return (
 		<CharacterContainer>
 			<CharacterLeft>
@@ -86,9 +96,16 @@ export default function Character(props: Props): ReactElement {
 					</CharacterStatsContainer>
 				</CharacterCenteredDiv>
 				<CharacterCenteredDiv>
-					<button type="button" className="nes-btn">
+					<button
+						onClick={() => handleOpenInventory()}
+						type="button"
+						className="nes-btn">
 						Open Inventory
 					</button>
+					<InventoryModal
+						inventoryOpen={inventoryOpen}
+						closeModal={handleCloseInventory}
+					/>
 				</CharacterCenteredDiv>
 			</CharacterRight>
 		</CharacterContainer>

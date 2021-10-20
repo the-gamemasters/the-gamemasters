@@ -1,7 +1,7 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
-import ShopItem from "./ShopItem";
-import { Item } from "./ShopModal";
+import ShopItem from "./InventoryItem";
+import { Item } from "./InventoryModal";
 
 interface Props {
 	shopItems: Item[];
