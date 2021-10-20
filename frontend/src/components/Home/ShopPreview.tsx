@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from "react";
 import styled from "styled-components";
-import ShopModal from "./ShopModal";
+import ShopModal from "./Shop/ShopModal";
 
 const ShopPreviewContainer = styled.div`
 	display: flex;
