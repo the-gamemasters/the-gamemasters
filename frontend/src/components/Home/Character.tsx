@@ -1,30 +1,30 @@
-import React, { ReactElement } from "react"
-import styled from "styled-components"
+import React, { ReactElement } from "react";
+import styled from "styled-components";
 
 const CharacterContainer = styled.div`
-	background-color: #36363671;
+	background-color: rgb(110, 136, 173);
 	display: grid;
 	grid-template-columns: 3fr 4fr;
 	grid-template-rows: 1fr;
-`
+`;
 
 const CharacterLeft = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr 1fr;
-`
+`;
 
 const CharacterCenteredDiv = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`
+`;
 
 const CharacterAvatar = styled.img`
 	height: 7em;
 	width: auto;
 	border: 1px solid black;
-`
+`;
 
 const CharacterItemsBox = styled.div`
 	display: grid;
@@ -32,25 +32,25 @@ const CharacterItemsBox = styled.div`
 	grid-template-rows: repeat(2, 1fr);
 	grid-column-gap: 10px;
 	grid-row-gap: 10px;
-`
+`;
 
 const CharacterItem = styled.img`
 	height: 4em;
 	width: 4em;
 	border: 0.5px solid black;
 	background-color: white;
-`
+`;
 
 const CharacterRight = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 3fr 1fr;
-`
+`;
 
 const CharacterStatsContainer = styled.div`
 	background-color: white;
 	text-align: left;
-`
+`;
 
 interface Props {}
 
@@ -92,5 +92,5 @@ export default function Character(props: Props): ReactElement {
 				</CharacterCenteredDiv>
 			</CharacterRight>
 		</CharacterContainer>
-	)
+	);
 }

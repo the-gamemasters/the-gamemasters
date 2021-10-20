@@ -1,25 +1,25 @@
-import React, { Component } from "react"
-import * as Colyseus from "colyseus.js"
-import "./styles/combat.css"
-import MoveBox from "./MoveBox"
-import ReactModal from "react-modal"
-import SelectModal from "./SelectModal"
-import { Link } from "react-router-dom"
-import styled from "styled-components"
+import React, { Component } from "react";
+import * as Colyseus from "colyseus.js";
+import "./styles/combat.css";
+import MoveBox from "./MoveBox";
+import ReactModal from "react-modal";
+import SelectModal from "./SelectModal";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
 
 interface Props {}
 interface State {
-	roomInstance: Colyseus.Room
-	stateInstance: any
-	combatLog: string
-	loading: boolean
-	p1Ready: boolean
-	p2Ready: boolean
-	myParty: string
-	currentTurn: string
-	result: string | undefined
-	selectOpen: boolean
-	selectType?: "spell" | "item"
+	roomInstance: Colyseus.Room;
+	stateInstance: any;
+	combatLog: string;
+	loading: boolean;
+	p1Ready: boolean;
+	p2Ready: boolean;
+	myParty: string;
+	currentTurn: string;
+	result: string | undefined;
+	selectOpen: boolean;
+	selectType?: "spell" | "item";
 }
 
 const combatEndModalStyles = {
@@ -37,133 +37,133 @@ const combatEndModalStyles = {
 		height: "50%",
 		width: "30%",
 	},
-}
+};
 
 const PartyIndicator = styled.i`
 	display: inline;
-`
+`;
 
 const CombatLogContainer = styled.div`
 	background-color: white;
-`
+`;
 
 const CombatLogText = styled.span`
 	color: black;
-`
+`;
 
-ReactModal.setAppElement("#root")
+ReactModal.setAppElement("#root");
 export default class Combat extends Component<Props, State> {
 	componentWillMount() {
-		this.setState({ combatLog: "", loading: true })
+		this.setState({ combatLog: "", loading: true });
 	}
 	componentDidMount() {
-		let client = new Colyseus.Client("ws://localhost:3553")
+		let client = new Colyseus.Client("ws://localhost:3553");
 		client.joinOrCreate("combat").then((room) => {
 			//* Function to handle handing out party1 or party2 status
 			room.onMessage("assignment", (message) => {
 				if (message === "party1") {
-					this.setState({ myParty: "party1", p1Ready: true })
+					this.setState({ myParty: "party1", p1Ready: true });
 				} else {
-					this.setState({ myParty: "party2", p2Ready: true })
+					this.setState({ myParty: "party2", p2Ready: true });
 				}
-			})
+			});
 
 			room.onMessage("ready", () => {
 				this.setState({
 					p1Ready: true,
 					p2Ready: true,
-				})
-			})
+				});
+			});
 
 			room.onMessage("attack", (message) => {
 				this.setState({
 					combatLog: `${message[0]} attacks for ${message[1]} damage!`,
-				})
-			})
+				});
+			});
 
 			room.onMessage("spell", (message) => {
 				this.setState({
 					combatLog: message,
-				})
-			})
+				});
+			});
 
 			room.onMessage("item", (message) => {
 				this.setState({
 					combatLog: `${message[0]} ${message[1]}`,
-				})
-			})
+				});
+			});
 
 			room.onMessage("evade", (message) => {
 				this.setState({
 					combatLog: `${message} prepares to evade!`,
-				})
-			})
+				});
+			});
 
 			room.onMessage("miss", (message) => {
 				if (message[0] === "attack") {
 					this.setState({
 						combatLog: `${message[1]} attacked but ${message[2]} dodged it!`,
-					})
+					});
 				} else {
 					this.setState({
 						combatLog: `${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`,
-					})
+					});
 				}
-			})
+			});
 
 			room.onMessage("victory", (message) => {
-				this.setState({ result: message })
-			})
+				this.setState({ result: message });
+			});
 
 			//* Function to grab state updates
 			room.onStateChange((state) => {
-				this.setState({ stateInstance: state })
+				this.setState({ stateInstance: state });
 				this.setState({
 					currentTurn: this.state.stateInstance.currentTurn,
-				})
-			})
-			this.setState({ roomInstance: room, loading: false })
-		})
+				});
+			});
+			this.setState({ roomInstance: room, loading: false });
+		});
 	}
 
 	// This might have to be changed if we want to be able to have multiple items and spells -Nathan
 
 	handleAction = (move: string, moveData: string) => {
-		let room = this.state.roomInstance
+		let room = this.state.roomInstance;
 		let message = {
 			action: move,
 			moveData: moveData,
-		}
+		};
 
-		room.send("turn", message)
-	}
+		room.send("turn", message);
+	};
 
 	handleDebug = (party: string) => {
-		let room = this.state.roomInstance
-		room.send("debug", party)
-	}
+		let room = this.state.roomInstance;
+		room.send("debug", party);
+	};
 
 	getResultMessage = () => {
 		if (this.state.result !== undefined) {
 			if (this.state.result === this.state.myParty) {
-				return `You vanquished ${this.state.stateInstance.party2.displayName}!`
+				return `You vanquished ${this.state.stateInstance.party2.displayName}!`;
 			} else {
-				return `You were defeated by ${this.state.stateInstance.party1.displayName}!`
+				return `You were defeated by ${this.state.stateInstance.party1.displayName}!`;
 			}
 		}
-	}
+	};
 
 	openSelectModal = (selectType: "spell" | "item") => {
-		this.setState({ selectOpen: true, selectType: selectType })
-	}
+		this.setState({ selectOpen: true, selectType: selectType });
+	};
 
 	closeSelectModal = () => {
-		this.setState({ selectOpen: false })
-	}
+		this.setState({ selectOpen: false });
+	};
 
 	render() {
 		if (this.state.loading === true) {
-			return <div className="page-container">Loading...</div>
+			return <div className="page-container">Loading...</div>;
 		} else {
 			return (
 				<div className="page-container">
@@ -351,7 +351,7 @@ export default class Combat extends Component<Props, State> {
 						) : null}
 					</div>
 				</div>
-			)
+			);
 		}
 	}
 }
