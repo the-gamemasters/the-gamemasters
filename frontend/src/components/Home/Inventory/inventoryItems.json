@@ -1,0 +1,222 @@
+[
+	{
+		"item_key": 1,
+		"item_name": "Cream",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 10,
+		"item_effect_duration": 0,
+		"item_cost": 5,
+		"world": 1,
+		"item_icon": ""
+	},
+	{
+		"item_key": 2,
+		"item_name": "Prehistoric Spoon",
+		"item_effect": "buff",
+		"item_effect_stat": "int",
+		"item_effect_value": 1,
+		"item_effect_duration": 2,
+		"item_cost": 10,
+		"world": 1,
+		"item_icon": ""
+	},
+	{
+		"item_key": 3,
+		"item_name": "Bitter Herb",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 5,
+		"item_effect_duration": 0,
+		"item_cost": 1,
+		"world": 1,
+		"item_icon": ""
+	},
+	{
+		"item_key": 4,
+		"item_name": "Clean Water",
+		"item_effect": "buff",
+		"item_effect_stat": "str",
+		"item_effect_value": 1,
+		"item_effect_duration": 1,
+		"item_cost": 3,
+		"world": 1,
+		"item_icon": ""
+	},
+	{
+		"item_key": 5,
+		"item_name": "Dirt",
+		"item_effect": "debuff",
+		"item_effect_stat": "dex",
+		"item_effect_value": 1,
+		"item_effect_duration": 2,
+		"item_cost": 1,
+		"world": 1,
+		"item_icon": ""
+	},
+	{
+		"item_key": 6,
+		"item_name": "Papyrus",
+		"item_effect": "buff",
+		"item_effect_stat": "int",
+		"item_effect_value": 2,
+		"item_effect_duration": 3,
+		"item_cost": 20,
+		"world": 2,
+		"item_icon": "papyrus.png"
+	},
+	{
+		"item_key": 7,
+		"item_name": "Snake Venom",
+		"item_effect": "debuff",
+		"item_effect_stat": "str",
+		"item_effect_value": 2,
+		"item_effect_duration": 3,
+		"item_cost": 30,
+		"world": 2,
+		"item_icon": "snake-venom.png"
+	},
+	{
+		"item_key": 8,
+		"item_name": "Hairball",
+		"item_effect": "debuff",
+		"item_effect_stat": "dex",
+		"item_effect_value": 2,
+		"item_effect_duration": 2,
+		"item_cost": 15,
+		"world": 2,
+		"item_icon": "hairball.png"
+	},
+	{
+		"item_key": 9,
+		"item_name": "Cheese",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 30,
+		"item_effect_duration": 0,
+		"item_cost": 23,
+		"world": 2,
+		"item_icon": "cheese.png"
+	},
+	{
+		"item_key": 10,
+		"item_name": "Potion of Healing",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 50,
+		"item_effect_duration": 0,
+		"item_cost": 100,
+		"world": 3,
+		"item_icon": ""
+	},
+	{
+		"item_key": 11,
+		"item_name": "Magic Powder",
+		"item_effect": "buff",
+		"item_effect_stat": "int",
+		"item_effect_value": 32,
+		"item_effect_duration": 2,
+		"item_cost": 100,
+		"world": 3,
+		"item_icon": ""
+	},
+	{
+		"item_key": 12,
+		"item_name": "Social Contract",
+		"item_effect": "buff",
+		"item_effect_stat": "str",
+		"item_effect_value": 3,
+		"item_effect_duration": 2,
+		"item_cost": 100,
+		"world": 3,
+		"item_icon": ""
+	},
+	{
+		"item_key": 13,
+		"item_name": "You're a witch",
+		"item_effect": "debuff",
+		"item_effect_stat": "dex",
+		"item_effect_value": 2,
+		"item_effect_duration": 3,
+		"item_cost": 100,
+		"world": 3,
+		"item_icon": ""
+	},
+	{
+		"item_key": 14,
+		"item_name": "Stinky cheese",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 30,
+		"item_effect_duration": 0,
+		"item_cost": 60,
+		"world": 3,
+		"item_icon": ""
+	},
+	{
+		"item_key": 15,
+		"item_name": "Nasty Coffee",
+		"item_effect": "debuff",
+		"item_effect_stat": "dex",
+		"item_effect_value": 2,
+		"item_effect_duration": 3,
+		"item_cost": 100,
+		"world": 4,
+		"item_icon": ""
+	},
+	{
+		"item_key": 16,
+		"item_name": "Aged cheese",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 70,
+		"item_effect_duration": 0,
+		"item_cost": 200,
+		"world": 4,
+		"item_icon": ""
+	},
+	{
+		"item_key": 17,
+		"item_name": "Walkman",
+		"item_effect": "buff",
+		"item_effect_stat": "int",
+		"item_effect_value": 3,
+		"item_effect_duration": 3,
+		"item_cost": 400,
+		"world": 4,
+		"item_icon": ""
+	},
+	{
+		"item_key": 18,
+		"item_name": "Vague Meme",
+		"item_effect": "debuff",
+		"item_effect_stat": "int",
+		"item_effect_value": 2,
+		"item_effect_duration": 5,
+		"item_cost": 200,
+		"world": 5,
+		"item_icon": ""
+	},
+	{
+		"item_key": 19,
+		"item_name": "Fine Aged Cheese",
+		"item_effect": "heal",
+		"item_effect_stat": "hp",
+		"item_effect_value": 100,
+		"item_effect_duration": 0,
+		"item_cost": 500,
+		"world": 5,
+		"item_icon": ""
+	},
+	{
+		"item_key": 20,
+		"item_name": "Nanobot Injection",
+		"item_effect": "Buff",
+		"item_effect_stat": "str",
+		"item_effect_value": 5,
+		"item_effect_duration": 4,
+		"item_cost": 1000,
+		"world": 5,
+		"item_icon": ""
+	}
+]
