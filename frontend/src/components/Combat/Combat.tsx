@@ -6,6 +6,7 @@ import ReactModal from "react-modal";
 import SelectModal from "./SelectModal";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import BackgroundMusic from "../General/BackgroundMusic";
 
 interface Props {}
 interface State {
@@ -167,6 +168,7 @@ export default class Combat extends Component<Props, State> {
 		} else {
 			return (
 				<div className="page-container">
+					<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
 					<div className="combat-top">
 						<h1 className="nes-text">Combat</h1>
 						<h6>Room ID: {this.state.roomInstance.id}</h6>

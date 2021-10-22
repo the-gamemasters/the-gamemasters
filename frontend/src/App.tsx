@@ -4,9 +4,7 @@ import "nes.css/css/nes.min.css";
 
 const AppContainer = styled.div`
 	text-align: center;
-	background-image: url("/images/login-background.gif");
-	background-size: cover;
-	background-position: center bottom;
+	background-color: white;
 	height: 100%;
 	min-height: 100vh;
 `;

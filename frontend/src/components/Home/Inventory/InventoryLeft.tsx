@@ -13,6 +13,6 @@ const InventoryLeftContainer = styled.div`
 	width: 100%;
 `;
 
-export default function ShopLeft(props: Props): ReactElement {
+export default function InventoryLeft(props: Props): ReactElement {
 	return <InventoryLeftContainer></InventoryLeftContainer>;
 }

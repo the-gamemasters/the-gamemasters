@@ -8,7 +8,7 @@
 		"item_effect_duration": 0,
 		"item_cost": 5,
 		"world": 1,
-		"item_icon": ""
+		"item_icon": "cream.png"
 	},
 	{
 		"item_key": 2,
@@ -19,7 +19,7 @@
 		"item_effect_duration": 2,
 		"item_cost": 10,
 		"world": 1,
-		"item_icon": ""
+		"item_icon": "prehistoric-spoon.png"
 	},
 	{
 		"item_key": 3,
@@ -30,7 +30,7 @@
 		"item_effect_duration": 0,
 		"item_cost": 1,
 		"world": 1,
-		"item_icon": ""
+		"item_icon": "bitter-herb.png"
 	},
 	{
 		"item_key": 4,
@@ -41,7 +41,7 @@
 		"item_effect_duration": 1,
 		"item_cost": 3,
 		"world": 1,
-		"item_icon": ""
+		"item_icon": "clean-water.png"
 	},
 	{
 		"item_key": 5,
@@ -52,7 +52,7 @@
 		"item_effect_duration": 2,
 		"item_cost": 1,
 		"world": 1,
-		"item_icon": ""
+		"item_icon": "dirt.png"
 	},
 	{
 		"item_key": 6,
