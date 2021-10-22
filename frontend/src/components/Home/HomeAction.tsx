@@ -1,5 +1,6 @@
 import React, { ReactElement } from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const HomeActionContainer = styled.div`
 	background-color: #6dc074;
@@ -34,9 +35,11 @@ export default function HomeAction(props: Props): ReactElement {
 			<HomeActionBottom>
 				<div></div>
 				<div>
-					<button type="button" className="nes-btn is-primary">
-						Venture Forth!
-					</button>
+					<Link to="/combat">
+						<button type="button" className="nes-btn is-primary">
+							Venture Forth!
+						</button>
+					</Link>
 				</div>
 			</HomeActionBottom>
 		</HomeActionContainer>

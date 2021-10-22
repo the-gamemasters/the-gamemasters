@@ -17,6 +17,7 @@
     "nes.css": "^2.3.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-howler": "^5.2.0",
     "react-modal": "^3.14.3",
     "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
@@ -50,8 +51,9 @@
     ]
   },
   "devDependencies": {
-    "@types/react-modal": "^3.12.1",
     "@types/howler": "^2.2.4",
+    "@types/react-howler": "^3.7.3",
+    "@types/react-modal": "^3.12.1",
     "@types/react-router-dom": "^5.3.0"
   }
 }

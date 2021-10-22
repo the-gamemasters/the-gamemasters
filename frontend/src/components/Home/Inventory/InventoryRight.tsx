@@ -2,7 +2,7 @@ import React, { ReactElement } from "react";
 import styled from "styled-components";
 import { Item } from "./InventoryModal";
 
-import ShopItemPreview from "./ShopItemPreview";
+import InventoryItemPreview from "./InventoryItemPreview";
 
 interface Props {
 	activeItem: Item;
@@ -20,10 +20,10 @@ const InventoryRightContainer = styled.div`
 	}
 `;
 
-export default function ShopRight(props: Props): ReactElement {
+export default function InventoryRight(props: Props): ReactElement {
 	return (
 		<InventoryRightContainer>
-			<ShopItemPreview activeItem={props.activeItem} />
+			<InventoryItemPreview activeItem={props.activeItem} />
 
 			<button className={"nes-btn is-success"}>Equip</button>
 		</InventoryRightContainer>

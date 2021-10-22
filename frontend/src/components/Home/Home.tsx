@@ -137,7 +137,11 @@ export default function Home(props: Props): ReactElement {
 											Number(e.target.value)
 										)
 									}>
-									<option value="" disabled selected hidden>
+									<option
+										value=""
+										disabled
+										defaultValue="2"
+										hidden>
 										Select World...
 									</option>
 									<option value="1">
