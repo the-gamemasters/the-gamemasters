@@ -110,7 +110,7 @@ export default function ShopItemPreview(props: Props): ReactElement {
 		return (
 			<PreviewContainer>
 				<div className="div1">
-					<img src={`/icons/shop/${item_icon}`} alt="item icon" />
+					<img src={`/icons/items/${item_icon}`} alt="item icon" />
 				</div>
 				<div className="div2">
 					<ItemName>{item_name}</ItemName>

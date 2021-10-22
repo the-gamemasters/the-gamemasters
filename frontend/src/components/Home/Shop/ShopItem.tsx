@@ -65,7 +65,7 @@ export default function ShopItem(props: Props): ReactElement {
 					? "#969696"
 					: undefined,
 			}}>
-			<img src={`/icons/shop/${props.item.item_icon}`} alt="item icon" />
+			<img src={`/icons/items/${props.item.item_icon}`} alt="item icon" />
 			<p className="item-name">{props.item.item_name}</p>
 			<ShopItemPriceContainer>
 				<i className="nes-icon coin is-small"></i>

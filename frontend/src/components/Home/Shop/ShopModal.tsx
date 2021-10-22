@@ -11,9 +11,9 @@ const shopModalStyles = {
 	},
 	content: {
 		padding: "1.5rem 2rem",
-		"border-color": "#000",
-		"border-style": "solid",
-		"border-width": "4px",
+		borderColor: "#000",
+		borderStyle: "solid",
+		borderWidth: "4px",
 		backgroundColor: "white",
 		top: "50%",
 		left: "50%",

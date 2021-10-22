@@ -1,8 +1,16 @@
-import "./css/App.css";
+import "nes.css/css/nes.min.css";
+import styled from "styled-components";
 import routes from "./routes";
 
+const AppContainer = styled.div`
+	text-align: center;
+	background-color: white;
+	height: 100%;
+	min-height: 100vh;
+`;
+
 function App() {
-	return <div className="App">{routes}</div>;
+	return <AppContainer className="App">{routes}</AppContainer>;
 }
 
 export default App;
