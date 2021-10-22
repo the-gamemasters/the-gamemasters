@@ -1,66 +1,66 @@
 import React, { ReactElement } from "react";
 
 interface Props {
-    handleAction: any;
-    currentTurn?: any;
-    myParty?: string;
-    loading?: boolean;
-    openSelectModal: any;
+	handleAction: any;
+	currentTurn?: any;
+	myParty?: string;
+	loading?: boolean;
+	openSelectModal: any;
 }
 
 //TODO Need to optimize this function heavily
 
 export default function MoveBox(props: Props): ReactElement {
-    const setDisabledButtonClass = (): any => {
-        if (props.currentTurn === props.myParty) {
-            return null;
-        } else {
-            return "is-disabled";
-        }
-    };
+	const setDisabledButtonClass = (): any => {
+		if (props.currentTurn === props.myParty) {
+			return null;
+		} else {
+			return "is-disabled";
+		}
+	};
 
-    return (
-        <div className="moves-container">
-            <button
-                type="button"
-                className={`nes-btn attack-btn ${setDisabledButtonClass()}`}
-                onClick={
-                    props.currentTurn === props.myParty
-                        ? () => props.handleAction("attack", "")
-                        : undefined
-                }>
-                Attack
-            </button>
-            <button
-                type="button"
-                className={`nes-btn spells-btn ${setDisabledButtonClass()}`}
-                onClick={
-                    props.currentTurn === props.myParty
-                        ? () => props.openSelectModal("spell")
-                        : undefined
-                }>
-                Spells
-            </button>
-            <button
-                type="button"
-                className={`nes-btn item-btn ${setDisabledButtonClass()}`}
-                onClick={
-                    props.currentTurn === props.myParty
-                        ? () => props.openSelectModal("item")
-                        : undefined
-                }>
-                Items
-            </button>
-            <button
-                type="button"
-                className={`nes-btn evade-btn ${setDisabledButtonClass()}`}
-                onClick={
-                    props.currentTurn === props.myParty
-                        ? () => props.handleAction("evade", "")
-                        : undefined
-                }>
-                Evade
-            </button>
-        </div>
-    );
+	return (
+		<div className="moves-container">
+			<button
+				type="button"
+				className={`nes-btn attack-btn ${setDisabledButtonClass()}`}
+				onClick={
+					props.currentTurn === props.myParty
+						? () => props.handleAction("attack", "")
+						: undefined
+				}>
+				Attack
+			</button>
+			<button
+				type="button"
+				className={`nes-btn spells-btn ${setDisabledButtonClass()}`}
+				onClick={
+					props.currentTurn === props.myParty
+						? () => props.openSelectModal("spell")
+						: undefined
+				}>
+				Spells
+			</button>
+			<button
+				type="button"
+				className={`nes-btn item-btn ${setDisabledButtonClass()}`}
+				onClick={
+					props.currentTurn === props.myParty
+						? () => props.openSelectModal("item")
+						: undefined
+				}>
+				Items
+			</button>
+			<button
+				type="button"
+				className={`nes-btn evade-btn ${setDisabledButtonClass()}`}
+				onClick={
+					props.currentTurn === props.myParty
+						? () => props.handleAction("evade", "")
+						: undefined
+				}>
+				Evade
+			</button>
+		</div>
+	);
 }
