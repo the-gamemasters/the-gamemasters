@@ -32,8 +32,8 @@ export class Player extends Schema {
 	@type([Spells]) spells = new ArraySchema<Spells>()
 	@type(Stats) baseStats = new Stats()
 	@type(Stats) tempStats = new Stats()
-	@type("number") baseHp: number = this.baseStats.constitution * 10
-	@type("number") tempHp: number = this.baseHp
+	@type("number") baseHp: number
+	@type("number") tempHp: number
 	@type("number") weaponBonus: number
 	@type("number") baseDodgeChance: number
 	@type("number") tempDodgeChance: number
