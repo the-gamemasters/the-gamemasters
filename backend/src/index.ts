@@ -104,7 +104,7 @@ app.delete("/api/test", (req, res) => {
 
 app.post("/api/register", register)
 app.put("/api/login", login)
-app.delete("/api/logout", logout)
+app.post("/api/logout", logout)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)
