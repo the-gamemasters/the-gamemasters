@@ -8,8 +8,9 @@ import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
-import { createCharacter } from "./controllers/characters"
 import { register, login, logout } from "./controllers/users"
+import { createCharacter, editCharacterInfo } from "./controllers/characters"
+require("dotenv").config()
 
 //require("./controllers/passport/passportConfig")
 
