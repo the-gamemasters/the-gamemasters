@@ -87,6 +87,7 @@ function login(req: any, res: any) {
 				} else {
 					req.session.user = {
 						username: dbUser[0].username,
+						userKey: dbUser[0].user_key,
 					};
 					res.status(200).send(req.session.user);
 				}
