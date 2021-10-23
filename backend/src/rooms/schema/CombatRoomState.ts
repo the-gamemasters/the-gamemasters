@@ -1,46 +1,45 @@
-import { Schema, ArraySchema, type } from "@colyseus/schema";
-import { party } from "../CombatRoom";
+import { Schema, ArraySchema, type } from "@colyseus/schema"
+import { party } from "../CombatRoom"
 
 export class Stats extends Schema {
-	@type("number") strength: number;
-	@type("number") dexterity: number;
-	@type("number") constitution: number;
-	@type("number") intelligence: number;
+	@type("number") strength: number
+	@type("number") dexterity: number
+	@type("number") constitution: number
+	@type("number") intelligence: number
 }
 
 export class Spells extends Schema {
-	@type("string") spellName: string;
-	@type("string") spellSchool: string;
-	@type("string") effectType: string;
-	@type("number") effectBase: number;
-	@type("number") effectDuration: number;
-	@type("number") cooldownTurns: number;
+	@type("string") spellName: string
+	@type("string") spellSchool: string
+	@type("string") effectType: string
+	@type("number") effectBase: number
+	@type("number") effectDuration: number
+	@type("number") cooldownTurns: number
 }
 
 export class Items extends Schema {
-	@type("string") itemName: string;
-	@type("string") effectType: string;
-	@type("number") effectBase: number;
-	@type("number") inventoryQuantity: number;
+	@type("string") itemName: string
+	@type("string") effectType: string
+	@type("number") effectBase: number
+	@type("number") inventoryQuantity: number
 }
 
 export class Player extends Schema {
-	@type("string") id: string;
-	@type("string") displayName: string;
-	@type("string") spriteUrl: string;
-	@type([Items]) items = new ArraySchema<Items>();
-	@type([Spells]) spells = new ArraySchema<Spells>();
-	@type(Stats) baseStats = new Stats();
-	@type(Stats) tempStats = new Stats();
-	@type("number") baseHp: number = this.baseStats.constitution * 10;
-	@type("number") tempHp: number = this.baseHp;
-	@type("number") weaponBonus: number;
-	@type("number") baseDodgeChance: number;
-	@type("number") tempDodgeChance: number;
+	@type("string") id: string
+	@type("string") displayName: string
+	@type("string") spriteUrl: string
+	@type([Items]) items = new ArraySchema<Items>()
+	@type([Spells]) spells = new ArraySchema<Spells>()
+	@type(Stats) baseStats = new Stats()
+	@type(Stats) tempStats = new Stats()
+	@type("number") baseHp: number
+	@type("number") tempHp: number
+	@type("number") weaponBonus: number
+	@type("number") baseDodgeChance: number
+	@type("number") tempDodgeChance: number
 }
 export default class CombatRoomState extends Schema {
-	@type("string") currentTurn: party = "party1";
-	@type("string") combatLog: string = "";
-	@type(Player) party1 = new Player();
-	@type(Player) party2 = new Player();
+	@type("string") currentTurn: party = "party1"
+	@type(Player) party1 = new Player()
+	@type(Player) party2 = new Player()
 }

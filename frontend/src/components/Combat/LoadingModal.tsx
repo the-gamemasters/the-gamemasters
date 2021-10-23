@@ -1,6 +1,6 @@
-import React, { ReactElement } from "react";
-import ReactModal from "react-modal";
-import styled, { keyframes } from "styled-components";
+import React, { ReactElement } from "react"
+import ReactModal from "react-modal"
+import styled, { keyframes } from "styled-components"
 
 const loadingModalStyles = {
 	overlay: {
@@ -17,7 +17,7 @@ const loadingModalStyles = {
 		height: "35%",
 		width: "50%",
 	},
-};
+}
 
 const blink = keyframes`
     /**
@@ -41,7 +41,7 @@ const blink = keyframes`
     100% {
       opacity: .2;
     }
-`;
+`
 
 const Container = styled.div`
 	background: white;
@@ -69,18 +69,18 @@ const Container = styled.div`
 	& span:nth-child(3) {
 		animation-delay: 0.4s;
 	}
-`;
+`
 
-ReactModal.setAppElement("#root");
+ReactModal.setAppElement("#root")
 
 interface Props {
-	loading: boolean;
+	ready: boolean
 }
 
 export default function LoadingModal(props: Props): ReactElement {
 	return (
 		<div>
-			<ReactModal style={loadingModalStyles} isOpen={props.loading}>
+			<ReactModal style={loadingModalStyles} isOpen={!props.ready}>
 				<Container className="nes-text is-warning">
 					Waiting for opponent
 					<span>.</span>
@@ -89,5 +89,5 @@ export default function LoadingModal(props: Props): ReactElement {
 				</Container>
 			</ReactModal>
 		</div>
-	);
+	)
 }

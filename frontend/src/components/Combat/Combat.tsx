@@ -1,21 +1,21 @@
-import * as Colyseus from "colyseus.js";
-import React, { ReactElement, useState, useEffect } from "react";
-import ReactModal from "react-modal";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import MoveBox from "./MoveBox";
-import SelectModal from "./SelectModal";
-import LoadingModal from "./LoadingModal";
-import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks";
+import * as Colyseus from "colyseus.js"
+import React, { ReactElement, useState, useEffect } from "react"
+import ReactModal from "react-modal"
+import { Link } from "react-router-dom"
+import styled from "styled-components"
+import MoveBox from "./MoveBox"
+import SelectModal from "./SelectModal"
+import LoadingModal from "./LoadingModal"
+import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks"
 import {
 	setUserId,
 	setCharId,
 	selectUserId,
 	selectCharId,
-} from "../../redux/userSlice";
-import BackgroundMusic from "../General/BackgroundMusic";
-import "./styles/combat.css";
-import { CombatState, Player, Items, Spells, Stats } from "./CombatState";
+} from "../../redux/userSlice"
+import BackgroundMusic from "../General/BackgroundMusic"
+import "./styles/combat.css"
+import { CombatState, Player } from "./CombatState"
 
 interface Props {}
 
@@ -34,7 +34,7 @@ const combatEndModalStyles = {
 		height: "50%",
 		width: "30%",
 	},
-};
+}
 
 const PageContainer = styled.div`
 	height: 100vh;
@@ -47,150 +47,176 @@ const PageContainer = styled.div`
 		no-repeat fixed;
 	background-size: cover;
 	padding: 2em;
-`;
+`
 
 const PartyIndicator = styled.i`
 	display: inline;
-`;
+`
 
 const CombatLogContainer = styled.div`
 	background-color: white;
-`;
+`
 
 const CombatLogText = styled.span`
 	color: black;
-`;
+`
 
 const HPBar = styled.progress`
 	width: 60%;
-`;
+`
 
-ReactModal.setAppElement("#root");
+ReactModal.setAppElement("#root")
 
 interface Props {}
 
 export default function Combat(props: Props): ReactElement {
-	const [combatLog, setCombatLog] = useState("");
-	const [loading, setLoading] = useState(true);
-	const [myParty, setMyParty] = useState("");
-	const [result, setResult] = useState();
-	const [roomInstance, setRoomInstance] = useState<
-		Colyseus.Room<any> | undefined
-	>();
-	const [state, setState] = useState();
-	const [selectOpen, setSelectOpen] = useState<boolean>(false);
-	const [selectType, setSelectType] = useState<"spell" | "item">("spell");
-	const userId = useAppSelector(selectUserId);
-	const charId = useAppSelector(selectCharId);
-	const dispatch = useAppDispatch();
+	const [currentTurn, setCurrentTurn] = useState("party1")
+	const [combatLog, setCombatLog] = useState("")
+	const [ready, setReady] = useState(false)
+	const [myParty, setMyParty] = useState("")
+	const [result, setResult] = useState<
+		"party1" | "party2" | "dc" | undefined
+	>()
+	const [room, setRoom] = useState<any>()
+	const [state, setState] = useState<any>()
+	const [selectOpen, setSelectOpen] = useState<boolean>(false)
+	const [selectType, setSelectType] = useState<"spell" | "item">("spell")
+	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		//TODO
-		dispatch(setUserId(12345));
-		dispatch(setCharId(67890));
-	}, []);
+		dispatch(setUserId(12345))
+		dispatch(setCharId(67890))
+	}, [])
 
 	useEffect(() => {
-		const client = new Colyseus.Client("ws://localhost:3553");
-		client.joinOrCreate("combat").then((room: Colyseus.Room<any>) => {
-			room.onMessage("assignment", (message) => {
-				if (message === "party1") {
-					setMyParty("party1");
-				} else {
-					setMyParty("party2");
-				}
-			});
+		const initRoom = async (client: Colyseus.Client) => {
+			setRoom(await client.joinOrCreate("combat"))
+		}
 
-			room.onMessage("ready", () => {
-				setLoading(false);
-				setState(room.state);
-			});
+		initRoom(new Colyseus.Client("ws://localhost:3553"))
+	}, [])
 
-			room.onMessage("attack", (message) => {
-				setCombatLog(`${message[0]} attacks for ${message[1]} damage!`);
-			});
+	room?.onMessage("ready", () => {
+		setTimeout(() => {
+			setReady(true)
+		}, 500)
+	})
 
-			room.onMessage("spell", (message) => {
-				setCombatLog(message);
-			});
+	room?.onMessage("assignment", (message: any) => {
+		if (message === "party1") {
+			setMyParty("party1")
+		} else {
+			setMyParty("party2")
+		}
+	})
 
-			room.onMessage("item", (message) => {
-				setCombatLog(`${message[0]} ${message[1]}`);
-			});
+	room?.onMessage("attack", (message: any) => {
+		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
+	})
 
-			room.onMessage("evade", (message) => {
-				setCombatLog(`${message} prepares to evade!`);
-			});
+	room?.onMessage("spell", (message: any) => {
+		setCombatLog(message)
+	})
 
-			room.onMessage("miss", (message) => {
-				if (message[0] === "attack") {
-					setCombatLog(
-						`${message[1]} attacked but ${message[2]} dodged it!`
-					);
-				} else {
-					setCombatLog(
-						`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
-					);
-				}
-			});
+	room?.onMessage("item", (message: any) => {
+		setCombatLog(`${message[0]} ${message[1]}`)
+	})
 
-			room.onMessage("victory", (message) => {
-				setResult(message);
-			});
+	room?.onMessage("evade", (message: any) => {
+		setCombatLog(`${message} prepares to evade!`)
+	})
 
-			setRoomInstance(room);
-			setState(room.state);
-		});
-	}, []);
+	room?.onMessage("miss", (message: any) => {
+		if (message[0] === "attack") {
+			setCombatLog(`${message[1]} attacked but ${message[2]} dodged it!`)
+		} else {
+			setCombatLog(
+				`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
+			)
+		}
+	})
+
+	room?.onMessage("victory", (message: any) => {
+		setResult(message)
+	})
+
+	room?.onMessage("disconnect", () => {
+		setResult("dc")
+	})
+
+	room?.onStateChange.once((state: any) => {
+		setRoom(room)
+		setState(state)
+	})
+
+	room?.onStateChange((state: any) => {
+		setState(state)
+		setCurrentTurn(state.currentTurn)
+	})
 
 	const handleAction = (move: string, moveData: string) => {
 		let message = {
 			action: move,
 			moveData: moveData,
-		};
-		if (roomInstance) {
-			roomInstance.send("turn", message);
 		}
-	};
+		if (room) {
+			room.send("turn", message)
+		}
+	}
 
 	const handleDebug = (party: string) => {
-		if (roomInstance) {
-			roomInstance.send("debug", party);
+		if (room) {
+			room.send("debug", party)
 		}
-	};
+	}
 
 	const getResultMessage = () => {
 		if (result !== undefined) {
-			if (result === myParty) {
-				return `You vanquished ${state?.party2.displayName}!`;
+			if (result === "dc") {
+				return "Your opponent disconnected. You are victorious!"
 			} else {
-				return `You were defeated by ${state?.party1.displayName}!`;
+				if (myParty === "party1") {
+					if (result === myParty) {
+						return `You vanquished ${state.party2.displayName}!`
+					} else {
+						return `You were defeated by ${state.party1.displayName}!`
+					}
+				} else {
+					if (result === myParty) {
+						return `You vanquished ${state.party1.displayName}!`
+					} else {
+						return `You were defeated by ${state.party2.displayName}!`
+					}
+				}
 			}
 		}
-	};
+	}
 
 	const controlSelectModal = (selectType?: "spell" | "item") => {
 		if (selectType) {
-			setSelectType(selectType);
+			setSelectType(selectType)
 		}
-		setSelectOpen(!selectType);
-	};
+		setSelectOpen(!selectOpen)
+	}
 
-	if (loading === true) {
+	if (room === undefined) {
+		return <PageContainer></PageContainer>
+	} else if (ready === false) {
 		return (
 			<PageContainer>
-				<LoadingModal loading={loading} />
+				<LoadingModal ready={ready} />
 			</PageContainer>
-		);
-	} else if (state === undefined) {
-		return <PageContainer></PageContainer>;
+		)
 	} else {
 		return (
 			<PageContainer>
 				<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
-					<h6>Room ID: {roomInstance?.id}</h6>
+					<h6>Room ID: {room.id}</h6>
 				</div>
 				<div className="combat-mid">
 					<div className="party1-sprite-box">
@@ -208,7 +234,7 @@ export default function Combat(props: Props): ReactElement {
 							<div
 								className="nes-dialog is-dark is-rounded"
 								id="dialog-dark-rounded">
-								{result === myParty ? (
+								{result === myParty || result === "dc" ? (
 									<p className="title nes-text is-success">
 										Victory!
 									</p>
@@ -288,9 +314,9 @@ export default function Combat(props: Props): ReactElement {
 					<div className="bottom-center">
 						<MoveBox
 							handleAction={handleAction}
-							currentTurn={state.currentTurn}
-							myParty={myParty}
-							loading={loading}
+							myTurn={
+								state.currentTurn === myParty ? true : false
+							}
 							openSelectModal={controlSelectModal}
 						/>
 						<CombatLogContainer className="nes-container combat-log-container">
@@ -317,8 +343,8 @@ export default function Combat(props: Props): ReactElement {
 						</span>
 						<HPBar
 							className="nes-progress is-error flipped-hp"
-							value={state.party2.tempHp}
-							max={state.party2.baseHp}
+							value={state?.party2.tempHp}
+							max={state?.party2.baseHp}
 						/>
 						<span className="hp-text">
 							{state.party2.tempHp} / {state.party2.baseHp}
@@ -332,6 +358,6 @@ export default function Combat(props: Props): ReactElement {
 					</div>
 				</div>
 			</PageContainer>
-		);
+		)
 	}
 }
