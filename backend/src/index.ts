@@ -93,6 +93,9 @@ app.put("/api/test", (req, res) => {
 	res.status(200).send("Success")
 })
 
+// edits character information, takes a body that has {characterKey, description?, gold?, experience?, level?, strength?, constitution?, intelligence?, dexterity?}
+app.put("/api/character", editCharacterInfo)
+
 //Test DELETE Endpoint
 app.delete("/api/test", (req, res) => {
 	console.log("Test DELETE endpoint hit.")
