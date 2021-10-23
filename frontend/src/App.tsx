@@ -1,6 +1,6 @@
-import "nes.css/css/nes.min.css";
 import styled from "styled-components";
 import routes from "./routes";
+import "nes.css/css/nes.min.css";
 
 const AppContainer = styled.div`
 	text-align: center;

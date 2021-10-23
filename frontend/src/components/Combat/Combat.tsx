@@ -1,12 +1,11 @@
 import * as Colyseus from "colyseus.js";
 import React, { ReactElement, useState, useEffect } from "react";
-
 import ReactModal from "react-modal";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import MoveBox from "./MoveBox";
 import SelectModal from "./SelectModal";
-import "./styles/combat.css";
+import LoadingModal from "./LoadingModal";
 import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks";
 import {
 	setUserId,
@@ -15,6 +14,8 @@ import {
 	selectCharId,
 } from "../../redux/userSlice";
 import BackgroundMusic from "../General/BackgroundMusic";
+import "./styles/combat.css";
+import { CombatState, Player, Items, Spells, Stats } from "./CombatState";
 
 interface Props {}
 
@@ -35,6 +36,19 @@ const combatEndModalStyles = {
 	},
 };
 
+const PageContainer = styled.div`
+	height: 100vh;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 2fr 3fr 2fr;
+	grid-column-gap: 0px;
+	grid-row-gap: 0px;
+	background: url(https://64.media.tumblr.com/00ec803404f6e9d6583f92d8870b5fb8/tumblr_p7k8f3fMWS1wvbydeo1_1280.png)
+		no-repeat fixed;
+	background-size: cover;
+	padding: 2em;
+`;
+
 const PartyIndicator = styled.i`
 	display: inline;
 `;
@@ -47,6 +61,10 @@ const CombatLogText = styled.span`
 	color: black;
 `;
 
+const HPBar = styled.progress`
+	width: 60%;
+`;
+
 ReactModal.setAppElement("#root");
 
 interface Props {}
@@ -55,17 +73,11 @@ export default function Combat(props: Props): ReactElement {
 	const [combatLog, setCombatLog] = useState("");
 	const [loading, setLoading] = useState(true);
 	const [myParty, setMyParty] = useState("");
-	const [p1Ready, setP1Ready] = useState(false);
-	const [p2Ready, setP2Ready] = useState(false);
-	const [currentTurn, setCurrentTurn] = useState<
-		"party1" | "party2" | undefined
-	>();
 	const [result, setResult] = useState();
 	const [roomInstance, setRoomInstance] = useState<
-		Colyseus.Room | undefined
+		Colyseus.Room<any> | undefined
 	>();
-	const [stateInstance, setStateInstance] = useState<any>();
-
+	const [state, setState] = useState();
 	const [selectOpen, setSelectOpen] = useState<boolean>(false);
 	const [selectType, setSelectType] = useState<"spell" | "item">("spell");
 	const userId = useAppSelector(selectUserId);
@@ -76,27 +88,22 @@ export default function Combat(props: Props): ReactElement {
 		//TODO
 		dispatch(setUserId(12345));
 		dispatch(setCharId(67890));
-	});
+	}, []);
 
 	useEffect(() => {
 		const client = new Colyseus.Client("ws://localhost:3553");
-		client.joinOrCreate("combat").then((room) => {
-			setRoomInstance(room);
+		client.joinOrCreate("combat").then((room: Colyseus.Room<any>) => {
 			room.onMessage("assignment", (message) => {
 				if (message === "party1") {
 					setMyParty("party1");
-
-					setP1Ready(true);
 				} else {
 					setMyParty("party2");
-
-					setP2Ready(true);
 				}
 			});
 
 			room.onMessage("ready", () => {
-				setP1Ready(true);
-				setP2Ready(true);
+				setLoading(false);
+				setState(room.state);
 			});
 
 			room.onMessage("attack", (message) => {
@@ -131,36 +138,33 @@ export default function Combat(props: Props): ReactElement {
 				setResult(message);
 			});
 
-			room.onStateChange((state) => {
-				console.log(state);
-				setStateInstance(state);
-			});
-
-			setLoading(false);
+			setRoomInstance(room);
+			setState(room.state);
 		});
 	}, []);
 
 	const handleAction = (move: string, moveData: string) => {
-		let room: any = roomInstance;
 		let message = {
 			action: move,
 			moveData: moveData,
 		};
-
-		room.send("turn", message);
+		if (roomInstance) {
+			roomInstance.send("turn", message);
+		}
 	};
 
 	const handleDebug = (party: string) => {
-		let room: any = roomInstance;
-		room.send("debug", party);
+		if (roomInstance) {
+			roomInstance.send("debug", party);
+		}
 	};
 
 	const getResultMessage = () => {
 		if (result !== undefined) {
 			if (result === myParty) {
-				return `You vanquished ${stateInstance?.party2.displayName}!`;
+				return `You vanquished ${state?.party2.displayName}!`;
 			} else {
-				return `You were defeated by ${stateInstance?.party1.displayName}!`;
+				return `You were defeated by ${state?.party1.displayName}!`;
 			}
 		}
 	};
@@ -173,25 +177,29 @@ export default function Combat(props: Props): ReactElement {
 	};
 
 	if (loading === true) {
-		return <div className="page-container">Loading...</div>;
+		return (
+			<PageContainer>
+				<LoadingModal loading={loading} />
+			</PageContainer>
+		);
+	} else if (state === undefined) {
+		return <PageContainer></PageContainer>;
 	} else {
 		return (
-			<div className="page-container">
+			<PageContainer>
 				<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
 					<h6>Room ID: {roomInstance?.id}</h6>
 				</div>
 				<div className="combat-mid">
-					{p1Ready ? (
-						<div className="party1-sprite-box">
-							<img
-								src={stateInstance.party1.spriteUrl}
-								alt={stateInstance.party1.displayName}
-								className="party1-sprite"
-							/>
-						</div>
-					) : undefined}
+					<div className="party1-sprite-box">
+						<img
+							src={state.party1.spriteUrl}
+							alt={state.party1.displayName}
+							className="party1-sprite"
+						/>
+					</div>
 
 					<div className="mid-center">
 						<ReactModal
@@ -224,114 +232,106 @@ export default function Combat(props: Props): ReactElement {
 								</menu>
 							</div>
 						</ReactModal>
-						{p1Ready === true && p2Ready === true ? (
-							<SelectModal
-								selectOpen={selectOpen}
-								selectType={selectType}
-								partyInstance={stateInstance[myParty]}
-								closeModal={controlSelectModal}
-								handleAction={handleAction}
-							/>
-						) : null}
+
+						<SelectModal
+							selectOpen={selectOpen}
+							selectType={selectType}
+							partyInstance={
+								myParty === "party1"
+									? state.party1
+									: state.party2
+							}
+							closeModal={controlSelectModal}
+							handleAction={handleAction}
+						/>
 					</div>
 
 					<div className="party2-sprite-box">
-						{p2Ready ? (
-							<img
-								src={stateInstance.party2.spriteUrl}
-								alt={stateInstance.party2.displayName}
-								className="party2-sprite"
-							/>
-						) : null}
+						<img
+							src={state.party2.spriteUrl}
+							alt={state.party2.displayName}
+							className="party2-sprite"
+						/>
 					</div>
 				</div>
 				<div className="combat-bottom">
-					{p1Ready ? (
-						<div className="party-info-box party1-info">
-							<span className="party-name">
-								<span
-									className={
-										stateInstance.currentTurn === "party1"
-											? "party-name-turn"
-											: undefined
-									}>
-									{stateInstance.party1.displayName}
-								</span>
-								{myParty === "party1" ? (
-									<PartyIndicator className="nes-icon is-medium star" />
-								) : null}
+					<div className="party-info-box party1-info">
+						<span className="party-name">
+							<span
+								className={
+									state.currentTurn === "party1"
+										? "party-name-turn"
+										: undefined
+								}>
+								{state.party1.displayName}
 							</span>
-							<progress
-								className="nes-progress is-error hp-bar"
-								value={stateInstance.party1.tempHp}
-								max={stateInstance.party1.baseHp}
-							/>
-							<span className="hp-text">
-								{stateInstance.party1.tempHp} /{" "}
-								{stateInstance.party1.baseHp}
-							</span>
-							<button
-								type="button"
-								className="nes-btn"
-								onClick={() => handleDebug("party1")}>
-								Debug P1
-							</button>
-						</div>
-					) : (
-						<div></div>
-					)}
-					{p1Ready === true && p2Ready === true ? (
-						<div className="bottom-center">
-							<MoveBox
-								handleAction={handleAction}
-								currentTurn={stateInstance.currentTurn}
-								myParty={myParty}
-								loading={loading}
-								openSelectModal={controlSelectModal}
-							/>
-							<CombatLogContainer className="nes-container combat-log-container">
-								<CombatLogText className="nes-text combat-log-text">
-									{combatLog}
-								</CombatLogText>
-							</CombatLogContainer>
-						</div>
-					) : null}
+							{myParty === "party1" ? (
+								<PartyIndicator className="nes-icon is-medium star" />
+							) : null}
+						</span>
+						<HPBar
+							className="nes-progress is-error"
+							value={state.party1.tempHp}
+							max={state.party1.baseHp}
+						/>
+						<span className="hp-text">
+							{state.party1.tempHp} / {state.party1.baseHp}
+						</span>
+						<button
+							type="button"
+							className="nes-btn"
+							onClick={() => handleDebug("party1")}>
+							Debug P1
+						</button>
+					</div>
 
-					{p2Ready ? (
-						<div className="party-info-box party2-info">
-							<span className="party-name">
-								{myParty === "party2" ? (
-									<PartyIndicator className="nes-icon is-medium star" />
-								) : null}
+					<div className="bottom-center">
+						<MoveBox
+							handleAction={handleAction}
+							currentTurn={state.currentTurn}
+							myParty={myParty}
+							loading={loading}
+							openSelectModal={controlSelectModal}
+						/>
+						<CombatLogContainer className="nes-container combat-log-container">
+							<CombatLogText className="nes-text combat-log-text">
+								{combatLog}
+							</CombatLogText>
+						</CombatLogContainer>
+					</div>
 
-								<span
-									className={
-										stateInstance.currentTurn === "party2"
-											? "party-name-turn"
-											: undefined
-									}>
-									{stateInstance.party2.displayName}
-								</span>
+					<div className="party-info-box party2-info">
+						<span className="party-name">
+							{myParty === "party2" ? (
+								<PartyIndicator className="nes-icon is-medium star" />
+							) : null}
+
+							<span
+								className={
+									state.currentTurn === "party2"
+										? "party-name-turn"
+										: ""
+								}>
+								{state.party2.displayName}
 							</span>
-							<progress
-								className="nes-progress is-error hp-bar flipped-hp"
-								value={stateInstance.party2.tempHp}
-								max={stateInstance.party2.baseHp}
-							/>
-							<span className="hp-text">
-								{stateInstance.party2.tempHp} /{" "}
-								{stateInstance.party2.baseHp}
-							</span>
-							<button
-								type="button"
-								className="nes-btn"
-								onClick={() => handleDebug("party2")}>
-								Debug P2
-							</button>
-						</div>
-					) : null}
+						</span>
+						<HPBar
+							className="nes-progress is-error flipped-hp"
+							value={state.party2.tempHp}
+							max={state.party2.baseHp}
+						/>
+						<span className="hp-text">
+							{state.party2.tempHp} / {state.party2.baseHp}
+						</span>
+						<button
+							type="button"
+							className="nes-btn"
+							onClick={() => handleDebug("party2")}>
+							Debug P2
+						</button>
+					</div>
 				</div>
-			</div>
+			</PageContainer>
 		);
 	}
 }
