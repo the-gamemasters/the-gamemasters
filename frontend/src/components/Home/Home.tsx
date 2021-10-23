@@ -1,10 +1,17 @@
-import React, { ReactElement, useState } from "react";
+import React, { ReactElement, useEffect, useState } from "react";
 import styled from "styled-components";
-import Community from "./Community";
-import User from "./User";
-import ShopPreview from "./ShopPreview";
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
+import {
+	selectCharId,
+	selectUserId,
+	setCharId,
+	setUserId,
+} from "../../redux/userSlice";
 import Character from "./Character";
+import Community from "./Community";
 import HomeAction from "./HomeAction";
+import ShopPreview from "./ShopPreview";
+import User from "./User";
 
 interface Props {}
 
@@ -49,56 +56,17 @@ const TopRight = styled.div`
 	color: white;
 `;
 
-const worldList = [
-	{
-		world_number: 1,
-		world_name: "Big Head, Small Arms",
-		theme: "Triassic Period",
-		boss: "Rex the T",
-		drops_available: "Items",
-		background: "world-1.png",
-		notes: "",
-	},
-	{
-		world_number: 2,
-		world_name: "Queen of the Nile",
-		theme: "Egypt",
-		boss: "Cleopatra",
-		drops_available: "Items, Weapon",
-		background: "world-2.jpg",
-		notes: "",
-	},
-	{
-		world_number: 3,
-		world_name: "Feudal Feud",
-		theme: "Middle Ages",
-		boss: "Lord Maxximus IV",
-		drops_available: "Items, Weapon, Armor",
-		background: "world-3.jpg",
-		notes: "",
-	},
-	{
-		world_number: 4,
-		world_name: "The Hot War",
-		theme: "80's",
-		boss: "Dictator Ronald Reagan",
-		drops_available: "Items, Weapon, Armor",
-		background: "world-4.png",
-		notes: "",
-	},
-	{
-		world_number: 5,
-		world_name: "Overshot",
-		theme: "Future",
-		boss: "(PVP)",
-		drops_available: "Glory",
-		background: "world-5.jpg",
-		notes: "",
-	},
-];
-
 export default function Home(props: Props): ReactElement {
 	const [currentWorld, setCurrentWorld] = useState(2);
+	const userId = useAppSelector(selectUserId);
+	const charId = useAppSelector(selectCharId);
+	const dispatch = useAppDispatch();
+
+	useEffect(() => {
+		//TODO
+		dispatch(setUserId(12345));
+		dispatch(setCharId(67890));
+	});
 
 	const handleWorldChange = (world: number) => {
 		setCurrentWorld(world);
@@ -171,3 +139,51 @@ export default function Home(props: Props): ReactElement {
 		</PageContainer>
 	);
 }
+
+const worldList = [
+	{
+		world_number: 1,
+		world_name: "Big Head, Small Arms",
+		theme: "Triassic Period",
+		boss: "Rex the T",
+		drops_available: "Items",
+		background: "world-1.png",
+		notes: "",
+	},
+	{
+		world_number: 2,
+		world_name: "Queen of the Nile",
+		theme: "Egypt",
+		boss: "Cleopatra",
+		drops_available: "Items, Weapon",
+		background: "world-2.jpg",
+		notes: "",
+	},
+	{
+		world_number: 3,
+		world_name: "Feudal Feud",
+		theme: "Middle Ages",
+		boss: "Lord Maxximus IV",
+		drops_available: "Items, Weapon, Armor",
+		background: "world-3.jpg",
+		notes: "",
+	},
+	{
+		world_number: 4,
+		world_name: "The Hot War",
+		theme: "80's",
+		boss: "Dictator Ronald Reagan",
+		drops_available: "Items, Weapon, Armor",
+		background: "world-4.png",
+		notes: "",
+	},
+	{
+		world_number: 5,
+		world_name: "Overshot",
+		theme: "Future",
+		boss: "(PVP)",
+		drops_available: "Glory",
+		background: "world-5.jpg",
+		notes: "",
+	},
+];

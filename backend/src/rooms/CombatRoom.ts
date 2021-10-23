@@ -117,6 +117,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						if (this.state[forceZ].tempHp <= 0) {
 							this.state[forceZ].tempHp = 0
 							this.broadcast("victory", forceA)
+							this.disconnect()
 						}
 					}
 					this.state[forceZ].tempDodgeChance =
@@ -155,6 +156,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 								if (this.state[forceZ].tempHp <= 0) {
 									this.state[forceZ].tempHp = 0
 									this.broadcast("victory", forceA)
+									this.disconnect()
 								}
 							}
 
@@ -280,7 +282,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 	onJoin(client: Client, options: any) {
 		let force: party = this.clients.length > 1 ? "party2" : "party1"
-		let randomEncounter = Math.floor((Math.random() / 2.5) * 10)
+		let randomEncounter = Math.floor((Math.random() / 2) * 10)
 
 		let encounter = encountersList[randomEncounter]
 		let party = this.state[force]
@@ -303,16 +305,32 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 		client.send("assignment", force)
 		if (this.clients.length > 1) {
+			if (this.state.party1.tempStats >= this.state.party2.tempStats) {
+				this.state.currentTurn = "party1"
+			} else {
+				this.state.currentTurn = "party2"
+			}
 			this.broadcast("ready")
+
+			this.lock()
 		}
 		//TODO Connect to backend, which connects to DB, to get player stats, items, and spells
 	}
 
 	onLeave(client: Client, consented: boolean) {
-		console.log(client.sessionId, "left!")
+		this.broadcast("disconnect")
 	}
 
 	onDispose() {
+		// return new Promise((resolve, reject) => {
+		//     // doDatabaseOperation((err, data) => {
+		//     //     if (err) {
+		//     //         reject(err);
+		//     //     } else {
+		//     //         resolve(data);
+		//     //     }
+		//     // });
+		// });
 		console.log("room", this.roomId, "disposing...")
 	}
 }
