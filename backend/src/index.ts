@@ -8,7 +8,7 @@ import { CombatRoom } from "./rooms/CombatRoom";
 import bcrypt from "bcrypt";
 import session from "express-session";
 import massive from "massive";
-import { createCharacter } from "./controllers/characters";
+import { createCharacter, editCharacterInfo } from "./controllers/characters";
 import { register, login } from "./controllers/users";
 
 //require("./controllers/passport/passportConfig")
@@ -91,6 +91,9 @@ app.put("/api/test", (req, res) => {
 	console.log("Test PUT endpoint hit. req.body=", req.body);
 	res.status(200).send("Success");
 });
+
+// edits character information, takes a body that has {characterKey, description?, gold?, experience?, level?, strength?, constitution?, intelligence?, dexterity?}
+app.put("/api/character", editCharacterInfo);
 
 //Test DELETE Endpoint
 app.delete("/api/test", (req, res) => {
