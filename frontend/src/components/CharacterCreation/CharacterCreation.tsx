@@ -1,95 +1,162 @@
-import { ReactElement, useState } from 'react';
-import CharacterInfo from './CharacterInfo';
-import { classList } from './classes';
-import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { ReactElement, useState } from "react";
+import CharacterInfo from "./CharacterInfo";
+import { classList } from "./classes";
+import axios from "axios";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import BackgroundMusic from "../General/BackgroundMusic";
 
 interface Props {}
 
+const Background = styled.div`
+	height: 100vh;
+	background-image: url("/images/login-background.gif");
+	background-size: cover;
+	background-position: center bottom;
+	display: flex;
+	justify-content: space-between;
+`;
+
+const Title = styled.h1`
+	padding-top: 2.5rem;
+	color: #ffffff;
+	-webkit-text-stroke: 1px black;
+`;
+
+const LeftBox = styled.div`
+	height: 100vh;
+	width: 40vw;
+	text-align: left;
+	margin-left: 3rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	padding-top: 4rem;
+	padding-bottom: 10rem;
+`;
+
+const RightBox = styled.div`
+	height: 90vh;
+	width: 40vw;
+	overflow-y: auto;
+	border-radius: 5px;
+	background-color: rgba(255, 255, 255, 0.5);
+	border: 3px black solid;
+	margin-top: 5vh;
+	margin-right: 1vw;
+	padding: 10px;
+	display: flex;
+	flex-direction: column;
+	text-align: left;
+`;
+
+const Input = styled.div`
+	font-size: 3 rem;
+	color: #ffffff;
+	-webkit-text-stroke: 1px black;
+`;
+
 export default function CharacterCreation(props: Props): ReactElement {
-  const [charName, setCharName] = useState<string>('');
-  const [currentClass, setCurrentClass] = useState<
-    'KNIGHT' | 'ROGUE' | 'BARBARIAN' | 'MAGE' | 'NONE'
-  >('NONE');
-  const [description, setDescription] = useState<string>('');
+	const [charName, setCharName] = useState<string>("");
+	const [currentClass, setCurrentClass] = useState<
+		"KNIGHT" | "ROGUE" | "BARBARIAN" | "MAGE" | "NONE"
+	>("NONE");
+	const [description, setDescription] = useState<string>("");
 
-  return (
-    <div>
-      <h1>Enter Character Name!!</h1>
-      <input
-        type="string"
-        value={charName}
-        name="character name"
-        onChange={(e) => setCharName(e.target.value)}
-        placeholder="Character name"
-      />
-      <h1>Enter Character Description</h1>
-      <textarea
-        name="Character description"
-        placeholder="Please enter a description of your character"
-        value={description}
-        cols={50}
-        rows={5}
-        onChange={(e) => setDescription(e.target.value)}
-      />
-      <h2>Pick a class </h2>
-      <div>
-        <div>
-          <input
-            type="radio"
-            value="KNIGHT"
-            name="class"
-            onChange={() => setCurrentClass('KNIGHT')}
-          />
-          Knight
-        </div>
-        <div>
-          <input
-            type="radio"
-            value="ROGUE"
-            name="class"
-            onChange={() => setCurrentClass('ROGUE')}
-          />
-          Rogue
-        </div>
-        <div>
-          <input
-            type="radio"
-            value="BARBARIAN"
-            name="class"
-            onChange={(e) => setCurrentClass('BARBARIAN')}
-          />
-          Barbarian
-        </div>
-        <div>
-          <input
-            type="radio"
-            value="MAGE"
-            name="class"
-            onChange={(e) => setCurrentClass('MAGE')}
-          />
-          Mage
-        </div>
-      </div>
-      <CharacterInfo currentClass={currentClass} />
-      <Link to="/combat">
-        <button
-          onClick={async () => {
-            const result = await axios.post('/api/character', {
-              charName,
-              description,
-              strength: classList[currentClass].str,
-              constitution: classList[currentClass].con,
-              intelligence: classList[currentClass].int,
-              dexterity: classList[currentClass].dex,
-            });
+	return (
+		<Background>
+			<BackgroundMusic musicSrc={"audio/music/track11-login.mp3"} />
+			<LeftBox>
+				<div>
+					<Title>Enter Character Name!!</Title>
+					<input
+						type="string"
+						value={charName}
+						name="character name"
+						onChange={(e) => setCharName(e.target.value)}
+						placeholder="Character name"
+					/>
+				</div>
+				<div>
+					<Title>Enter Character Description</Title>
+					<textarea
+						name="Character description"
+						placeholder="Please enter a description of your character"
+						value={description}
+						cols={50}
+						rows={5}
+						onChange={(e) => setDescription(e.target.value)}
+					/>
+				</div>
+				<div>
+					<Title>Pick a class </Title>
+					<div>
+						<Input>
+							<input
+								type="radio"
+								value="KNIGHT"
+								name="class"
+								onChange={() => setCurrentClass("KNIGHT")}
+							/>
+							Knight
+						</Input>
+						<Input>
+							<input
+								type="radio"
+								value="ROGUE"
+								name="class"
+								onChange={() => setCurrentClass("ROGUE")}
+							/>
+							Rogue
+						</Input>
+						<Input>
+							<input
+								type="radio"
+								value="BARBARIAN"
+								name="class"
+								onChange={(e) => setCurrentClass("BARBARIAN")}
+							/>
+							Barbarian
+						</Input>
+						<Input>
+							<input
+								type="radio"
+								value="MAGE"
+								name="class"
+								onChange={(e) => setCurrentClass("MAGE")}
+							/>
+							Mage
+						</Input>
+					</div>
+				</div>
+			</LeftBox>
+			{currentClass === "NONE" ? null : (
+				<RightBox>
+					<CharacterInfo currentClass={currentClass} />
+					<Link to="/combat">
+						<button
+							onClick={async () => {
+								const result = await axios.post(
+									"/api/character",
+									{
+										charName,
+										description,
+										strength: classList[currentClass].str,
+										constitution:
+											classList[currentClass].con,
+										intelligence:
+											classList[currentClass].int,
+										dexterity: classList[currentClass].dex,
+									}
+								);
 
-            console.log(result, 'from the submit');
-          }}
-        >
-          Select
-        </button>
-      </Link>
-    </div>
-  );
+								console.log(result, "from the submit");
+							}}>
+							Select
+						</button>
+					</Link>
+				</RightBox>
+			)}
+		</Background>
+	);
 }
