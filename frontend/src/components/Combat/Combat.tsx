@@ -217,6 +217,9 @@ export default function Combat(props: Props): ReactElement {
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
 					<h6>Room ID: {room.id}</h6>
+					<Link to="/home">
+						<button>Go back to the home page</button>
+					</Link>
 				</div>
 				<div className="combat-mid">
 					<div className="party1-sprite-box">
