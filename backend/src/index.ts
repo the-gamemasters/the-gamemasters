@@ -9,6 +9,11 @@ import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
 import { createCharacter, editCharacterInfo } from "./controllers/characters"
+import {
+	getEquipment,
+	addEquipment,
+	editEquipment,
+} from "./controllers/equipment"
 import { register, login } from "./controllers/users"
 
 //require("./controllers/passport/passportConfig")
@@ -69,7 +74,7 @@ const gameServer = new Server({
 })
 
 gameServer.define("combat", CombatRoom)
-gameServer.listen(port)
+gameServer.listen(3553)
 
 //Test GET Endpoint
 app.get("/api/test", (req, res) => {
@@ -100,6 +105,12 @@ app.delete("/api/test", (req, res) => {
 	console.log("Test DELETE endpoint hit.")
 	res.status(200).send("Success")
 })
+
+app.get("/api/equipment/:charKey", getEquipment)
+
+app.post("/api/equipment/:charKey", addEquipment)
+
+app.put("/api/equipment/:charKey", editEquipment)
 
 app.post("/api/register", register)
 

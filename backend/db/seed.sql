@@ -41,21 +41,21 @@ CREATE TABLE charStats (
 
 CREATE TABLE equipment (
     equipment_key SERIAL PRIMARY KEY,
-    slot INT, -- 1=head, 2= right hand, 3=left hand, 4=armor, 5=feet
+    slot INT, -- 1=armor, 2=weapon
     equipment_name VARCHAR(100),
     equipment_description VARCHAR(200),
-    effect_stat int,
-    effect_other int,
-    rarity VARCHAR(30),
-    cost INT
+    equipment_effect_stat VARCHAR(20),
+    equipment_effect_stat_value INT,
+    equipment_value INT,
+    world INT,
+    equipment_icon TEXT
 );
 
 CREATE TABLE charactersEquipment (
     charactersEquipment_key SERIAL PRIMARY KEY,
     character_key INT REFERENCES characters(character_key),
     equipment_key INT REFERENCES equipment(equipment_key),
-    equipped BOOLEAN,
-    quantity INT
+    equipped BOOLEAN
 );
 
 CREATE TABLE monsters (
