@@ -64,8 +64,6 @@ export default function Login(props: Props): ReactElement {
 	const [email, setEmail] = useState<string>("")
 	const [password, setPassword] = useState<string>("")
 	const dispatch = useDispatch()
-	const result = useSelector((state) => state)
-	// console.log(dispatch, "dispatch", result, "result")
 
 	function submitLogin() {
 		if (email.length === 0) {

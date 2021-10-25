@@ -70,7 +70,6 @@ export default function Character(props: Props): ReactElement {
 
 	const charStats = useAppSelector(selectCharStats)
 	const { strength, constitution, intelligence, dexterity } = charStats
-	console.log(charStats)
 	return (
 		<CharacterContainer>
 			<CharacterLeft>
