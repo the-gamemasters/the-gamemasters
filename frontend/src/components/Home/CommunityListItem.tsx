@@ -1,29 +1,29 @@
-import React, { ReactElement } from "react";
-import styled from "styled-components";
+import React, { ReactElement } from "react"
+import styled from "styled-components"
 
 const ListItemTitle = styled.div`
 	font-size: 1.2em;
-`;
+`
 
 const ListItemTimestamp = styled.div`
 	font-size: 0.7em;
-`;
+`
 
 const ListItemDivider = styled.hr`
 	width: 70%;
 	margin: 1em 0;
-`;
+`
 
 const ListItemBody = styled.div`
 	font-size: 0.85em;
-`;
+`
 
 interface Props {
 	announcement: {
-		title: string;
-		date: string;
-		body: string;
-	};
+		title: string
+		date: string
+		body: string
+	}
 }
 
 export default function CommunityListItem(props: Props): ReactElement {
@@ -40,5 +40,5 @@ export default function CommunityListItem(props: Props): ReactElement {
 				{props.announcement.body}
 			</ListItemBody>
 		</div>
-	);
+	)
 }

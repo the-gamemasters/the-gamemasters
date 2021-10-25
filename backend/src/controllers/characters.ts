@@ -1,24 +1,24 @@
 interface Character {
-	characterKey: number;
-	charName: string;
-	description: string;
-	userKey: number;
-	avatarKey: number;
-	gold: number;
-	experience: number;
-	level: number;
+	characterKey: number
+	charName: string
+	description: string
+	userKey: number
+	avatarKey: number
+	gold: number
+	experience: number
+	level: number
 }
 
 interface CharStats {
-	charStatsKey: number;
-	strength: number;
-	constitution: number;
-	intelligence: number;
-	dexterity: number;
+	charStatsKey: number
+	strength: number
+	constitution: number
+	intelligence: number
+	dexterity: number
 }
 
 async function createCharacter(req: any, res: any) {
-	const db = req.app.get("db");
+	const db = req.app.get("db")
 
 	//
 
@@ -30,10 +30,10 @@ async function createCharacter(req: any, res: any) {
 		gold = 0,
 		experience = 0,
 		level = 0,
-	}: Character = req.body;
+	}: Character = req.body
 
 	const { strength, constitution, intelligence, dexterity }: CharStats =
-		req.body;
+		req.body
 
 	const characterInfo = await db.Characters.createCharacter([
 		charName,
@@ -43,8 +43,8 @@ async function createCharacter(req: any, res: any) {
 		gold,
 		experience,
 		level,
-	]);
-	const { characterKey = 1 } = characterInfo;
+	])
+	const { characterKey = 1 } = characterInfo
 
 	const characterStats = await db.Characters.createCharacterStats([
 		characterKey,
@@ -52,23 +52,23 @@ async function createCharacter(req: any, res: any) {
 		constitution,
 		intelligence,
 		dexterity,
-	]);
+	])
 
-	res.status(200).json({ characterInfo, characterStats });
+	res.status(200).json({ characterInfo, characterStats })
 }
 
 async function editCharacterInfo(req: any, res: any) {
-	const db = req.app.get("db");
+	const db = req.app.get("db")
 
-	const { characterKey } = req.body;
+	const { characterKey } = req.body
 
-	let result = await db.Characters.findCharacter([characterKey]);
-	console.log(result[0], characterKey);
-	const { description, gold, experience, level } = result[0];
+	let result = await db.Characters.findCharacter([characterKey])
+	console.log(result[0], characterKey)
+	const { description, gold, experience, level } = result[0]
 
-	result = await db.Characters.findCharacterStats([characterKey]);
-	console.log(result);
-	const { strength, constitution, intelligence, dexterity } = result[0];
+	result = await db.Characters.findCharacterStats([characterKey])
+	console.log(result)
+	const { strength, constitution, intelligence, dexterity } = result[0]
 
 	const {
 		description: newDescription = description,
@@ -79,7 +79,7 @@ async function editCharacterInfo(req: any, res: any) {
 		constitution: newConstitution = constitution,
 		intelligence: newIntelligence = intelligence,
 		dexterity: newDexterity = dexterity,
-	} = req.body;
+	} = req.body
 
 	const character = await db.Characters.updateCharacter([
 		characterKey,
@@ -87,7 +87,7 @@ async function editCharacterInfo(req: any, res: any) {
 		newGold,
 		newExperience,
 		newLevel,
-	]);
+	])
 
 	const stats = await db.Characters.updateCharacterStats([
 		characterKey,
@@ -95,9 +95,9 @@ async function editCharacterInfo(req: any, res: any) {
 		newConstitution,
 		newIntelligence,
 		newDexterity,
-	]);
+	])
 
-	res.status(200).json({ character: character[0], stats: stats[0] });
+	res.status(200).json({ character: character[0], stats: stats[0] })
 }
 
 // I was thinking about creating two functions and running both when the POST endpoint was called.  I could use res.local or res.data to send the data to the next middleware, and then just add a next()
@@ -108,7 +108,7 @@ async function editCharacterInfo(req: any, res: any) {
 // }
 
 function mochaTest() {
-	return "hello";
+	return "hello"
 }
 
-export { createCharacter, mochaTest, editCharacterInfo };
+export { createCharacter, mochaTest, editCharacterInfo }

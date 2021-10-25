@@ -1,7 +1,7 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement } from "react"
 
 interface Props {
-	closeModal: any;
+	closeModal: any
 }
 
 export default function CloseButton(props: Props): ReactElement {
@@ -14,8 +14,9 @@ export default function CloseButton(props: Props): ReactElement {
 			}}
 			onClick={() => props.closeModal()}
 			type="button"
-			className="nes-btn is-error">
+			className="nes-btn is-error"
+		>
 			<i className="nes-icon close is-small"></i>
 		</button>
-	);
+	)
 }

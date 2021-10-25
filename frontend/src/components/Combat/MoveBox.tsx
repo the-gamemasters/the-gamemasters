@@ -28,7 +28,8 @@ export default function MoveBox(props: Props): ReactElement {
 					props.myTurn
 						? () => props.handleAction("attack", "")
 						: undefined
-				}>
+				}
+			>
 				Attack
 			</button>
 			<button
@@ -39,7 +40,8 @@ export default function MoveBox(props: Props): ReactElement {
 					props.myTurn
 						? () => props.openSelectModal("spell")
 						: undefined
-				}>
+				}
+			>
 				Spells
 			</button>
 			<button
@@ -50,7 +52,8 @@ export default function MoveBox(props: Props): ReactElement {
 					props.myTurn
 						? () => props.openSelectModal("item")
 						: undefined
-				}>
+				}
+			>
 				Items
 			</button>
 			<button
@@ -61,7 +64,8 @@ export default function MoveBox(props: Props): ReactElement {
 					props.myTurn
 						? () => props.handleAction("evade", "")
 						: undefined
-				}>
+				}
+			>
 				Evade
 			</button>
 		</div>

@@ -39,7 +39,8 @@ export default function HomeAction(props: Props): ReactElement {
 						to={{
 							pathname: "/combat",
 							state: { pvp: false },
-						}}>
+						}}
+					>
 						<button type="button" className="nes-btn is-primary">
 							Venture Forth!
 						</button>
