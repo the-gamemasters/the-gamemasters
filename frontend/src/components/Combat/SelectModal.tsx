@@ -46,7 +46,8 @@ export default function SelectModal(props: Props): ReactElement {
 			<ReactModal style={selectModalStyles} isOpen={props.selectOpen}>
 				<div
 					className="nes-dialog is-dark is-rounded"
-					id="dialog-dark-rounded">
+					id="dialog-dark-rounded"
+				>
 					<XButton closeModal={props.closeModal} />
 					<p className="title nes-text is-success">
 						{props.selectType === "spell" ? "Spells" : "Items"}
@@ -68,7 +69,8 @@ export default function SelectModal(props: Props): ReactElement {
 													closeModal={
 														props.closeModal
 													}
-													key={i}></SelectItem>
+													key={i}
+												></SelectItem>
 											)
 										}
 								  )
@@ -89,7 +91,8 @@ export default function SelectModal(props: Props): ReactElement {
 													closeModal={
 														props.closeModal
 													}
-													key={i}></SelectItem>
+													key={i}
+												></SelectItem>
 											)
 										}
 								  )}

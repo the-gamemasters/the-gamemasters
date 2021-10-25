@@ -1,9 +1,9 @@
-import React, { ReactElement, useState, useEffect } from "react";
-import ReactModal from "react-modal";
-import CloseButton from "../../General/CloseButton";
-import InventoryLeft from "./InventoryLeft";
-import InventoryRight from "./InventoryRight";
-import styled from "styled-components";
+import React, { ReactElement, useState, useEffect } from "react"
+import ReactModal from "react-modal"
+import CloseButton from "../../General/CloseButton"
+import InventoryLeft from "./InventoryLeft"
+import InventoryRight from "./InventoryRight"
+import styled from "styled-components"
 
 const inventoryModalStyles = {
 	overlay: {
@@ -24,7 +24,7 @@ const inventoryModalStyles = {
 		height: "85%",
 		width: "70%",
 	},
-};
+}
 
 const ModalContent = styled.div`
 	display: grid;
@@ -33,29 +33,29 @@ const ModalContent = styled.div`
 	grid-column-gap: 0px;
 	grid-row-gap: 25px;
 	height: 80%;
-`;
+`
 
 const ModalContentTop = styled.div`
 	height: 100%;
-`;
+`
 
 const ModalContentBottom = styled.div`
 	display: grid;
 	grid-template-columns: 2fr 3fr;
 	grid-column-gap: 25px;
 	grid-row-gap: 0px;
-`;
+`
 
 export interface Item {
-	item_key: number;
-	item_name: string;
-	item_effect: string;
-	item_effect_stat: string;
-	item_effect_value: number;
-	item_effect_duration: number;
-	item_cost: number;
-	world: number;
-	item_icon: string;
+	item_key: number
+	item_name: string
+	item_effect: string
+	item_effect_stat: string
+	item_effect_value: number
+	item_effect_duration: number
+	item_cost: number
+	world: number
+	item_icon: string
 }
 
 const blankItem: Item = {
@@ -68,28 +68,28 @@ const blankItem: Item = {
 	item_cost: 0,
 	world: 0,
 	item_icon: "",
-};
+}
 
-const blankItems: Item[] = [];
+const blankItems: Item[] = []
 
-ReactModal.setAppElement("#root");
+ReactModal.setAppElement("#root")
 
 interface Props {
-	inventoryOpen: boolean;
-	closeModal: any;
+	inventoryOpen: boolean
+	closeModal: any
 }
 
 export default function InventoryModal(props: Props): ReactElement {
-	const [activeItem, setActiveItem] = useState(blankItem);
-	const [inventoryItems, setInventoryItems] = useState(blankItems);
+	const [activeItem, setActiveItem] = useState(blankItem)
+	const [inventoryItems, setInventoryItems] = useState(blankItems)
 
 	useEffect(() => {
-		setInventoryItems(require("./inventoryItems.json"));
-	}, [inventoryItems]);
+		setInventoryItems(require("./inventoryItems.json"))
+	}, [inventoryItems])
 
 	const handleClickItem = (item: Item) => {
-		setActiveItem(item);
-	};
+		setActiveItem(item)
+	}
 
 	return (
 		<ReactModal style={inventoryModalStyles} isOpen={props.inventoryOpen}>
@@ -107,5 +107,5 @@ export default function InventoryModal(props: Props): ReactElement {
 				</ModalContentBottom>
 			</ModalContent>
 		</ReactModal>
-	);
+	)
 }

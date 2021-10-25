@@ -1,24 +1,24 @@
-import React, { ReactElement } from "react";
-import styled from "styled-components";
-import ShopItem from "./InventoryItem";
-import { Item } from "./InventoryModal";
+import React, { ReactElement } from "react"
+import styled from "styled-components"
+import ShopItem from "./InventoryItem"
+import { Item } from "./InventoryModal"
 
 interface Props {
-	shopItems: Item[];
-	handleClickItem: any;
-	activeItem: Item;
+	shopItems: Item[]
+	handleClickItem: any
+	activeItem: Item
 }
 
 const InventoryListContainer = styled.div`
 	height: 100%;
 	width: 90%;
 	padding: 0;
-`;
+`
 
 const List = styled.ul`
 	list-style: none;
 	padding: 0;
-`;
+`
 
 export default function InventoryList(props: Props): ReactElement {
 	return (
@@ -35,10 +35,10 @@ export default function InventoryList(props: Props): ReactElement {
 								item={ele}
 								key={i}
 							/>
-						);
+						)
 					}
 				})}
 			</List>
 		</InventoryListContainer>
-	);
+	)
 }

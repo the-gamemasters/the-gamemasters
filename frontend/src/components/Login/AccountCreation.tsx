@@ -1,8 +1,8 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import axios from "axios";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import axios from "axios"
 
-import CloseButton from "../General/CloseButton";
+import CloseButton from "../General/CloseButton"
 
 const AccountCreationContainer = styled.div`
 	height: 100%;
@@ -11,7 +11,7 @@ const AccountCreationContainer = styled.div`
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
-`;
+`
 
 const AccountCreationForm = styled.form`
 	display: flex;
@@ -35,20 +35,20 @@ const AccountCreationForm = styled.form`
 	button {
 		margin-top: 0.1rem;
 	}
-`;
+`
 interface Props {
-	closeModal: () => void;
+	closeModal: () => void
 }
 
 export default function AccountCreation(props: Props): ReactElement {
-	const [email, setEmail] = useState<string>("");
-	const [userName, setUserName] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
-	const [passwordConfirm, setPasswordConfirm] = useState<string>("");
+	const [email, setEmail] = useState<string>("")
+	const [userName, setUserName] = useState<string>("")
+	const [password, setPassword] = useState<string>("")
+	const [passwordConfirm, setPasswordConfirm] = useState<string>("")
 
 	function submitNewUser() {
 		if (password !== passwordConfirm) {
-			return alert("Passwords do not match");
+			return alert("Passwords do not match")
 		}
 		axios
 			.post("/api/register", { userName, email, password })
@@ -56,17 +56,17 @@ export default function AccountCreation(props: Props): ReactElement {
 				if (typeof res.data === "string") {
 					//If account is properly created, post message, and close modal, otherwise just post message\\
 					if (res.data === "Account Created") {
-						props.closeModal();
+						props.closeModal()
 					}
-					alert(res.data);
+					alert(res.data)
 				} else {
 					//If I somehow get a response that isn't text, log it -- might tie in here for additional functionality\\
-					console.log(res.data);
+					console.log(res.data)
 				}
 			})
 			.catch((e) => {
-				console.log(e);
-			});
+				console.log(e)
+			})
 	}
 
 	return (
@@ -138,5 +138,5 @@ export default function AccountCreation(props: Props): ReactElement {
 				/>
 			</AccountCreationForm>
 		</AccountCreationContainer>
-	);
+	)
 }

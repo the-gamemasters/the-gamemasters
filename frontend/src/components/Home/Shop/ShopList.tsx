@@ -1,24 +1,24 @@
-import React, { ReactElement } from "react";
-import styled from "styled-components";
-import ShopItem from "./ShopItem";
-import { Item } from "./ShopModal";
+import React, { ReactElement } from "react"
+import styled from "styled-components"
+import ShopItem from "./ShopItem"
+import { Item } from "./ShopModal"
 
 interface Props {
-	shopItems: Item[];
-	handleClickItem: any;
-	activeItem: Item;
+	shopItems: Item[]
+	handleClickItem: any
+	activeItem: Item
 }
 
 const ShopListContainer = styled.div`
 	height: 100%;
 	width: 90%;
 	padding: 0;
-`;
+`
 
 const List = styled.ul`
 	list-style: none;
 	padding: 0;
-`;
+`
 
 export default function ShopList(props: Props): ReactElement {
 	return (
@@ -35,10 +35,10 @@ export default function ShopList(props: Props): ReactElement {
 								item={ele}
 								key={i}
 							/>
-						);
+						)
 					}
 				})}
 			</List>
 		</ShopListContainer>
-	);
+	)
 }

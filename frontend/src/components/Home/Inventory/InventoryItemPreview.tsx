@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import { Item } from "./InventoryModal";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import { Item } from "./InventoryModal"
 
 const PreviewContainer = styled.div`
 	height: 60%;
@@ -38,17 +38,17 @@ const PreviewContainer = styled.div`
 		height: 5rem;
 		width: auto;
 	}
-`;
+`
 
 const ItemName = styled.h4`
 	font-size: 1.5rem;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-`;
+`
 
 const ItemDescription = styled.p`
 	font-size: 0.9rem;
-`;
+`
 
 const ShopItemPriceContainer = styled.div`
 	display: flex;
@@ -61,10 +61,10 @@ const ShopItemPriceContainer = styled.div`
 		font-size: 1.25rem;
 		margin-left: 0.5rem;
 	}
-`;
+`
 
 interface Props {
-	activeItem: Item;
+	activeItem: Item
 }
 
 export default function InventoryItemPreview(props: Props): ReactElement {
@@ -76,36 +76,36 @@ export default function InventoryItemPreview(props: Props): ReactElement {
 		item_effect_duration,
 		item_cost,
 		item_icon,
-	} = props.activeItem;
+	} = props.activeItem
 
 	const sanitizeItemEffect = () => {
-		let effect = item_effect.toLowerCase();
-		let effectStat = item_effect_stat.toLowerCase();
+		let effect = item_effect.toLowerCase()
+		let effectStat = item_effect_stat.toLowerCase()
 
 		switch (effectStat) {
 			case "str":
-				effectStat = "Strength";
-				break;
+				effectStat = "Strength"
+				break
 			case "dex":
-				effectStat = "Dexterity";
-				break;
+				effectStat = "Dexterity"
+				break
 			case "int":
-				effectStat = "Intelligence";
-				break;
+				effectStat = "Intelligence"
+				break
 		}
 
 		switch (effect) {
 			case "heal":
-				return `Heal yourself for ${item_effect_value} Hit Points`;
+				return `Heal yourself for ${item_effect_value} Hit Points`
 			case "buff":
-				return `Increase your ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`;
+				return `Increase your ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
 			case "debuff":
-				return `Decrease the enemy's ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`;
+				return `Decrease the enemy's ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
 		}
-	};
+	}
 
 	if (props.activeItem.item_name === "") {
-		return <div></div>;
+		return <div></div>
 	} else {
 		return (
 			<PreviewContainer>
@@ -123,6 +123,6 @@ export default function InventoryItemPreview(props: Props): ReactElement {
 					</ShopItemPriceContainer>
 				</div>
 			</PreviewContainer>
-		);
+		)
 	}
 }

@@ -1,11 +1,11 @@
-import React, { ReactElement } from "react";
-import styled from "styled-components";
-import { Item } from "./InventoryModal";
+import React, { ReactElement } from "react"
+import styled from "styled-components"
+import { Item } from "./InventoryModal"
 
-import InventoryItemPreview from "./InventoryItemPreview";
+import InventoryItemPreview from "./InventoryItemPreview"
 
 interface Props {
-	activeItem: Item;
+	activeItem: Item
 }
 
 const InventoryRightContainer = styled.div`
@@ -18,7 +18,7 @@ const InventoryRightContainer = styled.div`
 	button {
 		width: 40%;
 	}
-`;
+`
 
 export default function InventoryRight(props: Props): ReactElement {
 	return (
@@ -27,5 +27,5 @@ export default function InventoryRight(props: Props): ReactElement {
 
 			<button className={"nes-btn is-success"}>Equip</button>
 		</InventoryRightContainer>
-	);
+	)
 }

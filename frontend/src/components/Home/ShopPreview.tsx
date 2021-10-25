@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import ShopModal from "./Shop/ShopModal";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import ShopModal from "./Shop/ShopModal"
 
 const ShopPreviewContainer = styled.div`
 	display: flex;
@@ -10,34 +10,34 @@ const ShopPreviewContainer = styled.div`
 	color: black;
 	height: 100%;
 	width: 100%;
-`;
+`
 
 const ShopPreviewDiv = styled.div`
 	height: 60%;
 	width: 80%;
 	background-color: white;
-`;
+`
 const ShopPreviewImg = styled.img`
 	height: 5em;
 	width: auto;
-`;
+`
 
 const EnterShopBtn = styled.button`
 	margin-top: 1em;
-`;
+`
 
 interface Props {}
 
 export default function ShopPreview(props: Props): ReactElement {
-	const [shopOpen, setShopOpen] = useState(false);
+	const [shopOpen, setShopOpen] = useState(false)
 
 	const handleOpenShop = () => {
-		setShopOpen(true);
-	};
+		setShopOpen(true)
+	}
 
 	const handleCloseShop = () => {
-		setShopOpen(false);
-	};
+		setShopOpen(false)
+	}
 
 	return (
 		<ShopPreviewContainer>
@@ -50,11 +50,12 @@ export default function ShopPreview(props: Props): ReactElement {
 				<EnterShopBtn
 					onClick={() => handleOpenShop()}
 					type="button"
-					className="nes-btn is-warning">
+					className="nes-btn is-warning"
+				>
 					Enter Shop
 				</EnterShopBtn>
 				<ShopModal shopOpen={shopOpen} closeModal={handleCloseShop} />
 			</ShopPreviewDiv>
 		</ShopPreviewContainer>
-	);
+	)
 }

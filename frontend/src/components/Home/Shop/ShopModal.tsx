@@ -1,9 +1,9 @@
-import React, { ReactElement, useState, useEffect } from "react";
-import ReactModal from "react-modal";
-import CloseButton from "../../General/CloseButton";
-import ShopLeft from "./ShopLeft";
-import ShopRight from "./ShopRight";
-import styled from "styled-components";
+import React, { ReactElement, useState, useEffect } from "react"
+import ReactModal from "react-modal"
+import CloseButton from "../../General/CloseButton"
+import ShopLeft from "./ShopLeft"
+import ShopRight from "./ShopRight"
+import styled from "styled-components"
 
 const shopModalStyles = {
 	overlay: {
@@ -24,7 +24,7 @@ const shopModalStyles = {
 		height: "85%",
 		width: "70%",
 	},
-};
+}
 
 const ModalContent = styled.div`
 	display: grid;
@@ -33,35 +33,35 @@ const ModalContent = styled.div`
 	grid-column-gap: 0px;
 	grid-row-gap: 25px;
 	height: 80%;
-`;
+`
 
 const ModalContentTop = styled.div`
 	height: 100%;
-`;
+`
 
 const SwitchModeBtn = styled.button`
 	width: 15rem;
 	height: 3rem;
 	font-size: 0.8rem;
-`;
+`
 
 const ModalContentBottom = styled.div`
 	display: grid;
 	grid-template-columns: 2fr 3fr;
 	grid-column-gap: 25px;
 	grid-row-gap: 0px;
-`;
+`
 
 export interface Item {
-	item_key: number;
-	item_name: string;
-	item_effect: string;
-	item_effect_stat: string;
-	item_effect_value: number;
-	item_effect_duration: number;
-	item_cost: number;
-	world: number;
-	item_icon: string;
+	item_key: number
+	item_name: string
+	item_effect: string
+	item_effect_stat: string
+	item_effect_value: number
+	item_effect_duration: number
+	item_cost: number
+	world: number
+	item_icon: string
 }
 
 const blankItem: Item = {
@@ -74,37 +74,37 @@ const blankItem: Item = {
 	item_cost: 0,
 	world: 0,
 	item_icon: "",
-};
+}
 
-const blankItems: Item[] = [];
+const blankItems: Item[] = []
 
-ReactModal.setAppElement("#root");
+ReactModal.setAppElement("#root")
 
 interface Props {
-	shopOpen: boolean;
-	closeModal: any;
+	shopOpen: boolean
+	closeModal: any
 }
 
 export default function ShopModal(props: Props): ReactElement {
-	const [activeItem, setActiveItem] = useState(blankItem);
-	const [shopMode, setShopMode] = useState("buy");
-	const [shopItems, setShopItems] = useState(blankItems);
+	const [activeItem, setActiveItem] = useState(blankItem)
+	const [shopMode, setShopMode] = useState("buy")
+	const [shopItems, setShopItems] = useState(blankItems)
 
 	useEffect(() => {
-		setShopItems(require("./shopItems.json"));
-	}, [shopItems]);
+		setShopItems(require("./shopItems.json"))
+	}, [shopItems])
 
 	const handleClickItem = (item: Item) => {
-		setActiveItem(item);
-	};
+		setActiveItem(item)
+	}
 
 	const handleShopModeChange = () => {
 		if (shopMode === "buy") {
-			setShopMode("sell");
+			setShopMode("sell")
 		} else {
-			setShopMode("buy");
+			setShopMode("buy")
 		}
-	};
+	}
 
 	return (
 		<ReactModal style={shopModalStyles} isOpen={props.shopOpen}>
@@ -114,7 +114,8 @@ export default function ShopModal(props: Props): ReactElement {
 				<ModalContentTop>
 					<SwitchModeBtn
 						onClick={() => handleShopModeChange()}
-						className="nes-btn is-primary is-small">
+						className="nes-btn is-primary is-small"
+					>
 						Switch Shop Mode
 					</SwitchModeBtn>
 				</ModalContentTop>
@@ -128,5 +129,5 @@ export default function ShopModal(props: Props): ReactElement {
 				</ModalContentBottom>
 			</ModalContent>
 		</ReactModal>
-	);
+	)
 }

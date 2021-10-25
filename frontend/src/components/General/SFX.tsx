@@ -1,16 +1,16 @@
-import React, { ReactElement } from "react";
-import ReactHowler from "react-howler";
-import styled from "styled-components";
+import React, { ReactElement } from "react"
+import ReactHowler from "react-howler"
+import styled from "styled-components"
 
 const Container = styled.div`
 	position: fixed;
 	top: 0em;
 	left: 0em;
-`;
+`
 
 interface Props {
-	sfxSrc: string;
-	handleEndSFX: any;
+	sfxSrc: string
+	handleEndSFX: any
 }
 
 export default function SFX(props: Props): ReactElement {
@@ -24,5 +24,5 @@ export default function SFX(props: Props): ReactElement {
 				volume={0.1}
 			/>
 		</Container>
-	);
+	)
 }
