@@ -2,7 +2,7 @@ import { ReactElement, useState } from "react";
 import styled from "styled-components";
 import AccountCreation from "./AccountCreation";
 import BackgroundMusic from "../General/BackgroundMusic";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import axios from "axios";
 
 const LoginContainer = styled.div`

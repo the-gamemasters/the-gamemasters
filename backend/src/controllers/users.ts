@@ -94,4 +94,8 @@ function login(req: any, res: any) {
 		})
 }
 
+function isLoggedIn(req: any, res: any) {
+	console.log(req)
+}
+
 export { register, findUser, login }
