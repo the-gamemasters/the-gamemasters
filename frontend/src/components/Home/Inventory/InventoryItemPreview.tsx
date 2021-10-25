@@ -1,9 +1,9 @@
 import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
-import { Item } from "./InventoryModal"
+import { Equipment } from "./InventoryModal"
 
 const PreviewContainer = styled.div`
-	height: 60%;
+	height: 70%;
 	width: 100%;
 	display: grid;
 	grid-template-columns: 1fr 3fr 1fr;
@@ -41,86 +41,90 @@ const PreviewContainer = styled.div`
 `
 
 const ItemName = styled.h4`
-	font-size: 1.5rem;
+	font-size: 1.1rem;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 `
 
-const ItemDescription = styled.p`
-	font-size: 0.9rem;
-`
-
-const ShopItemPriceContainer = styled.div`
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	height: auto;
-
-	p {
-		font-size: 1.25rem;
-		margin-left: 0.5rem;
-	}
+const ItemStats = styled.p`
+	font-size: 0.8rem;
 `
 
 interface Props {
-	activeItem: Item
+	activeItem: Equipment
+	equippedArmor: Equipment
+	equippedWeapon: Equipment
+	handleEquip: any
 }
 
 export default function InventoryItemPreview(props: Props): ReactElement {
 	const {
-		item_name,
-		item_effect,
-		item_effect_stat,
-		item_effect_value,
-		item_effect_duration,
-		item_cost,
-		item_icon,
+		charactersequipment_key,
+		equipment_key,
+		equipment_name,
+		slot,
+		equipment_description,
+		equipment_effect_stat,
+		equipment_effect_stat_value,
+		equipped,
+		equipment_icon,
 	} = props.activeItem
 
-	const sanitizeItemEffect = () => {
-		let effect = item_effect.toLowerCase()
-		let effectStat = item_effect_stat.toLowerCase()
-
-		switch (effectStat) {
-			case "str":
-				effectStat = "Strength"
-				break
-			case "dex":
-				effectStat = "Dexterity"
-				break
-			case "int":
-				effectStat = "Intelligence"
-				break
-		}
-
-		switch (effect) {
-			case "heal":
-				return `Heal yourself for ${item_effect_value} Hit Points`
-			case "buff":
-				return `Increase your ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
-			case "debuff":
-				return `Decrease the enemy's ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
+	const sanitizeItemStats = () => {
+		if (slot === 1) {
+			if (equipment_effect_stat === "con") {
+				return `+${equipment_effect_stat_value} Constitution`
+			} else {
+				return `+${equipment_effect_stat_value} Dexterity`
+			}
+		} else {
+			if (equipment_effect_stat === "str") {
+				return `+${equipment_effect_stat_value} Strength`
+			} else {
+				return `+${equipment_effect_stat_value} Intelligence`
+			}
 		}
 	}
 
-	if (props.activeItem.item_name === "") {
+	if (props.activeItem.equipment_name === "") {
 		return <div></div>
 	} else {
 		return (
 			<PreviewContainer>
 				<div className="div1">
-					<img src={`/icons/shop/${item_icon}`} alt="item icon" />
+					<img
+						src={
+							equipment_icon !== ""
+								? `/icons/equipment/${equipment_icon}`
+								: `/icons/equipment/item-placeholder.png`
+						}
+						alt="item icon"
+					/>
 				</div>
 				<div className="div2">
-					<ItemName>{item_name}</ItemName>
-					<ItemDescription>{sanitizeItemEffect()}</ItemDescription>
+					<ItemName>{equipment_name}</ItemName>
+					<ItemStats>{sanitizeItemStats()}</ItemStats>
 				</div>
 				<div className="div3">
-					<ShopItemPriceContainer>
-						<i className="nes-icon coin"></i>
-						<p>{item_cost}</p>
-					</ShopItemPriceContainer>
+					<button
+						className={`nes-btn ${
+							props.activeItem.equipment_key ===
+								props.equippedArmor.equipment_key ||
+							props.activeItem.equipment_key ===
+								props.equippedWeapon.equipment_key
+								? "is-disabled"
+								: "is-success"
+						}`}
+						onClick={
+							props.activeItem.equipment_key ===
+								props.equippedArmor.equipment_key ||
+							props.activeItem.equipment_key ===
+								props.equippedWeapon.equipment_key
+								? undefined
+								: () => props.handleEquip()
+						}>
+						Equip
+					</button>
 				</div>
 			</PreviewContainer>
 		)

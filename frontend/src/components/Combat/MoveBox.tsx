@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react"
+import "./styles/combat.css"
 
 interface Props {
 	handleAction: any
@@ -21,7 +22,8 @@ export default function MoveBox(props: Props): ReactElement {
 		<div className="moves-container">
 			<button
 				type="button"
-				className={`nes-btn attack-btn ${setDisabledButtonClass()}`}
+				className={`nes-btn ${setDisabledButtonClass()}`}
+				id="attack-btn"
 				onClick={
 					props.myTurn
 						? () => props.handleAction("attack", "")
@@ -32,7 +34,8 @@ export default function MoveBox(props: Props): ReactElement {
 			</button>
 			<button
 				type="button"
-				className={`nes-btn spells-btn ${setDisabledButtonClass()}`}
+				className={`nes-btn ${setDisabledButtonClass()}`}
+				id="spells-btn"
 				onClick={
 					props.myTurn
 						? () => props.openSelectModal("spell")
@@ -43,7 +46,8 @@ export default function MoveBox(props: Props): ReactElement {
 			</button>
 			<button
 				type="button"
-				className={`nes-btn item-btn ${setDisabledButtonClass()}`}
+				className={`nes-btn ${setDisabledButtonClass()}`}
+				id="item-btn"
 				onClick={
 					props.myTurn
 						? () => props.openSelectModal("item")
@@ -54,7 +58,8 @@ export default function MoveBox(props: Props): ReactElement {
 			</button>
 			<button
 				type="button"
-				className={`nes-btn evade-btn ${setDisabledButtonClass()}`}
+				className={`nes-btn  ${setDisabledButtonClass()}`}
+				id="evade-btn"
 				onClick={
 					props.myTurn
 						? () => props.handleAction("evade", "")
