@@ -1,10 +1,12 @@
-import { ReactElement, useState } from "react";
-import CharacterInfo from "./CharacterInfo";
-import { classList } from "./classes";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
-import BackgroundMusic from "../General/BackgroundMusic";
+import { ReactElement, useState } from "react"
+import CharacterInfo from "./CharacterInfo"
+import { classList } from "./classes"
+import axios from "axios"
+import { Link } from "react-router-dom"
+import styled from "styled-components"
+import BackgroundMusic from "../General/BackgroundMusic"
+import { useDispatch, useSelector } from "react-redux"
+import { setCharId } from "../../redux/userSlice"
 
 interface Props {}
 
@@ -15,13 +17,13 @@ const Background = styled.div`
 	background-position: center bottom;
 	display: flex;
 	justify-content: space-between;
-`;
+`
 
 const Title = styled.h1`
 	padding-top: 2.5rem;
 	color: #ffffff;
 	-webkit-text-stroke: 1px black;
-`;
+`
 
 const LeftBox = styled.div`
 	height: 100vh;
@@ -33,7 +35,7 @@ const LeftBox = styled.div`
 	justify-content: space-between;
 	padding-top: 4rem;
 	padding-bottom: 10rem;
-`;
+`
 
 const RightBox = styled.div`
 	height: 90vh;
@@ -48,20 +50,21 @@ const RightBox = styled.div`
 	display: flex;
 	flex-direction: column;
 	text-align: left;
-`;
+`
 
 const Input = styled.div`
 	font-size: 3 rem;
 	color: #ffffff;
 	-webkit-text-stroke: 1px black;
-`;
+`
 
 export default function CharacterCreation(props: Props): ReactElement {
-	const [charName, setCharName] = useState<string>("");
+	const [charName, setCharName] = useState<string>("")
 	const [currentClass, setCurrentClass] = useState<
 		"KNIGHT" | "ROGUE" | "BARBARIAN" | "MAGE" | "NONE"
-	>("NONE");
-	const [description, setDescription] = useState<string>("");
+	>("NONE")
+	const [description, setDescription] = useState<string>("")
+	const dispatch = useDispatch()
 
 	return (
 		<Background>
@@ -133,7 +136,7 @@ export default function CharacterCreation(props: Props): ReactElement {
 			{currentClass === "NONE" ? null : (
 				<RightBox>
 					<CharacterInfo currentClass={currentClass} />
-					<Link to="/combat">
+					<Link to="/home">
 						<button
 							onClick={async () => {
 								const result = await axios.post(
@@ -148,9 +151,14 @@ export default function CharacterCreation(props: Props): ReactElement {
 											classList[currentClass].int,
 										dexterity: classList[currentClass].dex,
 									}
-								);
+								)
 
-								console.log(result, "from the submit");
+								dispatch(
+									setCharId(
+										result.data.characterInfo[0]
+											.character_key
+									)
+								)
 							}}>
 							Select
 						</button>
@@ -158,5 +166,5 @@ export default function CharacterCreation(props: Props): ReactElement {
 				</RightBox>
 			)}
 		</Background>
-	);
+	)
 }

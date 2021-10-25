@@ -1,3 +1,3 @@
-SELECT username, email, password
+SELECT *
 FROM users
 WHERE email = $1;
