@@ -67,10 +67,10 @@ function findUser(req: any, res: any) {
 	})
 }
 
-function login(req: any, res: any) {
+async function login(req: any, res: any) {
 	const { email, password } = req.body
 	const db = req.app.get("db")
-	db.Users.find_user_by_email(email)
+	await db.Users.find_user_by_email(email)
 		.then((dbUser: any) => {
 			if (!(dbUser.length > 0)) {
 				res.status(200).json("username or password do not match")
@@ -82,16 +82,37 @@ function login(req: any, res: any) {
 				if (!isValid) {
 					res.status(200).json("username or password do not match")
 				} else {
-					req.session.user = {
-						username: dbUser[0].username,
-					}
+					db.Characters.characterKey(dbUser[0].user_key)
+						.then((dbCharacter: any) => {
+							if (dbCharacter.length > 0) {
+								req.session.user = {
+									username: dbUser[0].username,
+									userKey: dbUser[0].user_key,
+									characterKey: dbCharacter[0].character_key,
+								}
+							} else {
+								req.session.user = {
+									username: dbUser[0].username,
+									userKey: dbUser[0].user_key,
+								}
+							}
+						})
+						.catch((err: any) => {
+							console.log(err)
+						})
+
 					res.status(200).send(req.session.user)
 				}
 			}
 		})
-		.catch((e: any) => {
-			console.log(e)
+		.catch((err: any) => {
+			console.log(err)
 		})
 }
 
-export { register, findUser, login }
+function logout(req: any, res: any) {
+	req.session.destroy()
+	res.sendStatus(200)
+}
+
+export { register, findUser, login, logout }

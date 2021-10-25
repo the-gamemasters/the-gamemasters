@@ -27,7 +27,8 @@ CREATE TABLE characters (
     avatar_key INT REFERENCES avatars(avatar_key),
     gold INT,
     experience INT,
-    level INT
+    level INT,
+    myDefault BOOLEAN
 );
 
 CREATE TABLE charStats (

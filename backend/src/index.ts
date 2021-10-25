@@ -8,8 +8,9 @@ import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
+import { register, login, logout } from "./controllers/users"
 import { createCharacter, editCharacterInfo } from "./controllers/characters"
-import { register, login } from "./controllers/users"
+require("dotenv").config()
 
 //require("./controllers/passport/passportConfig")
 
@@ -102,8 +103,8 @@ app.delete("/api/test", (req, res) => {
 })
 
 app.post("/api/register", register)
-
 app.put("/api/login", login)
+app.post("/api/logout", logout)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)
