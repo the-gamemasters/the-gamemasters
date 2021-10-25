@@ -1,31 +1,33 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import InventoryModal from "./Inventory/InventoryModal";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import InventoryModal from "./Inventory/InventoryModal"
+import { useAppSelector } from "../../redux/reduxHooks"
+import { selectCharStats } from "../../redux/userSlice"
 
 const CharacterContainer = styled.div`
 	background-color: #a0a0a0;
 	display: grid;
 	grid-template-columns: 3fr 4fr;
 	grid-template-rows: 1fr;
-`;
+`
 
 const CharacterLeft = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 1fr 1fr;
-`;
+`
 
 const CharacterCenteredDiv = styled.div`
 	display: flex;
 	justify-content: center;
 	align-items: center;
-`;
+`
 
 const CharacterAvatar = styled.img`
 	height: 7em;
 	width: auto;
 	border: 1px solid black;
-`;
+`
 
 const CharacterItemsBox = styled.div`
 	display: grid;
@@ -33,38 +35,42 @@ const CharacterItemsBox = styled.div`
 	grid-template-rows: repeat(2, 1fr);
 	grid-column-gap: 10px;
 	grid-row-gap: 10px;
-`;
+`
 
 const CharacterItem = styled.img`
 	height: 4em;
 	width: 4em;
 	border: 0.5px solid black;
 	background-color: white;
-`;
+`
 
 const CharacterRight = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 3fr 1fr;
-`;
+`
 
 const CharacterStatsContainer = styled.div`
 	background-color: white;
 	text-align: left;
-`;
+`
 
 interface Props {}
 
 export default function Character(props: Props): ReactElement {
-	const [inventoryOpen, setInventoryOpen] = useState(false);
+	const [inventoryOpen, setInventoryOpen] = useState(false)
 
 	const handleOpenInventory = () => {
-		setInventoryOpen(true);
-	};
+		setInventoryOpen(true)
+	}
 
 	const handleCloseInventory = () => {
-		setInventoryOpen(false);
-	};
+		setInventoryOpen(false)
+	}
+
+	const charStats = useAppSelector(selectCharStats)
+	const { strength, constitution, intelligence, dexterity } = charStats
+	console.log(charStats)
 	return (
 		<CharacterContainer>
 			<CharacterLeft>
@@ -89,10 +95,10 @@ export default function Character(props: Props): ReactElement {
 			<CharacterRight>
 				<CharacterCenteredDiv>
 					<CharacterStatsContainer className="nes-container">
-						<div>STR: 16</div>
-						<div>DEX: 5</div>
-						<div>CON: 10</div>
-						<div>INT: 8</div>
+						<div>STR: {strength}</div>
+						<div>DEX: {dexterity}</div>
+						<div>CON: {constitution}</div>
+						<div>INT: {intelligence}</div>
 					</CharacterStatsContainer>
 				</CharacterCenteredDiv>
 				<CharacterCenteredDiv>
@@ -109,5 +115,5 @@ export default function Character(props: Props): ReactElement {
 				</CharacterCenteredDiv>
 			</CharacterRight>
 		</CharacterContainer>
-	);
+	)
 }

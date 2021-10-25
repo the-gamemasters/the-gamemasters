@@ -6,7 +6,7 @@ import { Link } from "react-router-dom"
 import styled from "styled-components"
 import BackgroundMusic from "../General/BackgroundMusic"
 import { useDispatch, useSelector } from "react-redux"
-import { setCharId } from "../../redux/userSlice"
+import { setCharId, setCharStats } from "../../redux/userSlice"
 
 interface Props {}
 
@@ -151,6 +151,17 @@ export default function CharacterCreation(props: Props): ReactElement {
 											classList[currentClass].int,
 										dexterity: classList[currentClass].dex,
 									}
+								)
+
+								dispatch(
+									setCharStats({
+										strength: classList[currentClass].str,
+										constitution:
+											classList[currentClass].con,
+										intelligence:
+											classList[currentClass].int,
+										dexterity: classList[currentClass].dex,
+									})
 								)
 
 								dispatch(

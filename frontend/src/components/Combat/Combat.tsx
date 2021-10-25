@@ -86,9 +86,9 @@ export default function Combat(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		//TODO
-		dispatch(setUserId(12345))
-		dispatch(setCharId(67890))
+		//TODO  For some reason this function was being called when going from character creation to the home page and it was resetting the userID and charId in redux
+		// dispatch(setUserId(12345))
+		// dispatch(setCharId(67890))
 	}, [])
 
 	useEffect(() => {

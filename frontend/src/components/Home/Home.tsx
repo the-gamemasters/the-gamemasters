@@ -1,24 +1,25 @@
-import React, { ReactElement, useEffect, useState } from "react";
-import styled from "styled-components";
-import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks";
+import React, { ReactElement, useEffect, useState } from "react"
+import styled from "styled-components"
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
 	selectCharId,
 	selectUserId,
+	selectCharStats,
 	setCharId,
 	setUserId,
-} from "../../redux/userSlice";
-import Character from "./Character";
-import Community from "./Community";
-import HomeAction from "./HomeAction";
-import ShopPreview from "./ShopPreview";
-import User from "./User";
+} from "../../redux/userSlice"
+import Character from "./Character"
+import Community from "./Community"
+import HomeAction from "./HomeAction"
+import ShopPreview from "./ShopPreview"
+import User from "./User"
 
 interface Props {}
 
 const PageContainer = styled.div`
 	height: 100vh;
 	width: 100vw;
-`;
+`
 
 const HomeContainer = styled.div`
 	height: 100%;
@@ -26,7 +27,7 @@ const HomeContainer = styled.div`
 	display: grid;
 	grid-template-columns: 1fr;
 	grid-template-rows: 60% 40%;
-`;
+`
 
 const HomeTop = styled.div`
 	height: 100%;
@@ -34,7 +35,7 @@ const HomeTop = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 3fr;
 	grid-template-rows: 1fr;
-`;
+`
 
 const HomeBottom = styled.div`
 	height: 100%;
@@ -42,7 +43,7 @@ const HomeBottom = styled.div`
 	display: grid;
 	grid-template-columns: 1fr 2fr;
 	grid-template-rows: 1fr;
-`;
+`
 
 const TopRight = styled.div`
 	height: 100%;
@@ -54,27 +55,28 @@ const TopRight = styled.div`
 	background-position: center;
 	background-size: cover;
 	color: white;
-`;
+`
 
 export default function Home(props: Props): ReactElement {
-	const [currentWorld, setCurrentWorld] = useState(2);
-	const userId = useAppSelector(selectUserId);
-	const charId = useAppSelector(selectCharId);
-	const dispatch = useAppDispatch();
+	const [currentWorld, setCurrentWorld] = useState(2)
+	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
+
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		//TODO
-		dispatch(setUserId(12345));
-		dispatch(setCharId(67890));
-	});
+		//TODO userId and character Id should be set when you log in.
+		// dispatch(setUserId(12345));
+		// dispatch(setCharId(67890));
+	})
 
 	const handleWorldChange = (world: number) => {
-		setCurrentWorld(world);
-	};
+		setCurrentWorld(world)
+	}
 
 	const getWorldName = () => {
-		return worldList[currentWorld - 1].world_name;
-	};
+		return worldList[currentWorld - 1].world_name
+	}
 
 	return (
 		<PageContainer>
@@ -137,7 +139,7 @@ export default function Home(props: Props): ReactElement {
 				</HomeBottom>
 			</HomeContainer>
 		</PageContainer>
-	);
+	)
 }
 
 const worldList = [
@@ -186,4 +188,4 @@ const worldList = [
 		background: "world-5.jpg",
 		notes: "",
 	},
-];
+]
