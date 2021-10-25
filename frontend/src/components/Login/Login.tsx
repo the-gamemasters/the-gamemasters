@@ -1,9 +1,9 @@
-import { ReactElement, useState } from "react";
-import styled from "styled-components";
-import AccountCreation from "./AccountCreation";
-import BackgroundMusic from "../General/BackgroundMusic";
-import { Link, Redirect } from "react-router-dom";
-import axios from "axios";
+import { ReactElement, useState } from "react"
+import styled from "styled-components"
+import AccountCreation from "./AccountCreation"
+import BackgroundMusic from "../General/BackgroundMusic"
+import { Link } from "react-router-dom"
+import axios from "axios"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -12,12 +12,12 @@ const LoginContainer = styled.div`
 	background-image: url("/images/login-background.gif");
 	background-size: cover;
 	background-position: center bottom;
-`;
+`
 
 const GameTitle = styled.h1`
 	color: #ffffff;
 	-webkit-text-stroke: 1px black;
-`;
+`
 
 const LoginForm = styled.form`
 	padding: 2em 0;
@@ -44,7 +44,7 @@ const LoginForm = styled.form`
 	button {
 		margin-top: 1rem;
 	}
-`;
+`
 
 const ModalContainer = styled.div`
 	position: fixed !important;
@@ -54,31 +54,31 @@ const ModalContainer = styled.div`
 	left: 50%;
 	top: 50%;
 	transform: translate(-50%, -50%);
-`;
+`
 interface Props {}
 
 export default function Login(props: Props): ReactElement {
-	const [newUser, setNewUser] = useState<boolean>(false);
-	const [email, setEmail] = useState<string>("");
-	const [password, setPassword] = useState<string>("");
+	const [newUser, setNewUser] = useState<boolean>(false)
+	const [email, setEmail] = useState<string>("")
+	const [password, setPassword] = useState<string>("")
 
 	function submitLogin() {
 		if (email.length === 0) {
-			alert("Please enter email and password, or create a new user");
+			alert("Please enter email and password, or create a new user")
 		} else {
 			axios
 				.put("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
-						alert(res.data);
+						alert(res.data)
 					} else {
-						console.log(res.data);
-						window.location.hash = "#Char";
+						console.log(res.data)
+						window.location.hash = "#Char"
 					}
 				})
 				.catch((e) => {
-					console.log(e);
-				});
+					console.log(e)
+				})
 		}
 	}
 
@@ -116,13 +116,15 @@ export default function Login(props: Props): ReactElement {
 
 				<button
 					className="nes-btn is-primary"
-					onClick={() => submitLogin()}>
+					onClick={() => submitLogin()}
+				>
 					Login
 				</button>
 			</LoginForm>
 			<button
 				className="nes-btn is-success"
-				onClick={() => setNewUser(!newUser)}>
+				onClick={() => setNewUser(!newUser)}
+			>
 				Create an Account
 			</button>
 
@@ -132,5 +134,5 @@ export default function Login(props: Props): ReactElement {
 				</ModalContainer>
 			) : null}
 		</LoginContainer>
-	);
+	)
 }

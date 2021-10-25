@@ -1,11 +1,11 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import { Item } from "./ShopModal";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import { Item } from "./ShopModal"
 
 interface Props {
-	item: Item;
-	handleClickItem: any;
-	activeItem: Item;
+	item: Item
+	handleClickItem: any
+	activeItem: Item
 }
 
 const ShopItemContainer = styled.li`
@@ -33,25 +33,25 @@ const ShopItemContainer = styled.li`
 		height: 4rem;
 		width: auto;
 	}
-`;
+`
 
 const ShopItemPriceContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	align-items: center;
 	height: auto;
-`;
+`
 
 export default function ShopItem(props: Props): ReactElement {
-	const [hovered, setHovered] = useState(false);
+	const [hovered, setHovered] = useState(false)
 
 	const handleHover = () => {
-		setHovered(!hovered);
-	};
+		setHovered(!hovered)
+	}
 
 	const handleClick = () => {
-		props.handleClickItem(props.item);
-	};
+		props.handleClickItem(props.item)
+	}
 
 	return (
 		<ShopItemContainer
@@ -64,7 +64,8 @@ export default function ShopItem(props: Props): ReactElement {
 					: props.activeItem === props.item
 					? "#969696"
 					: undefined,
-			}}>
+			}}
+		>
 			<img src={`/icons/items/${props.item.item_icon}`} alt="item icon" />
 			<p className="item-name">{props.item.item_name}</p>
 			<ShopItemPriceContainer>
@@ -72,5 +73,5 @@ export default function ShopItem(props: Props): ReactElement {
 				<p>{props.item.item_cost}</p>
 			</ShopItemPriceContainer>
 		</ShopItemContainer>
-	);
+	)
 }

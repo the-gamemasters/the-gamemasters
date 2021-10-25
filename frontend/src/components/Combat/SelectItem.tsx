@@ -40,7 +40,8 @@ export default function SelectItem(props: Props): ReactElement {
 		<Item
 			onMouseEnter={(e) => setHovered(e)}
 			onMouseLeave={(e) => setNotHovered(e)}
-			onClick={() => handleClick()}>
+			onClick={() => handleClick()}
+		>
 			{props.objectName}{" "}
 			{props.objectQuantity === undefined
 				? null
