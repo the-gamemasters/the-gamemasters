@@ -14,6 +14,7 @@ import {
 	selectCharId,
 } from "../../redux/userSlice"
 import BackgroundMusic from "../General/BackgroundMusic"
+import SFX from "../General/SFX"
 import "./styles/combat.css"
 import { CombatState, Player } from "./CombatState"
 
@@ -81,6 +82,7 @@ export default function Combat(props: Props): ReactElement {
 	const [state, setState] = useState<any>()
 	const [selectOpen, setSelectOpen] = useState<boolean>(false)
 	const [selectType, setSelectType] = useState<"spell" | "item">("spell")
+	const [activeSFX, setActiveSFX] = useState("")
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
 	const dispatch = useAppDispatch()
@@ -115,18 +117,38 @@ export default function Combat(props: Props): ReactElement {
 
 	room?.onMessage("attack", (message: any) => {
 		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-combat-hit.wav")
+		}
 	})
 
 	room?.onMessage("spell", (message: any) => {
 		setCombatLog(message)
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+		}
 	})
 
 	room?.onMessage("item", (message: any) => {
 		setCombatLog(`${message[0]} ${message[1]}`)
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-combat-heal.wav")
+		}
 	})
 
 	room?.onMessage("evade", (message: any) => {
 		setCombatLog(`${message} prepares to evade!`)
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+		}
 	})
 
 	room?.onMessage("miss", (message: any) => {
@@ -137,10 +159,20 @@ export default function Combat(props: Props): ReactElement {
 				`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
 			)
 		}
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-combat-evade.wav")
+		}
 	})
 
 	room?.onMessage("victory", (message: any) => {
 		setResult(message)
+		if (activeSFX) {
+			return
+		} else {
+			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+		}
 	})
 
 	room?.onMessage("disconnect", () => {
@@ -156,6 +188,10 @@ export default function Combat(props: Props): ReactElement {
 		setState(state)
 		setCurrentTurn(state.currentTurn)
 	})
+
+	const handleEndSFX = () => {
+		setActiveSFX("")
+	}
 
 	const handleAction = (move: string, moveData: string) => {
 		let message = {
@@ -214,6 +250,11 @@ export default function Combat(props: Props): ReactElement {
 		return (
 			<PageContainer>
 				<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
+				{activeSFX === "" ? (
+					""
+				) : (
+					<SFX sfxSrc={activeSFX} handleEndSFX={handleEndSFX} />
+				)}
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
 					<h6>Room ID: {room.id}</h6>
@@ -233,10 +274,12 @@ export default function Combat(props: Props): ReactElement {
 					<div className="mid-center">
 						<ReactModal
 							style={combatEndModalStyles}
-							isOpen={result !== undefined}>
+							isOpen={result !== undefined}
+						>
 							<div
 								className="nes-dialog is-dark is-rounded"
-								id="dialog-dark-rounded">
+								id="dialog-dark-rounded"
+							>
 								{result === myParty || result === "dc" ? (
 									<p className="title nes-text is-success">
 										Victory!
@@ -291,7 +334,8 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party1"
 										? "party-name-turn"
 										: undefined
-								}>
+								}
+							>
 								{state.party1.displayName}
 							</span>
 							{myParty === "party1" ? (
@@ -309,7 +353,8 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party1")}>
+							onClick={() => handleDebug("party1")}
+						>
 							Debug P1
 						</button>
 					</div>
@@ -340,7 +385,8 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party2"
 										? "party-name-turn"
 										: ""
-								}>
+								}
+							>
 								{state.party2.displayName}
 							</span>
 						</span>
@@ -355,7 +401,8 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party2")}>
+							onClick={() => handleDebug("party2")}
+						>
 							Debug P2
 						</button>
 					</div>

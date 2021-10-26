@@ -5,6 +5,7 @@ import axios from "axios"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 import BackgroundMusic from "../General/BackgroundMusic"
+// need to fix this to use the right dispatch
 import { useDispatch, useSelector } from "react-redux"
 import { setCharId, setCharStats } from "../../redux/userSlice"
 

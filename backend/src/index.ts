@@ -8,8 +8,13 @@ import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
+import { register, login, logout } from "./controllers/users"
 import { createCharacter, editCharacterInfo } from "./controllers/characters"
-import { register, login } from "./controllers/users"
+import {
+	getEquipment,
+	addEquipment,
+	editEquipment,
+} from "./controllers/equipment"
 
 //require("./controllers/passport/passportConfig")
 
@@ -69,7 +74,7 @@ const gameServer = new Server({
 })
 
 gameServer.define("combat", CombatRoom)
-gameServer.listen(port)
+gameServer.listen(3553)
 
 //Test GET Endpoint
 app.get("/api/test", (req, res) => {
@@ -101,9 +106,15 @@ app.delete("/api/test", (req, res) => {
 	res.status(200).send("Success")
 })
 
-app.post("/api/register", register)
+app.get("/api/equipment/:charKey", getEquipment)
 
+app.post("/api/equipment/:charKey", addEquipment)
+
+app.put("/api/equipment/:charKey", editEquipment)
+
+app.post("/api/register", register)
 app.put("/api/login", login)
+app.post("/api/logout", logout)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)

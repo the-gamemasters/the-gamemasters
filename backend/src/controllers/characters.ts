@@ -63,9 +63,11 @@ async function editCharacterInfo(req: any, res: any) {
 	const { characterKey } = req.body
 
 	let result = await db.Characters.findCharacter([characterKey])
+	console.log(result[0], characterKey)
 	const { description, gold, experience, level } = result[0]
 
 	result = await db.Characters.findCharacterStats([characterKey])
+	console.log(result)
 	const { strength, constitution, intelligence, dexterity } = result[0]
 
 	const {

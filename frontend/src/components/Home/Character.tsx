@@ -104,13 +104,17 @@ export default function Character(props: Props): ReactElement {
 					<button
 						onClick={() => handleOpenInventory()}
 						type="button"
-						className="nes-btn">
+						className="nes-btn is-success">
 						Open Inventory
 					</button>
-					<InventoryModal
-						inventoryOpen={inventoryOpen}
-						closeModal={handleCloseInventory}
-					/>
+					{inventoryOpen === true ? (
+						<InventoryModal
+							inventoryOpen={inventoryOpen}
+							closeModal={handleCloseInventory}
+						/>
+					) : (
+						<div></div>
+					)}
 				</CharacterCenteredDiv>
 			</CharacterRight>
 		</CharacterContainer>

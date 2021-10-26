@@ -120,13 +120,15 @@ export default function Login(props: Props): ReactElement {
 
 				<button
 					className="nes-btn is-primary"
-					onClick={() => submitLogin()}>
+					onClick={() => submitLogin()}
+				>
 					Login
 				</button>
 			</LoginForm>
 			<button
 				className="nes-btn is-success"
-				onClick={() => setNewUser(!newUser)}>
+				onClick={() => setNewUser(!newUser)}
+			>
 				Create an Account
 			</button>
 

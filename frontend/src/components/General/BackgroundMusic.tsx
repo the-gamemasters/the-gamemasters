@@ -1,6 +1,6 @@
-import React, { ReactElement, useState } from "react";
-import styled from "styled-components";
-import ReactHowler from "react-howler";
+import React, { ReactElement, useState } from "react"
+import styled from "styled-components"
+import ReactHowler from "react-howler"
 
 const SpeakerContainer = styled.div`
 	position: fixed;
@@ -20,15 +20,15 @@ const SpeakerIcon = styled.img`
 `;
 
 interface Props {
-	musicSrc: string;
+	musicSrc: string
 }
 
 export default function BackgroundMusic(props: Props): ReactElement {
-	const [musicPlaying, setMusicPlaying] = useState(false);
+	const [musicPlaying, setMusicPlaying] = useState(false)
 
 	const handleSpeakerClick = () => {
-		setMusicPlaying(!musicPlaying);
-	};
+		setMusicPlaying(!musicPlaying)
+	}
 
 	return (
 		<SpeakerContainer>
@@ -51,5 +51,5 @@ export default function BackgroundMusic(props: Props): ReactElement {
 				volume={0.1}
 			/>
 		</SpeakerContainer>
-	);
+	)
 }
