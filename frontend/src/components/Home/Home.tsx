@@ -69,10 +69,7 @@ export default function Home(props: Props): ReactElement {
 		const keepCharacterInfoUpdatedOnRedux = async (charId: number) => {
 			try {
 				const result = await axios.get(`/api/character/${charId}`)
-				console.log(
-					result.data,
-					"char info from home that will be stored in redux"
-				)
+
 				const {
 					char_name: charName,
 					gold,

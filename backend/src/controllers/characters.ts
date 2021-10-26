@@ -45,7 +45,6 @@ async function createCharacter(req: any, res: any) {
 		level,
 	])
 
-	console.log(characterInfo, "character info")
 	const { character_key: characterKey } = characterInfo[0]
 
 	const characterStats = await db.Characters.createCharacterStats([
@@ -64,14 +63,10 @@ async function getCharacterInfo(req: any, res: any) {
 	const { charKey } = req.params
 
 	let result = await db.Characters.findCharacter([charKey])
-	console.log(result, "find")
 	const { char_name, gold, experience, level } = result[0]
 
 	result = await db.Characters.findCharacterStats([charKey])
-	console.log(result, "stats")
 	const { strength, constitution, intelligence, dexterity } = result[0]
-
-	console.log(result)
 
 	res.status(200).json({
 		char_name,
