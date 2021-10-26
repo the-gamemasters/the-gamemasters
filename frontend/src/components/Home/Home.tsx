@@ -4,15 +4,17 @@ import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
 	selectCharId,
 	selectUserId,
-	selectCharStats,
+	selectCharInfo,
 	setCharId,
 	setUserId,
+	setCharInfo,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
 import HomeAction from "./HomeAction"
 import ShopPreview from "./ShopPreview"
 import User from "./User"
+import axios from "axios"
 
 interface Props {}
 
@@ -59,15 +61,45 @@ const TopRight = styled.div`
 
 export default function Home(props: Props): ReactElement {
 	const [currentWorld, setCurrentWorld] = useState(2)
-	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
 
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		//TODO userId and character Id should be set when you log in.
-		// dispatch(setUserId(12345));
-		// dispatch(setCharId(67890));
+		const keepCharacterInfoUpdatedOnRedux = async (charId: number) => {
+			try {
+				const result = await axios.get(`/api/character/${charId}`)
+				console.log(
+					result.data,
+					"char info from home that will be stored in redux"
+				)
+				const {
+					char_name: charName,
+					gold,
+					experience,
+					level,
+					strength,
+					constitution,
+					intelligence,
+					dexterity,
+				} = result.data
+				dispatch(
+					setCharInfo({
+						charName,
+						gold,
+						experience,
+						level,
+						strength,
+						constitution,
+						intelligence,
+						dexterity,
+					})
+				)
+			} catch (error) {
+				console.log(error)
+			}
+		}
+		keepCharacterInfoUpdatedOnRedux(charId)
 	})
 
 	const handleWorldChange = (world: number) => {
@@ -88,8 +120,7 @@ export default function Home(props: Props): ReactElement {
 							backgroundImage: `url(/images/${
 								worldList[currentWorld - 1].background
 							})`,
-						}}
-					>
+						}}>
 						<div>
 							<h2>{getWorldName()}</h2>
 							<h5>{`World ${currentWorld}`}</h5>
@@ -107,14 +138,12 @@ export default function Home(props: Props): ReactElement {
 										handleWorldChange(
 											Number(e.target.value)
 										)
-									}
-								>
+									}>
 									<option
 										value=""
 										disabled
 										defaultValue="2"
-										hidden
-									>
+										hidden>
 										Select World...
 									</option>
 									<option value="1">

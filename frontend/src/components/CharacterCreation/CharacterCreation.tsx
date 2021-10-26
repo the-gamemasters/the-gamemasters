@@ -10,7 +10,7 @@ import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks"
 import {
 	setUserId,
 	setCharId,
-	setCharStats,
+	setCharInfo,
 	selectUserId,
 	selectCharId,
 } from "../../redux/userSlice"
@@ -163,7 +163,8 @@ export default function CharacterCreation(props: Props): ReactElement {
 								)
 
 								dispatch(
-									setCharStats({
+									setCharInfo({
+										charName: charName,
 										strength: classList[currentClass].str,
 										constitution:
 											classList[currentClass].con,

@@ -5,7 +5,7 @@ import BackgroundMusic from "../General/BackgroundMusic"
 import { Link } from "react-router-dom"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
-import { setUserId } from "../../redux/userSlice"
+import { setCharId, setUserId } from "../../redux/userSlice"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -78,6 +78,7 @@ export default function Login(props: Props): ReactElement {
 					} else {
 						console.log(res.data)
 						dispatch(setUserId(res.data.userKey))
+						dispatch(setCharId(res.data.characterKey))
 						window.location.hash = "#Char"
 					}
 				})
@@ -121,13 +122,15 @@ export default function Login(props: Props): ReactElement {
 
 				<button
 					className="nes-btn is-primary"
-					onClick={() => submitLogin()}>
+					onClick={() => submitLogin()}
+				>
 					Login
 				</button>
 			</LoginForm>
 			<button
 				className="nes-btn is-success"
-				onClick={() => setNewUser(!newUser)}>
+				onClick={() => setNewUser(!newUser)}
+			>
 				Create an Account
 			</button>
 

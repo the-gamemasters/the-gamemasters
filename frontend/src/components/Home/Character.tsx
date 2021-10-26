@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
 import InventoryModal from "./Inventory/InventoryModal"
 import { useAppSelector } from "../../redux/reduxHooks"
-import { selectCharStats } from "../../redux/userSlice"
+import { selectCharInfo } from "../../redux/userSlice"
 
 const CharacterContainer = styled.div`
 	background-color: #a0a0a0;
@@ -68,8 +68,8 @@ export default function Character(props: Props): ReactElement {
 		setInventoryOpen(false)
 	}
 
-	const charStats = useAppSelector(selectCharStats)
-	const { strength, constitution, intelligence, dexterity } = charStats
+	const charInfo = useAppSelector(selectCharInfo)
+	const { strength, constitution, intelligence, dexterity } = charInfo
 	return (
 		<CharacterContainer>
 			<CharacterLeft>
@@ -104,8 +104,7 @@ export default function Character(props: Props): ReactElement {
 					<button
 						onClick={() => handleOpenInventory()}
 						type="button"
-						className="nes-btn is-success"
-					>
+						className="nes-btn is-success">
 						Open Inventory
 					</button>
 					{inventoryOpen === true ? (
