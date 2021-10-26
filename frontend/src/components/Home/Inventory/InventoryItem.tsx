@@ -44,7 +44,8 @@ export default function InventoryItem(props: Props): ReactElement {
 					: props.activeItem === props.item
 					? "#969696"
 					: undefined,
-			}}>
+			}}
+		>
 			<img
 				src={
 					props.item.equipment_icon !== ""

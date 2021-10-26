@@ -66,7 +66,8 @@ export default function EquippedItems(props: Props): ReactElement {
 							: props.activeItem === props.equippedArmor
 							? "#969696"
 							: undefined,
-					}}>
+					}}
+				>
 					<img
 						src={`/icons/equipment/${props?.equippedArmor.equipment_icon}`}
 						alt="current armor"
@@ -82,7 +83,8 @@ export default function EquippedItems(props: Props): ReactElement {
 							: props.activeItem === props.equippedWeapon
 							? "#969696"
 							: undefined,
-					}}>
+					}}
+				>
 					<img
 						src={`/icons/equipment/${props?.equippedWeapon.equipment_icon}`}
 						alt="current weapon"

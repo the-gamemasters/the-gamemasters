@@ -122,7 +122,8 @@ export default function InventoryItemPreview(props: Props): ReactElement {
 								props.equippedWeapon.equipment_key
 								? undefined
 								: () => props.handleEquip()
-						}>
+						}
+					>
 						Equip
 					</button>
 				</div>
