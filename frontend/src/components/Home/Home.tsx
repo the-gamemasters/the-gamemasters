@@ -4,6 +4,7 @@ import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
 	selectCharId,
 	selectUserId,
+	selectCharStats,
 	setCharId,
 	setUserId,
 } from "../../redux/userSlice"
@@ -60,12 +61,13 @@ export default function Home(props: Props): ReactElement {
 	const [currentWorld, setCurrentWorld] = useState(2)
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
+
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		//TODO
-		dispatch(setUserId(30))
-		dispatch(setCharId(23))
+		//TODO userId and character Id should be set when you log in.
+		// dispatch(setUserId(12345));
+		// dispatch(setCharId(67890));
 	})
 
 	const handleWorldChange = (world: number) => {

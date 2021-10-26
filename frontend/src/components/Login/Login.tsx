@@ -4,6 +4,8 @@ import AccountCreation from "./AccountCreation"
 import BackgroundMusic from "../General/BackgroundMusic"
 import { Link } from "react-router-dom"
 import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
+import { setUserId } from "../../redux/userSlice"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -61,6 +63,7 @@ export default function Login(props: Props): ReactElement {
 	const [newUser, setNewUser] = useState<boolean>(false)
 	const [email, setEmail] = useState<string>("")
 	const [password, setPassword] = useState<string>("")
+	const dispatch = useDispatch()
 
 	function submitLogin() {
 		if (email.length === 0) {
@@ -73,6 +76,7 @@ export default function Login(props: Props): ReactElement {
 						alert(res.data)
 					} else {
 						console.log(res.data)
+						dispatch(setUserId(res.data.userId))
 						window.location.hash = "#Char"
 					}
 				})
