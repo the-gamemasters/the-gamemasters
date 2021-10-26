@@ -1,6 +1,7 @@
 import { Room, Client } from "colyseus"
 import CombatRoomState from "./schema/CombatRoomState"
 import { encountersList } from "./encounters"
+import axios from "axios"
 
 const testSpellList = [
 	{
@@ -281,6 +282,13 @@ export class CombatRoom extends Room<CombatRoomState> {
 	}
 
 	onJoin(client: Client, options: any) {
+		const getUserCharacter = async (charId: number) => {
+			const result = await axios.get(`/api/character/${charId}`)
+			console.log(result)
+			return result
+		}
+		console.log(getUserCharacter(47))
+
 		let force: party = this.clients.length > 1 ? "party2" : "party1"
 		let randomEncounter = Math.floor((Math.random() / 2) * 10)
 

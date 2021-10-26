@@ -73,10 +73,11 @@ export default function Login(props: Props): ReactElement {
 				.put("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
+						console.log(res.data)
 						alert(res.data)
 					} else {
 						console.log(res.data)
-						dispatch(setUserId(res.data.userId))
+						dispatch(setUserId(res.data.userKey))
 						window.location.hash = "#Char"
 					}
 				})
@@ -120,15 +121,13 @@ export default function Login(props: Props): ReactElement {
 
 				<button
 					className="nes-btn is-primary"
-					onClick={() => submitLogin()}
-				>
+					onClick={() => submitLogin()}>
 					Login
 				</button>
 			</LoginForm>
 			<button
 				className="nes-btn is-success"
-				onClick={() => setNewUser(!newUser)}
-			>
+				onClick={() => setNewUser(!newUser)}>
 				Create an Account
 			</button>
 

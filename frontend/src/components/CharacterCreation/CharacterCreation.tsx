@@ -6,8 +6,14 @@ import { Link } from "react-router-dom"
 import styled from "styled-components"
 import BackgroundMusic from "../General/BackgroundMusic"
 // need to fix this to use the right dispatch
-import { useDispatch, useSelector } from "react-redux"
-import { setCharId, setCharStats } from "../../redux/userSlice"
+import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks"
+import {
+	setUserId,
+	setCharId,
+	setCharStats,
+	selectUserId,
+	selectCharId,
+} from "../../redux/userSlice"
 
 interface Props {}
 
@@ -65,7 +71,8 @@ export default function CharacterCreation(props: Props): ReactElement {
 		"KNIGHT" | "ROGUE" | "BARBARIAN" | "MAGE" | "NONE"
 	>("NONE")
 	const [description, setDescription] = useState<string>("")
-	const dispatch = useDispatch()
+	const dispatch = useAppDispatch()
+	const userId = useAppSelector(selectUserId)
 
 	return (
 		<Background>
@@ -143,6 +150,7 @@ export default function CharacterCreation(props: Props): ReactElement {
 								const result = await axios.post(
 									"/api/character",
 									{
+										userKey: userId,
 										charName,
 										description,
 										strength: classList[currentClass].str,
