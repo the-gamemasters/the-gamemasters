@@ -40,6 +40,7 @@
 	"dependencies": {
 		"@colyseus/arena": "^0.14.22",
 		"@colyseus/monitor": "^0.14.22",
+		"axios": "^0.24.0",
 		"bcrypt": "^5.0.1",
 		"bcryptjs": "^2.4.3",
 		"colyseus": "^0.14.20",

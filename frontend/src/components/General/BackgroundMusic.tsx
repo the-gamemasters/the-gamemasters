@@ -6,7 +6,7 @@ const SpeakerContainer = styled.div`
 	position: fixed;
 	top: 0.5em;
 	left: 0.5em;
-`;
+`
 
 const SpeakerIcon = styled.img`
 	height: 3rem;
@@ -17,7 +17,7 @@ const SpeakerIcon = styled.img`
 	border: 4px black solid;
 	border-radius: 5px;
 	background-color: white;
-`;
+`
 
 interface Props {
 	musicSrc: string
