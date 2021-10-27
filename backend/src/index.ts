@@ -8,7 +8,13 @@ import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
-import { register, login, logout } from "./controllers/users"
+import {
+	register,
+	login,
+	logout,
+	findUserById,
+	findCharById,
+} from "./controllers/users"
 import {
 	createCharacter,
 	editCharacterInfo,
@@ -121,6 +127,8 @@ app.put("/api/equipment/:charKey", editEquipment)
 app.post("/api/register", register)
 app.put("/api/login", login)
 app.post("/api/logout", logout)
+app.get("/api/userid", findUserById)
+app.get("/api/charid", findCharById)
 
 app.use(express.static(__dirname + "/../frontend/public"))
 console.log(`Listening on ws://localhost:${port}`)

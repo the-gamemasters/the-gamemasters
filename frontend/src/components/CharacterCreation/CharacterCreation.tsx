@@ -1,4 +1,4 @@
-import { ReactElement, useState } from "react"
+import { ReactElement, useEffect, useState } from "react"
 import CharacterInfo from "./CharacterInfo"
 import { classList } from "./classes"
 import axios from "axios"
@@ -73,6 +73,23 @@ export default function CharacterCreation(props: Props): ReactElement {
 	const [description, setDescription] = useState<string>("")
 	const dispatch = useAppDispatch()
 	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
+
+	async function checkUserId(userId: any){
+			await axios
+			.get("/api/userid")
+			.then((responseUserId) => {
+				console.log('DB Returned UserId:', responseUserId)
+			})
+			.catch((err) => {
+				console.log(err)
+			})
+	}
+
+	useEffect(() => {
+		console.log("This is my userId: ", userId, 'This is my charID: ', charId)
+		checkUserId(userId)
+	})
 
 	return (
 		<Background>

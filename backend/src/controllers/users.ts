@@ -60,11 +60,36 @@ async function register(req: any, res: any) {
 async function findUser(req: any, res: any) {
 	const { email } = req.body
 	const db = req.app.get("db")
-	await db.find_user_by_email(email).then((dbUser: any) => {
+	await db.Users.find_user_by_email(email).then((dbUser: any) => {
 		if (!(dbUser.length > 0)) {
 			res.status(200).json("No user found")
 		} else {
 			res.status(200).json(dbUser)
+		}
+	})
+}
+
+async function findUserById(req: any, res: any) {
+	const db = req.app.get("db")
+	const { userId } = req.body
+	console.log(req.body)
+	await db.Users.find_user_by_id(userId).then((dbUser: any) => {
+		if (!(dbUser.length > 0)) {
+			res.status(200).json("No user found")
+		} else {
+			res.status(200).json(dbUser)
+		}
+	})
+}
+
+async function findCharById(req: any, res: any) {
+	const db = req.app.get("db")
+	const { charId } = req.body
+	await db.Characters.characterKey(charId).then((dbChar: any) => {
+		if (!(dbChar.length > 0)) {
+			res.status(200).json("No char found")
+		} else {
+			res.status(200).json(dbChar)
 		}
 	})
 }
@@ -123,4 +148,12 @@ function logout(req: any, res: any) {
 	res.sendStatus(200)
 }
 
-export { register, findUser, login, logout, isLoggedIn }
+export {
+	register,
+	findUser,
+	login,
+	logout,
+	isLoggedIn,
+	findUserById,
+	findCharById,
+}
