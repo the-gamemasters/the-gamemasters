@@ -1,14 +1,14 @@
-import React, { ReactElement } from "react";
-import styled from "styled-components";
-import { classList } from "./classes";
-import { SKILLS } from "./skills";
+import React, { ReactElement } from "react"
+import styled from "styled-components"
+import { classList } from "./classes"
+import { SKILLS } from "./skills"
 
 interface Props {
-	currentClass: "KNIGHT" | "ROGUE" | "BARBARIAN" | "MAGE" | "NONE";
+	currentClass: "KNIGHT" | "ROGUE" | "BARBARIAN" | "MAGE" | "NONE"
 }
 
 function CharacterInfo(props: Props): ReactElement {
-	let currentClass = classList[props.currentClass];
+	let currentClass = classList[props.currentClass]
 
 	return (
 		<div>
@@ -29,14 +29,14 @@ function CharacterInfo(props: Props): ReactElement {
 								<p>{val.toUpperCase()}</p>
 								<span>{currentClass[val]}</span>
 							</div>
-						);
+						)
 					})}
 					<h3>Passive Skill</h3>
 					<p>{currentClass.passive}</p>
 				</>
 			) : null}
 		</div>
-	);
+	)
 }
 
-export default CharacterInfo;
+export default CharacterInfo

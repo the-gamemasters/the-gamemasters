@@ -113,8 +113,8 @@ async function login(req: any, res: any) {
 		})
 }
 
-function isLoggedIn(req: any, res: any) {
-	console.log(req)
+function isLoggedIn(req: any) {
+	console.log(req.session)
 }
 
 function logout(req: any, res: any) {

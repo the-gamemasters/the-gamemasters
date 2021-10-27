@@ -66,7 +66,6 @@ export default function Login(props: Props): ReactElement {
 	const [password, setPassword] = useState<string>("")
 	const history = useHistory()
 	const routeChangeChar = () => {
-		console.log("I made it to redirect!")
 		let path = `/Char`
 		history.push(path)
 	}
@@ -83,7 +82,7 @@ export default function Login(props: Props): ReactElement {
 						alert(res.data)
 					} else {
 						dispatch(setUserId(res.data.userId))
-						routeChangeChar();
+						routeChangeChar()
 					}
 				})
 				.catch((e) => {
