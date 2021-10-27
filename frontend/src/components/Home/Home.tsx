@@ -117,7 +117,8 @@ export default function Home(props: Props): ReactElement {
 							backgroundImage: `url(/images/${
 								worldList[currentWorld - 1].background
 							})`,
-						}}>
+						}}
+					>
 						<div>
 							<h2>{getWorldName()}</h2>
 							<h5>{`World ${currentWorld}`}</h5>
@@ -135,12 +136,14 @@ export default function Home(props: Props): ReactElement {
 										handleWorldChange(
 											Number(e.target.value)
 										)
-									}>
+									}
+								>
 									<option
 										value=""
 										disabled
 										defaultValue="2"
-										hidden>
+										hidden
+									>
 										Select World...
 									</option>
 									<option value="1">

@@ -104,7 +104,8 @@ export default function Character(props: Props): ReactElement {
 					<button
 						onClick={() => handleOpenInventory()}
 						type="button"
-						className="nes-btn is-success">
+						className="nes-btn is-success"
+					>
 						Open Inventory
 					</button>
 					{inventoryOpen === true ? (
