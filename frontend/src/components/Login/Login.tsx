@@ -4,6 +4,8 @@ import AccountCreation from "./AccountCreation"
 import BackgroundMusic from "../General/BackgroundMusic"
 import { Link, useHistory } from "react-router-dom"
 import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
+import { setUserId } from "../../redux/userSlice"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -63,11 +65,12 @@ export default function Login(props: Props): ReactElement {
 	const [email, setEmail] = useState<string>("")
 	const [password, setPassword] = useState<string>("")
 	const history = useHistory()
-	const routeChange = () => {
+	const routeChangeChar = () => {
 		console.log("I made it to redirect!")
 		let path = `/Char`
 		history.push(path)
 	}
+	const dispatch = useDispatch()
 
 	async function submitLogin() {
 		if (email.length === 0) {
@@ -77,11 +80,10 @@ export default function Login(props: Props): ReactElement {
 				.put("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
-						console.log("I in wrong place", res)
 						alert(res.data)
 					} else {
-						console.log("Nearly to redirect", res.data)
-						routeChange()
+						dispatch(setUserId(res.data.userId))
+						routeChangeChar();
 					}
 				})
 				.catch((e) => {

@@ -88,9 +88,9 @@ export default function Combat(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		//TODO
-		dispatch(setUserId(12345))
-		dispatch(setCharId(67890))
+		//TODO  For some reason this function was being called when going from character creation to the home page and it was resetting the userID and charId in redux
+		// dispatch(setUserId(12345))
+		// dispatch(setCharId(67890))
 	}, [])
 
 	useEffect(() => {
@@ -258,6 +258,9 @@ export default function Combat(props: Props): ReactElement {
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
 					<h6>Room ID: {room.id}</h6>
+					<Link to="/home">
+						<button>Go back to the home page</button>
+					</Link>
 				</div>
 				<div className="combat-mid">
 					<div className="party1-sprite-box">
