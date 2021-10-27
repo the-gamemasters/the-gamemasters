@@ -93,18 +93,19 @@ async function login(req: any, res: any) {
 									userKey: dbUser[0].user_key,
 									characterKey: dbCharacter[0].character_key,
 								}
+								res.status(200).send(req.session.user)
 							} else {
 								req.session.user = {
 									username: dbUser[0].username,
 									userKey: dbUser[0].user_key,
 								}
+
+								res.status(200).send(req.session.user)
 							}
 						})
 						.catch((err: any) => {
 							console.log(err)
 						})
-
-					res.status(200).send(req.session.user)
 				}
 			}
 		})

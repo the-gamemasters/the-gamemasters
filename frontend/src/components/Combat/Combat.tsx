@@ -6,12 +6,14 @@ import styled from "styled-components"
 import MoveBox from "./MoveBox"
 import SelectModal from "./SelectModal"
 import LoadingModal from "./LoadingModal"
-import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks"
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
-	setUserId,
-	setCharId,
-	selectUserId,
 	selectCharId,
+	selectUserId,
+	selectCharInfo,
+	setCharId,
+	setUserId,
+	setCharInfo,
 } from "../../redux/userSlice"
 import BackgroundMusic from "../General/BackgroundMusic"
 import SFX from "../General/SFX"
@@ -85,17 +87,18 @@ export default function Combat(props: Props): ReactElement {
 	const [activeSFX, setActiveSFX] = useState("")
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
+	const charInfo = useAppSelector(selectCharInfo)
 	const dispatch = useAppDispatch()
 
-	useEffect(() => {
-		//TODO  For some reason this function was being called when going from character creation to the home page and it was resetting the userID and charId in redux
-		// dispatch(setUserId(12345))
-		// dispatch(setCharId(67890))
-	}, [])
+	useEffect(() => {}, [])
 
 	useEffect(() => {
 		const initRoom = async (client: Colyseus.Client) => {
-			setRoom(await client.joinOrCreate("combat"))
+			setRoom(
+				await client.joinOrCreate("combat", {
+					charInfo,
+				})
+			)
 		}
 
 		initRoom(new Colyseus.Client("ws://localhost:3553"))

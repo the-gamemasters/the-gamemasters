@@ -5,7 +5,7 @@ import BackgroundMusic from "../General/BackgroundMusic"
 import { Link, useHistory } from "react-router-dom"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
-import { setUserId } from "../../redux/userSlice"
+import { setCharId, setUserId } from "../../redux/userSlice"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -79,9 +79,12 @@ export default function Login(props: Props): ReactElement {
 				.put("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
+						console.log(res.data)
 						alert(res.data)
 					} else {
-						dispatch(setUserId(res.data.userId))
+						console.log(res.data)
+						dispatch(setUserId(res.data.userKey))
+						dispatch(setCharId(res.data.characterKey))
 						routeChangeChar()
 					}
 				})

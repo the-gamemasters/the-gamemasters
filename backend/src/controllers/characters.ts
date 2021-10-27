@@ -29,7 +29,7 @@ async function createCharacter(req: any, res: any) {
 		avatarKey = null,
 		gold = 0,
 		experience = 0,
-		level = 0,
+		level = 1,
 	}: Character = req.body
 
 	const { strength, constitution, intelligence, dexterity }: CharStats =
@@ -44,7 +44,8 @@ async function createCharacter(req: any, res: any) {
 		experience,
 		level,
 	])
-	const { characterKey = 1 } = characterInfo
+
+	const { character_key: characterKey } = characterInfo[0]
 
 	const characterStats = await db.Characters.createCharacterStats([
 		characterKey,
@@ -57,17 +58,39 @@ async function createCharacter(req: any, res: any) {
 	res.status(200).json({ characterInfo, characterStats })
 }
 
+async function getCharacterInfo(req: any, res: any) {
+	const db = req.app.get("db")
+	const { charKey } = req.params
+
+	let result = await db.Characters.findCharacter([charKey])
+	const { char_name, gold, experience, level } = result[0]
+
+	result = await db.Characters.findCharacterStats([charKey])
+	const { strength, constitution, intelligence, dexterity } = result[0]
+
+	res.status(200).json({
+		char_name,
+		gold,
+		experience,
+		level,
+		strength,
+		constitution,
+		intelligence,
+		dexterity,
+	})
+}
+
 async function editCharacterInfo(req: any, res: any) {
 	const db = req.app.get("db")
 
 	const { characterKey } = req.body
 
 	let result = await db.Characters.findCharacter([characterKey])
-	console.log(result[0], characterKey)
+
 	const { description, gold, experience, level } = result[0]
 
 	result = await db.Characters.findCharacterStats([characterKey])
-	console.log(result)
+
 	const { strength, constitution, intelligence, dexterity } = result[0]
 
 	const {
@@ -111,4 +134,4 @@ function mochaTest() {
 	return "hello"
 }
 
-export { createCharacter, mochaTest, editCharacterInfo }
+export { createCharacter, mochaTest, editCharacterInfo, getCharacterInfo }
