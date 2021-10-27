@@ -14,51 +14,53 @@ async function register(req: any, res: any) {
 	if (!email) {
 		res.status(200).json("Please provide an email and password")
 	} else {
-		db.Users.find_user_by_email(email).then((inputUserEmail: any) => {
-			if (inputUserEmail.length > 0) {
-				return res.status(200).json("Email account already in use")
-			} else {
-				if (!userName) {
-					res.status(200).json("Please provide a username")
+		await db.Users.find_user_by_email(email).then(
+			async (inputUserEmail: any) => {
+				if (inputUserEmail.length > 0) {
+					return res.status(200).json("Email account already in use")
 				} else {
-					db.Users.find_user_by_username(userName)
-						.then((inputUserUsername: any) => {
-							if (inputUserUsername.length > 0) {
-								return res
-									.status(200)
-									.json("Username is unavailable")
-							} else {
-								const salt = bcrypt.genSaltSync(10)
-								const hash = bcrypt.hashSync(password, salt)
+					if (!userName) {
+						res.status(200).json("Please provide a username")
+					} else {
+						await db.Users.find_user_by_username(userName)
+							.then((inputUserUsername: any) => {
+								if (inputUserUsername.length > 0) {
+									return res
+										.status(200)
+										.json("Username is unavailable")
+								} else {
+									const salt = bcrypt.genSaltSync(10)
+									const hash = bcrypt.hashSync(password, salt)
 
-								const newUser = db.Users.create_user(
-									userName,
-									email,
-									hash
-								)
-									.then(() => {
-										return res
-											.status(200)
-											.send("Account Created")
-									})
-									.catch((e: any) => {
-										console.log(e)
-									})
-							}
-						})
-						.catch((e: any) => {
-							console.log(e)
-						})
+									const newUser = db.Users.create_user(
+										userName,
+										email,
+										hash
+									)
+										.then(() => {
+											return res
+												.status(200)
+												.send("Account Created")
+										})
+										.catch((e: any) => {
+											console.log(e)
+										})
+								}
+							})
+							.catch((e: any) => {
+								console.log(e)
+							})
+					}
 				}
 			}
-		})
+		)
 	}
 }
 
-function findUser(req: any, res: any) {
+async function findUser(req: any, res: any) {
 	const { email } = req.body
 	const db = req.app.get("db")
-	db.find_user_by_email(email).then((dbUser: any) => {
+	await db.find_user_by_email(email).then((dbUser: any) => {
 		if (!(dbUser.length > 0)) {
 			res.status(200).json("No user found")
 		} else {
@@ -71,7 +73,7 @@ async function login(req: any, res: any) {
 	const { email, password } = req.body
 	const db = req.app.get("db")
 	await db.Users.find_user_by_email(email)
-		.then((dbUser: any) => {
+		.then(async (dbUser: any) => {
 			if (!(dbUser.length > 0)) {
 				res.status(200).json("username or password do not match")
 			} else {
@@ -82,7 +84,7 @@ async function login(req: any, res: any) {
 				if (!isValid) {
 					res.status(200).json("username or password do not match")
 				} else {
-					db.Characters.characterKey(dbUser[0].user_key)
+					await db.Characters.characterKey(dbUser[0].user_key)
 						.then((dbCharacter: any) => {
 							if (dbCharacter.length > 0) {
 								req.session.user = {

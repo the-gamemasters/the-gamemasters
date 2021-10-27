@@ -2,7 +2,7 @@ import { ReactElement, useState } from "react"
 import styled from "styled-components"
 import AccountCreation from "./AccountCreation"
 import BackgroundMusic from "../General/BackgroundMusic"
-import { Link } from "react-router-dom"
+import { Link, useHistory } from "react-router-dom"
 import axios from "axios"
 
 const LoginContainer = styled.div`
@@ -55,25 +55,33 @@ const ModalContainer = styled.div`
 	top: 50%;
 	transform: translate(-50%, -50%);
 `
+
 interface Props {}
 
 export default function Login(props: Props): ReactElement {
 	const [newUser, setNewUser] = useState<boolean>(false)
 	const [email, setEmail] = useState<string>("")
 	const [password, setPassword] = useState<string>("")
+	const history = useHistory()
+	const routeChange = () => {
+		console.log("I made it to redirect!")
+		let path = `/Char`
+		history.push(path)
+	}
 
-	function submitLogin() {
+	async function submitLogin() {
 		if (email.length === 0) {
 			alert("Please enter email and password, or create a new user")
 		} else {
-			axios
+			await axios
 				.put("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
+						console.log("I in wrong place", res)
 						alert(res.data)
 					} else {
-						console.log(res.data)
-						window.location.hash = "#Char"
+						console.log("Nearly to redirect", res.data)
+						routeChange()
 					}
 				})
 				.catch((e) => {
