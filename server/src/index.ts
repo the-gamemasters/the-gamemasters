@@ -33,10 +33,6 @@ const {
 	PORT,
 } = process.env
 
-// this prevents `Error: self signed certificate`, Will need to look into this when going to production.
-// @ts-ignore
-process.env[`NODE_TLS_REJECT_UNAUTHORIZED`] = 0
-
 const app = express()
 const port = Number(PORT || 3553)
 
@@ -54,6 +50,9 @@ app.use(
 
 //app.use(passport.initialize())
 //app.use(passport.session())
+if ("development" == app.get("env")) {
+	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+}
 
 massive({
 	host: MASSIVE_HOST,
@@ -75,7 +74,6 @@ app.use(express.json())
 const server = http.createServer(app)
 const gameServer = new Server({
 	server: server,
-	express: app,
 })
 
 gameServer.define("combat", CombatRoom)
