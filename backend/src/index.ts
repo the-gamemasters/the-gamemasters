@@ -125,7 +125,7 @@ app.post("/api/equipment/:charKey", addEquipment)
 app.put("/api/equipment/:charKey", editEquipment)
 
 app.post("/api/register", register)
-app.put("/api/login", login)
+app.post("/api/login", login)
 app.post("/api/logout", logout)
 app.get("/api/userid", findUserById)
 app.get("/api/charid", findCharById)

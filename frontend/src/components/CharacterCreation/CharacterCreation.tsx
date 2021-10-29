@@ -75,11 +75,11 @@ export default function CharacterCreation(props: Props): ReactElement {
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
 
-	async function checkUserId(userId: any){
-			await axios
+	async function checkUserId(userId: any) {
+		await axios
 			.get("/api/userid")
 			.then((responseUserId) => {
-				console.log('DB Returned UserId:', responseUserId)
+				console.log("DB Returned UserId:", responseUserId)
 			})
 			.catch((err) => {
 				console.log(err)
@@ -87,7 +87,12 @@ export default function CharacterCreation(props: Props): ReactElement {
 	}
 
 	useEffect(() => {
-		console.log("This is my userId: ", userId, 'This is my charID: ', charId)
+		console.log(
+			"This is my userId: ",
+			userId,
+			"This is my charID: ",
+			charId
+		)
 		checkUserId(userId)
 	})
 

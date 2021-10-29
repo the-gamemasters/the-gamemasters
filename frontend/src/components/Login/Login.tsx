@@ -76,7 +76,7 @@ export default function Login(props: Props): ReactElement {
 			alert("Please enter email and password, or create a new user")
 		} else {
 			await axios
-				.put("/api/login", { email, password })
+				.post("/api/login", { email, password })
 				.then((res) => {
 					if (typeof res.data === "string") {
 						console.log(res.data)
