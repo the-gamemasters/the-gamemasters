@@ -5,13 +5,12 @@
 	"description": "npm init template for bootstrapping an empty Colyseus project",
 	"main": "lib/index.js",
 	"scripts": {
-		"start": "ts-node-dev --respawn --transpile-only src/index.ts",
+		"start": "ts-node server/src/index.ts",
 		"loadtest": "colyseus-loadtest loadtest/example.ts --room my_room --numClients 2",
-		"build": "npm run clean && tsc && node node_modules/copyfiles/copyfiles package.json ./lib && node node_modules/copyfiles/copyfiles arena.env ./lib",
+		"build": "cd react-ui/ && npm install && npm run build",
 		"clean": "node node_modules/rimraf/bin lib",
 		"test": "mocha --require ts-node/register test/**/*test.ts --exit --timeout 15000",
 		"format": "npx prettier --write ."
-
 	},
 	"author": "",
 	"license": "UNLICENSED",
