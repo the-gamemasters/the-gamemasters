@@ -6,7 +6,7 @@
 	"main": "lib/index.js",
 	"engines": {
 		"node": "14.x",
-		"npm": "7.xn"
+		"npm": "7.x"
 	},
 	"scripts": {
 		"start": "ts-node --transpile-only server/src/index.ts",
