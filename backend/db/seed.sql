@@ -96,6 +96,7 @@ CREATE TABLE items (
     item_effect_duration INT,
     item_cost INT,
     world INT
+    item_icon TEXT
 );
 
 CREATE TABLE spells (

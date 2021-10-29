@@ -2,12 +2,6 @@ import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
 import { Item } from "./ShopModal"
 
-interface Props {
-	item: Item
-	handleClickItem: any
-	activeItem: Item
-}
-
 const ShopItemContainer = styled.li`
 	height: 5rem;
 	border-bottom: 1px solid #000000;
@@ -37,10 +31,28 @@ const ShopItemContainer = styled.li`
 
 const ShopItemPriceContainer = styled.div`
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	align-items: center;
-	height: auto;
+
+	> div {
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		height: auto;
+	}
 `
+
+const ItemQuantity = styled.span`
+	color: #333333;
+	font-size: 0.7rem;
+`
+
+interface Props {
+	item: Item
+	handleClickItem: any
+	activeItem: Item
+	shopMode: string
+}
 
 export default function ShopItem(props: Props): ReactElement {
 	const [hovered, setHovered] = useState(false)
@@ -64,13 +76,15 @@ export default function ShopItem(props: Props): ReactElement {
 					: props.activeItem === props.item
 					? "#969696"
 					: undefined,
-			}}
-		>
+			}}>
 			<img src={`/icons/items/${props.item.item_icon}`} alt="item icon" />
 			<p className="item-name">{props.item.item_name}</p>
 			<ShopItemPriceContainer>
 				<i className="nes-icon coin is-small"></i>
 				<p>{props.item.item_cost}</p>
+				<ItemQuantity>
+					{props.shopMode === "sell" ? `x${props.item.quantity}` : ""}
+				</ItemQuantity>
 			</ShopItemPriceContainer>
 		</ShopItemContainer>
 	)

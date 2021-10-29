@@ -7,6 +7,8 @@ const CharacterContainer = styled.div`
 	display: grid;
 	grid-template-columns: 3fr 4fr;
 	grid-template-rows: 1fr;
+	border-right: 2px solid black;
+	border-top: 2px solid black;
 `
 
 const CharacterLeft = styled.div`

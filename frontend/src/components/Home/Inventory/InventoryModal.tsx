@@ -6,13 +6,8 @@ import InventoryList from "./InventoryList"
 import EquippedItems from "./EquippedItems"
 import styled from "styled-components"
 import axios from "axios"
-import { useAppDispatch, useAppSelector } from "../../../redux/reduxHooks"
-import {
-	selectCharId,
-	selectUserId,
-	setCharId,
-	setUserId,
-} from "../../../redux/userSlice"
+import { useAppSelector } from "../../../redux/reduxHooks"
+import { selectCharId, selectUserId } from "../../../redux/userSlice"
 
 const inventoryModalStyles = {
 	overlay: {
@@ -120,9 +115,6 @@ export default function InventoryModal(props: Props): ReactElement {
 	const [equippedWeapon, setEquippedWeapon] = useState(blankEquipment)
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
-	const dispatch = useAppDispatch()
-
-	useEffect(() => {}, [])
 
 	useEffect(() => {
 		//TODO make GET axios call to retrieve user's inventory
