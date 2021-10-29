@@ -6,7 +6,7 @@
 	"main": "lib/index.js",
 	"engines": {
 		"node": "14.x",
-		"npm": "7.20.3"
+		"npm": "7.x"
 	},
 	"scripts": {
 		"start": "ts-node server/src/index.ts",
@@ -38,7 +38,7 @@
 		"prettier": "2.4.1",
 		"rimraf": "^2.7.1",
 		"ts-mocha": "^8.0.0",
-		"ts-node": "^8.1.0",
+		"ts-node": "^8.10.2",
 		"ts-node-dev": "^1.0.0-pre.63",
 		"typescript": "^3.4.5"
 	},
