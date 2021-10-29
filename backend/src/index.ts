@@ -9,7 +9,11 @@ import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
 import { register, login, logout } from "./controllers/users"
-import { createCharacter, editCharacterInfo } from "./controllers/characters"
+import {
+	createCharacter,
+	editCharacterInfo,
+	getCharacterInfo,
+} from "./controllers/characters"
 import {
 	getEquipment,
 	addEquipment,
@@ -82,6 +86,8 @@ app.get("/api/test", (req, res) => {
 	console.log("Test GET endpoint hit.")
 	res.status(200).send("Success")
 })
+
+app.get("/api/character/:charKey", getCharacterInfo)
 
 //Test POST Endpoint
 app.post("/api/test", (req, res) => {

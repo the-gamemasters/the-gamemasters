@@ -6,12 +6,14 @@ import styled from "styled-components"
 import MoveBox from "./MoveBox"
 import SelectModal from "./SelectModal"
 import LoadingModal from "./LoadingModal"
-import { useAppSelector, useAppDispatch } from "../../redux/reduxHooks"
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
-	setUserId,
-	setCharId,
-	selectUserId,
 	selectCharId,
+	selectUserId,
+	selectCharInfo,
+	setCharId,
+	setUserId,
+	setCharInfo,
 } from "../../redux/userSlice"
 import BackgroundMusic from "../General/BackgroundMusic"
 import SFX from "../General/SFX"
@@ -85,17 +87,18 @@ export default function Combat(props: Props): ReactElement {
 	const [activeSFX, setActiveSFX] = useState("")
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
+	const charInfo = useAppSelector(selectCharInfo)
 	const dispatch = useAppDispatch()
 
-	useEffect(() => {
-		//TODO
-		dispatch(setUserId(12345))
-		dispatch(setCharId(67890))
-	}, [])
+	useEffect(() => {}, [])
 
 	useEffect(() => {
 		const initRoom = async (client: Colyseus.Client) => {
-			setRoom(await client.joinOrCreate("combat"))
+			setRoom(
+				await client.joinOrCreate("combat", {
+					charInfo,
+				})
+			)
 		}
 
 		initRoom(new Colyseus.Client("ws://localhost:3553"))
@@ -211,6 +214,7 @@ export default function Combat(props: Props): ReactElement {
 
 	const getResultMessage = () => {
 		if (result !== undefined) {
+			console.log(result)
 			if (result === "dc") {
 				return "Your opponent disconnected. You are victorious!"
 			} else {
@@ -258,6 +262,9 @@ export default function Combat(props: Props): ReactElement {
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
 					<h6>Room ID: {room.id}</h6>
+					<Link to="/home">
+						<button>Go back to the home page</button>
+					</Link>
 				</div>
 				<div className="combat-mid">
 					<div className="party1-sprite-box">
@@ -271,12 +278,10 @@ export default function Combat(props: Props): ReactElement {
 					<div className="mid-center">
 						<ReactModal
 							style={combatEndModalStyles}
-							isOpen={result !== undefined}
-						>
+							isOpen={result !== undefined}>
 							<div
 								className="nes-dialog is-dark is-rounded"
-								id="dialog-dark-rounded"
-							>
+								id="dialog-dark-rounded">
 								{result === myParty || result === "dc" ? (
 									<p className="title nes-text is-success">
 										Victory!
@@ -331,8 +336,7 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party1"
 										? "party-name-turn"
 										: undefined
-								}
-							>
+								}>
 								{state.party1.displayName}
 							</span>
 							{myParty === "party1" ? (
@@ -350,8 +354,7 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party1")}
-						>
+							onClick={() => handleDebug("party1")}>
 							Debug P1
 						</button>
 					</div>
@@ -382,8 +385,7 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party2"
 										? "party-name-turn"
 										: ""
-								}
-							>
+								}>
 								{state.party2.displayName}
 							</span>
 						</span>
@@ -398,8 +400,7 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party2")}
-						>
+							onClick={() => handleDebug("party2")}>
 							Debug P2
 						</button>
 					</div>

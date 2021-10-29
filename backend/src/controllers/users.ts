@@ -75,6 +75,7 @@ async function login(req: any, res: any) {
 			if (!(dbUser.length > 0)) {
 				res.status(200).json("username or password do not match")
 			} else {
+				// I don't know if you need lines 79 and 80.  the const hash isn't being used anywhere.
 				const salt = bcrypt.genSaltSync(10)
 				const hash = bcrypt.hashSync(password, salt)
 				const isValid = bcrypt.compareSync(password, dbUser[0].password)
@@ -90,18 +91,19 @@ async function login(req: any, res: any) {
 									userKey: dbUser[0].user_key,
 									characterKey: dbCharacter[0].character_key,
 								}
+								res.status(200).send(req.session.user)
 							} else {
 								req.session.user = {
 									username: dbUser[0].username,
 									userKey: dbUser[0].user_key,
 								}
+
+								res.status(200).send(req.session.user)
 							}
 						})
 						.catch((err: any) => {
 							console.log(err)
 						})
-
-					res.status(200).send(req.session.user)
 				}
 			}
 		})

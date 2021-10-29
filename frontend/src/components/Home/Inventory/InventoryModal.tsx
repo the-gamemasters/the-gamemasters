@@ -175,13 +175,15 @@ export default function InventoryModal(props: Props): ReactElement {
 		return (
 			<ReactModal
 				style={inventoryModalStyles}
-				isOpen={props.inventoryOpen}></ReactModal>
+				isOpen={props.inventoryOpen}
+			></ReactModal>
 		)
 	} else {
 		return (
 			<ReactModal
 				style={inventoryModalStyles}
-				isOpen={props.inventoryOpen}>
+				isOpen={props.inventoryOpen}
+			>
 				<CloseButton closeModal={props.closeModal} />
 				<h2 className="title nes-text is-success">Inventory</h2>
 				<ModalContent>

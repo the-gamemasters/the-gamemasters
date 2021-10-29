@@ -1,5 +1,5 @@
 import { Room, Client } from "colyseus"
-import CombatRoomState from "./schema/CombatRoomState"
+import CombatRoomState, { Stats } from "./schema/CombatRoomState"
 import { encountersList } from "./encounters"
 
 const testSpellList = [
@@ -90,6 +90,8 @@ export class CombatRoom extends Room<CombatRoomState> {
 			let forceA: party = this.state.currentTurn
 			let forceZ: party = forceA === "party1" ? "party2" : "party1"
 			let broadcastMessage = ""
+			let turnCount: number = 0
+
 			switch (message.action) {
 				case "attack":
 					let randomChanceDodge = Math.random()
@@ -117,7 +119,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						if (this.state[forceZ].tempHp <= 0) {
 							this.state[forceZ].tempHp = 0
 							this.broadcast("victory", forceA)
-							this.disconnect()
+							// this.disconnect()
 						}
 					}
 					this.state[forceZ].tempDodgeChance =
@@ -156,7 +158,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 								if (this.state[forceZ].tempHp <= 0) {
 									this.state[forceZ].tempHp = 0
 									this.broadcast("victory", forceA)
-									this.disconnect()
+									// this.disconnect()
 								}
 							}
 
@@ -166,6 +168,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 							this.state[forceA].tempHp += damageHealed
 							broadcastMessage = `${this.state[forceA].displayName} casts ${currentSpell.spellName} for ${damageHealed} damage!`
+
 							break
 						default:
 					}
@@ -207,36 +210,43 @@ export class CombatRoom extends Room<CombatRoomState> {
 								}
 
 								broadcastMessage = `uses ${itemName} and healed for ${effectBase}`
+
 								break
 							case "buff-int":
 								this.state[forceA].tempStats.intelligence +=
 									effectBase
 								broadcastMessage = `uses ${itemName} to increase their Intelligence by ${effectBase}`
+
 								break
 							case "buff-str":
 								this.state[forceA].tempStats.strength +=
 									effectBase
 								broadcastMessage = `uses ${itemName} to increase their Strength by ${effectBase}`
+
 								break
 							case "buff-dex":
 								this.state[forceA].tempStats.dexterity +=
 									effectBase
 								broadcastMessage = `uses ${itemName} to increase their Dexterity by ${effectBase}`
+
 								break
 							case "debuff-int":
 								this.state[forceZ].tempStats.intelligence -=
 									effectBase
 								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Intelligence by ${effectBase}`
+
 								break
 							case "debuff-str":
 								this.state[forceZ].tempStats.intelligence -=
 									effectBase
 								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Strength by ${effectBase}`
+
 								break
 							case "debuff-dex":
 								this.state[forceZ].tempStats.intelligence -=
 									effectBase
 								broadcastMessage = `uses ${itemName} to decrease ${this.state[forceZ].displayName}'s Dexterity by ${effectBase}`
+
 								break
 						}
 
@@ -281,27 +291,70 @@ export class CombatRoom extends Room<CombatRoomState> {
 	}
 
 	onJoin(client: Client, options: any) {
+		// console.log(options)
+
 		let force: party = this.clients.length > 1 ? "party2" : "party1"
 		let randomEncounter = Math.floor((Math.random() / 2) * 10)
-
 		let encounter = encountersList[randomEncounter]
 		let party = this.state[force]
-		console.log(
-			`${client.sessionId} joined as ${force} as a ${encounter.displayName}`
-		)
+		let { charInfo } = options
+
+		// console.log(charInfo)
 
 		party.id = client.sessionId
-		party.displayName = encounter.displayName
-		party.spriteUrl = encounter.spriteUrl
-		party.items.push(...encounter.items)
-		party.spells.push(...encounter.spells)
-		party.baseStats = encounter.baseStats
-		party.tempStats = encounter.tempStats
-		party.baseHp = party.baseStats.constitution * 10
-		party.tempHp = party.baseHp
-		party.weaponBonus = encounter.weaponBonus
-		party.baseDodgeChance = encounter.baseDodgeChance
-		party.tempDodgeChance = party.baseDodgeChance
+
+		if (force === "party1") {
+			const {
+				charName,
+				gold,
+				experience,
+				level,
+				strength,
+				constitution,
+				intelligence,
+				dexterity,
+			} = charInfo
+			console.log(`${client.sessionId} joined as ${charInfo.charName}`)
+			const testURL =
+				"https://i.pinimg.com/originals/84/ac/64/84ac64ec309108fad6172ef6b6a869c7.gif"
+
+			party.displayName = charName
+			party.spriteUrl = testURL
+			party.items.push(...encounter.items)
+			party.spells.push(...encounter.spells)
+			party.baseStats = new Stats({
+				strength,
+				dexterity,
+				constitution,
+				intelligence,
+			})
+			party.tempStats = new Stats({
+				strength,
+				dexterity,
+				constitution,
+				intelligence,
+			})
+			party.baseHp = party.baseStats.constitution * 10
+			party.tempHp = party.baseHp
+			party.weaponBonus = encounter.weaponBonus
+			party.baseDodgeChance = encounter.baseDodgeChance
+			party.tempDodgeChance = party.baseDodgeChance
+		} else {
+			console.log(
+				`${client.sessionId} joined as ${force} as a ${encounter.displayName}`
+			)
+			party.displayName = encounter.displayName
+			party.spriteUrl = encounter.spriteUrl
+			party.items.push(...encounter.items)
+			party.spells.push(...encounter.spells)
+			party.baseStats = encounter.baseStats
+			party.tempStats = encounter.tempStats
+			party.baseHp = party.baseStats.constitution * 10
+			party.tempHp = party.baseHp
+			party.weaponBonus = encounter.weaponBonus
+			party.baseDodgeChance = encounter.baseDodgeChance
+			party.tempDodgeChance = party.baseDodgeChance
+		}
 
 		client.send("assignment", force)
 		if (this.clients.length > 1) {
@@ -319,6 +372,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 	onLeave(client: Client, consented: boolean) {
 		this.broadcast("disconnect")
+		console.log("they left")
 	}
 
 	onDispose() {

@@ -66,6 +66,7 @@ CREATE TABLE charactersEquipment (
     equipped BOOLEAN
 );
 
+
 CREATE TABLE monsters (
     monster_key SERIAL PRIMARY KEY,
     monster_name varchar(100),
@@ -85,6 +86,13 @@ CREATE TABLE monstersEquipment (
     monstersEquipment_key SERIAL PRIMARY KEY,
     monster_key INT REFERENCES monsters(monster_key),
     equipment_key INT REFERENCES equipment(equipment_key)
+);
+
+CREATE TABLE inventory (
+    charactersInventory_key SERIAL PRIMARY KEY,
+    character_key INT REFERENCES characters(character_key),
+    item_key INT REFERENCES items(item_key),
+    quantity INT
 );
 
 CREATE TABLE items (

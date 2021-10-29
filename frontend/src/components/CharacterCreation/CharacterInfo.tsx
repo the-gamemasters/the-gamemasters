@@ -1,4 +1,5 @@
 import React, { ReactElement } from "react"
+import styled from "styled-components"
 import { classList } from "./classes"
 import { SKILLS } from "./skills"
 
@@ -11,7 +12,6 @@ function CharacterInfo(props: Props): ReactElement {
 
 	return (
 		<div>
-			<h1>test</h1>
 			<h2>{currentClass.class}</h2>
 			{currentClass.img ? (
 				<>
