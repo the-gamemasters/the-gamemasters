@@ -6,10 +6,10 @@
 	"main": "lib/index.js",
 	"engines": {
 		"node": "14.x",
-		"npm": "7.x"
+		"npm": "7.xn"
 	},
 	"scripts": {
-		"start": "ts-node server/src/index.ts",
+		"start": "ts-node --transpile-only server/src/index.ts",
 		"loadtest": "colyseus-loadtest loadtest/example.ts --room my_room --numClients 2",
 		"build": "cd react-ui/ && npm install && npm run build",
 		"clean": "node node_modules/rimraf/bin lib",
@@ -52,6 +52,7 @@
 		"cors": "^2.8.5",
 		"express": "^4.16.4",
 		"express-session": "^1.17.2",
-		"massive": "^6.10.0"
+		"massive": "^6.10.0",
+		"ts-node": "^8.10.2"
 	}
 }
