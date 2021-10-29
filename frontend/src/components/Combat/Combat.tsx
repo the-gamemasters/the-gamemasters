@@ -214,6 +214,7 @@ export default function Combat(props: Props): ReactElement {
 
 	const getResultMessage = () => {
 		if (result !== undefined) {
+			console.log(result)
 			if (result === "dc") {
 				return "Your opponent disconnected. You are victorious!"
 			} else {
@@ -277,12 +278,10 @@ export default function Combat(props: Props): ReactElement {
 					<div className="mid-center">
 						<ReactModal
 							style={combatEndModalStyles}
-							isOpen={result !== undefined}
-						>
+							isOpen={result !== undefined}>
 							<div
 								className="nes-dialog is-dark is-rounded"
-								id="dialog-dark-rounded"
-							>
+								id="dialog-dark-rounded">
 								{result === myParty || result === "dc" ? (
 									<p className="title nes-text is-success">
 										Victory!
@@ -337,8 +336,7 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party1"
 										? "party-name-turn"
 										: undefined
-								}
-							>
+								}>
 								{state.party1.displayName}
 							</span>
 							{myParty === "party1" ? (
@@ -356,8 +354,7 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party1")}
-						>
+							onClick={() => handleDebug("party1")}>
 							Debug P1
 						</button>
 					</div>
@@ -388,8 +385,7 @@ export default function Combat(props: Props): ReactElement {
 									state.currentTurn === "party2"
 										? "party-name-turn"
 										: ""
-								}
-							>
+								}>
 								{state.party2.displayName}
 							</span>
 						</span>
@@ -404,8 +400,7 @@ export default function Combat(props: Props): ReactElement {
 						<button
 							type="button"
 							className="nes-btn"
-							onClick={() => handleDebug("party2")}
-						>
+							onClick={() => handleDebug("party2")}>
 							Debug P2
 						</button>
 					</div>
