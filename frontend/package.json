@@ -29,10 +29,11 @@
 	},
 	"proxy": "http://localhost:3553/",
 	"scripts": {
-		"start": "npx prettier --write . && react-scripts start",
+		"start": "react-scripts start",
 		"build": "react-scripts build",
 		"test": "react-scripts test",
-		"eject": "react-scripts eject"
+		"eject": "react-scripts eject",
+		"format": "npx prettier --write ."
 	},
 	"eslintConfig": {
 		"extends": [

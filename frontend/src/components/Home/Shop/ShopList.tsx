@@ -7,6 +7,9 @@ interface Props {
 	shopItems: Item[]
 	handleClickItem: any
 	activeItem: Item
+	currentWorld: number
+	charItems: Item[]
+	shopMode: string
 }
 
 const ShopListContainer = styled.div`
@@ -21,24 +24,47 @@ const List = styled.ul`
 `
 
 export default function ShopList(props: Props): ReactElement {
-	return (
-		<ShopListContainer className="nes-container">
-			<List
-			// listLength={props.shop.items.length || 4}
-			>
-				{props.shopItems.map((ele, i) => {
-					if (ele.world === 2) {
+	if (props.shopMode === "buy") {
+		return (
+			<ShopListContainer className="nes-container">
+				<List
+				// listLength={props.shop.items.length || 4}
+				>
+					{props.shopItems.map((ele, i) => {
+						if (ele.world === props.currentWorld) {
+							return (
+								<ShopItem
+									handleClickItem={props.handleClickItem}
+									activeItem={props.activeItem}
+									item={ele}
+									key={i}
+									shopMode={props.shopMode}
+								/>
+							)
+						}
+					})}
+				</List>
+			</ShopListContainer>
+		)
+	} else {
+		return (
+			<ShopListContainer className="nes-container">
+				<List
+				// listLength={props.shop.items.length || 4}
+				>
+					{props.charItems.map((ele, i) => {
 						return (
 							<ShopItem
 								handleClickItem={props.handleClickItem}
 								activeItem={props.activeItem}
 								item={ele}
 								key={i}
+								shopMode={props.shopMode}
 							/>
 						)
-					}
-				})}
-			</List>
-		</ShopListContainer>
-	)
+					})}
+				</List>
+			</ShopListContainer>
+		)
+	}
 }

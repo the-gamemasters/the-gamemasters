@@ -57,6 +57,8 @@ const TopRight = styled.div`
 	background-position: center;
 	background-size: cover;
 	color: white;
+	border-left: 2px solid black;
+	border-bottom: 2px solid black;
 `
 
 export default function Home(props: Props): ReactElement {
@@ -117,8 +119,7 @@ export default function Home(props: Props): ReactElement {
 							backgroundImage: `url(/images/${
 								worldList[currentWorld - 1].background
 							})`,
-						}}
-					>
+						}}>
 						<div>
 							<h2>{getWorldName()}</h2>
 							<h5>{`World ${currentWorld}`}</h5>
@@ -136,14 +137,12 @@ export default function Home(props: Props): ReactElement {
 										handleWorldChange(
 											Number(e.target.value)
 										)
-									}
-								>
+									}>
 									<option
 										value=""
 										disabled
 										defaultValue="2"
-										hidden
-									>
+										hidden>
 										Select World...
 									</option>
 									<option value="1">
@@ -162,7 +161,7 @@ export default function Home(props: Props): ReactElement {
 								</select>
 							</div>
 						</div>
-						<ShopPreview />
+						<ShopPreview currentWorld={currentWorld} />
 					</TopRight>
 				</HomeTop>
 				<HomeBottom>

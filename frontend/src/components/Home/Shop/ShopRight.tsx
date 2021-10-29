@@ -9,6 +9,8 @@ import { render } from "@testing-library/react"
 interface Props {
 	activeItem: Item
 	shopMode: string
+	handleBuyItem: any
+	handleSellItem: any
 }
 
 const ShopRightContainer = styled.div`
@@ -27,10 +29,14 @@ export default function ShopRight(props: Props): ReactElement {
 	const [activeSFX, setActiveSFX] = useState(false)
 
 	const handleButtonClick = (action: "buy" | "sell") => {
-		if (activeSFX) {
-			return
-		} else {
+		if (!activeSFX) {
 			setActiveSFX(true)
+		}
+
+		if (action === "buy") {
+			props.handleBuyItem(props.activeItem)
+		} else {
+			props.handleSellItem(props.activeItem)
 		}
 	}
 
@@ -48,19 +54,20 @@ export default function ShopRight(props: Props): ReactElement {
 			) : (
 				""
 			)}
-			<ShopItemPreview activeItem={props.activeItem} />
+			<ShopItemPreview
+				shopMode={props.shopMode}
+				activeItem={props.activeItem}
+			/>
 			{props.shopMode === "buy" ? (
 				<button
 					onClick={() => handleButtonClick("buy")}
-					className={"nes-btn is-success"}
-				>
+					className={"nes-btn is-success"}>
 					Buy
 				</button>
 			) : (
 				<button
 					onClick={() => handleButtonClick("sell")}
-					className={"nes-btn is-error"}
-				>
+					className={"nes-btn is-error"}>
 					Sell
 				</button>
 			)}
