@@ -4,6 +4,9 @@ import CloseButton from "../../General/CloseButton"
 import ShopLeft from "./ShopLeft"
 import ShopRight from "./ShopRight"
 import styled from "styled-components"
+import axios from "axios"
+import { useAppSelector } from "../../../redux/reduxHooks"
+import { selectCharId, selectUserId } from "../../../redux/userSlice"
 
 const shopModalStyles = {
 	overlay: {
@@ -37,6 +40,15 @@ const ModalContent = styled.div`
 
 const ModalContentTop = styled.div`
 	height: 100%;
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+	grid-template-rows: 1fr;
+
+	> div {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+	}
 `
 
 const SwitchModeBtn = styled.button`
@@ -62,6 +74,8 @@ export interface Item {
 	item_cost: number
 	world: number
 	item_icon: string
+	quantity: number
+	charactersinventory_key: number
 }
 
 const blankItem: Item = {
@@ -74,6 +88,8 @@ const blankItem: Item = {
 	item_cost: 0,
 	world: 0,
 	item_icon: "",
+	quantity: 0,
+	charactersinventory_key: 0,
 }
 
 const blankItems: Item[] = []
@@ -83,19 +99,56 @@ ReactModal.setAppElement("#root")
 interface Props {
 	shopOpen: boolean
 	closeModal: any
+	currentWorld: number
 }
 
 export default function ShopModal(props: Props): ReactElement {
 	const [activeItem, setActiveItem] = useState(blankItem)
 	const [shopMode, setShopMode] = useState("buy")
+	const [loading, setLoading] = useState(true)
 	const [shopItems, setShopItems] = useState(blankItems)
+	const [charItems, setCharItems] = useState(blankItems)
+	const [gold, setGold] = useState(0)
+	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
 
 	useEffect(() => {
-		setShopItems(require("./shopItems.json"))
-	}, [shopItems])
+		axios.get(`/api/items`).then((response) => {
+			setShopItems(response.data.shopItems)
+			axios.get(`/api/items/${charId}`).then((response) => {
+				setCharItems(response.data.characterItems)
+				setLoading(false)
+			})
+		})
+
+		//TODO get gold amount from characters table
+	}, [charId])
 
 	const handleClickItem = (item: Item) => {
 		setActiveItem(item)
+	}
+
+	const handleBuyItem = (item: Item) => {
+		axios
+			.post(`/api/items/${charId}`, {
+				invKey: item.charactersinventory_key,
+				cost: item.item_cost,
+			})
+			.then((response) => {
+				setCharItems(response.data.characterItems)
+				// update gold on store and retrieve
+			})
+	}
+
+	const handleSellItem = (item: Item) => {
+		axios
+			.put(`/api/items/${charId}`, {
+				invKey: item.charactersinventory_key,
+				value: item.item_cost,
+			})
+			.then((response) => {
+				setCharItems(response.data.characterItems)
+			})
 	}
 
 	const handleShopModeChange = () => {
@@ -105,29 +158,47 @@ export default function ShopModal(props: Props): ReactElement {
 			setShopMode("buy")
 		}
 	}
-
-	return (
-		<ReactModal style={shopModalStyles} isOpen={props.shopOpen}>
-			<CloseButton closeModal={props.closeModal} />
-			<h2 className="title nes-text is-primary">Shop</h2>
-			<ModalContent>
-				<ModalContentTop>
-					<SwitchModeBtn
-						onClick={() => handleShopModeChange()}
-						className="nes-btn is-primary is-small"
-					>
-						Switch Shop Mode
-					</SwitchModeBtn>
-				</ModalContentTop>
-				<ModalContentBottom>
-					<ShopLeft
-						shopItems={shopItems}
-						handleClickItem={handleClickItem}
-						activeItem={activeItem}
-					/>
-					<ShopRight shopMode={shopMode} activeItem={activeItem} />
-				</ModalContentBottom>
-			</ModalContent>
-		</ReactModal>
-	)
+	if (loading === true) {
+		return (
+			<ReactModal
+				style={shopModalStyles}
+				isOpen={props.shopOpen}></ReactModal>
+		)
+	} else {
+		return (
+			<ReactModal style={shopModalStyles} isOpen={props.shopOpen}>
+				<CloseButton closeModal={props.closeModal} />
+				<h2 className="title nes-text is-primary">Shop</h2>
+				<ModalContent>
+					<ModalContentTop>
+						<SwitchModeBtn
+							onClick={() => handleShopModeChange()}
+							className="nes-btn is-primary is-small">
+							Switch Shop Mode
+						</SwitchModeBtn>
+						<div>
+							<img alt="purse"></img>
+							<span>{gold}</span>
+						</div>
+					</ModalContentTop>
+					<ModalContentBottom>
+						<ShopLeft
+							shopItems={shopItems}
+							charItems={charItems}
+							handleClickItem={handleClickItem}
+							activeItem={activeItem}
+							currentWorld={props.currentWorld}
+							shopMode={shopMode}
+						/>
+						<ShopRight
+							shopMode={shopMode}
+							activeItem={activeItem}
+							handleBuyItem={handleBuyItem}
+							handleSellItem={handleSellItem}
+						/>
+					</ModalContentBottom>
+				</ModalContent>
+			</ReactModal>
+		)
+	}
 }

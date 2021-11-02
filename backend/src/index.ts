@@ -25,6 +25,7 @@ import {
 	addEquipment,
 	editEquipment,
 } from "./controllers/equipment"
+import { getItems, buyItem, getInventory, sellItem } from "./controllers/items"
 
 //require("./controllers/passport/passportConfig")
 
@@ -123,6 +124,14 @@ app.get("/api/equipment/:charKey", getEquipment)
 app.post("/api/equipment/:charKey", addEquipment)
 
 app.put("/api/equipment/:charKey", editEquipment)
+
+app.get("/api/items", getItems)
+
+app.get("/api/items/:charKey", getInventory)
+
+app.post("/api/items/:charKey", buyItem)
+
+app.put("/api/items/:charKey", sellItem)
 
 app.post("/api/register", register)
 app.post("/api/login", login)

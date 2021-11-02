@@ -63,8 +63,14 @@ const ShopItemPriceContainer = styled.div`
 	}
 `
 
+const ItemQuantity = styled.span`
+	color: #333333;
+	font-size: 0.7rem;
+`
+
 interface Props {
 	activeItem: Item
+	shopMode: string
 }
 
 export default function ShopItemPreview(props: Props): ReactElement {
@@ -80,27 +86,23 @@ export default function ShopItemPreview(props: Props): ReactElement {
 
 	const sanitizeItemEffect = () => {
 		let effect = item_effect.toLowerCase()
-		let effectStat = item_effect_stat.toLowerCase()
-
-		switch (effectStat) {
-			case "str":
-				effectStat = "Strength"
-				break
-			case "dex":
-				effectStat = "Dexterity"
-				break
-			case "int":
-				effectStat = "Intelligence"
-				break
+		let writtenEffectStat = ""
+		console.log(item_effect_stat)
+		if (item_effect_stat === "1") {
+			writtenEffectStat = "Strength"
+		} else if (item_effect_stat === "2") {
+			writtenEffectStat = "Dexterity"
+		} else {
+			writtenEffectStat = "Intelligence"
 		}
 
 		switch (effect) {
 			case "heal":
 				return `Heal yourself for ${item_effect_value} Hit Points`
 			case "buff":
-				return `Increase your ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
+				return `Increase your ${writtenEffectStat} by ${item_effect_value} for ${item_effect_duration} turns`
 			case "debuff":
-				return `Decrease the enemy's ${effectStat} by ${item_effect_value} for ${item_effect_duration} turns`
+				return `Decrease the enemy's ${writtenEffectStat} by ${item_effect_value} for ${item_effect_duration} turns`
 		}
 	}
 
@@ -120,6 +122,11 @@ export default function ShopItemPreview(props: Props): ReactElement {
 					<ShopItemPriceContainer>
 						<i className="nes-icon coin"></i>
 						<p>{item_cost}</p>
+						<ItemQuantity>
+							{props.shopMode === "sell"
+								? `x${props.activeItem.quantity}`
+								: ""}
+						</ItemQuantity>
 					</ShopItemPriceContainer>
 				</div>
 			</PreviewContainer>

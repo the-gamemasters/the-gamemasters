@@ -7,6 +7,8 @@ const CommunityContainer = styled.div`
 	height: 100%;
 	width: 100%;
 	background-color: white;
+	border-right: 2px solid black;
+	border-bottom: 2px solid black;
 `
 
 const CommunityList = styled.ul`

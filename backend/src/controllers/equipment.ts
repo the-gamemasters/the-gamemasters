@@ -1,14 +1,3 @@
-interface Character {
-	characterKey: number
-	charName: string
-	description: string
-	userKey: number
-	avatarKey: number
-	gold: number
-	experience: number
-	level: number
-}
-
 interface Equipment {
 	equipment_key: number
 	equipment_name: string
