@@ -1,44 +1,32 @@
 require("dotenv").config()
 
-import http from "http"
-import https from "https"
-import express, { application } from "express"
-import cors from "cors"
 import { Server } from "colyseus"
-import { CombatRoom } from "./rooms/CombatRoom"
-import bcrypt from "bcrypt"
+import cors from "cors"
+import express from "express"
 import session from "express-session"
+import https from "https"
 import massive from "massive"
+import path from "path"
 import { parse } from "pg-connection-string"
-import { register, login, logout } from "./controllers/users"
 import {
 	createCharacter,
 	editCharacterInfo,
 	getCharacterInfo,
 } from "./controllers/characters"
 import {
-	getEquipment,
 	addEquipment,
 	editEquipment,
+	getEquipment,
 } from "./controllers/equipment"
-import { getItems, buyItem, getInventory, sellItem } from "./controllers/items"
-import path from "path"
+import { buyItem, getInventory, getItems, sellItem } from "./controllers/items"
+import { login, logout, register } from "./controllers/users"
+import { CombatRoom } from "./rooms/CombatRoom"
 
 //require("./controllers/passport/passportConfig")
 
-const {
-	MASSIVE_HOST,
-	MASSIVE_PORT,
-	MASSIVE_DATABASE,
-	MASSIVE_USER,
-	MASSIVE_PASSWORD,
-	MASSIVE_CONNECTION_STRING,
-	SECRET,
-	PORT,
-} = process.env
+const { MASSIVE_CONNECTION_STRING, SECRET, PORT } = process.env
 
 const app = express()
-const port = Number(PORT || 3553)
 
 //----------Session setup----------\\
 app.use(
@@ -146,5 +134,4 @@ app.post("/api/register", register)
 app.put("/api/login", login)
 app.post("/api/logout", logout)
 
-app.use(express.static(__dirname + "/../frontend/public"))
-console.log(`Listening on ws://localhost:${port}`)
+app.listen(PORT, () => console.log(`Listening on ws://localhost:${PORT}`))
