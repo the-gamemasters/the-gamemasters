@@ -1,6 +1,7 @@
 require("dotenv").config()
 
 import http from "http"
+import https from "https"
 import express, { application } from "express"
 import cors from "cors"
 import { Server } from "colyseus"
@@ -8,6 +9,7 @@ import { CombatRoom } from "./rooms/CombatRoom"
 import bcrypt from "bcrypt"
 import session from "express-session"
 import massive from "massive"
+import { parse } from "pg-connection-string"
 import { register, login, logout } from "./controllers/users"
 import {
 	createCharacter,
@@ -20,6 +22,7 @@ import {
 	editEquipment,
 } from "./controllers/equipment"
 import { getItems, buyItem, getInventory, sellItem } from "./controllers/items"
+import path from "path"
 
 //require("./controllers/passport/passportConfig")
 
@@ -29,6 +32,7 @@ const {
 	MASSIVE_DATABASE,
 	MASSIVE_USER,
 	MASSIVE_PASSWORD,
+	MASSIVE_CONNECTION_STRING,
 	SECRET,
 	PORT,
 } = process.env
@@ -50,28 +54,41 @@ app.use(
 
 //app.use(passport.initialize())
 //app.use(passport.session())
-if ("development" == app.get("env")) {
-	process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
+
+const initMassive = async () => {
+	let connector: any = parse(MASSIVE_CONNECTION_STRING)
+	connector.ssl = { sslmode: "require", rejectUnauthorized: false }
+	try {
+		let db = await massive(connector)
+
+		app.set("db", db)
+		console.log(db.listTables())
+	} catch (e) {
+		console.log(e)
+	}
 }
 
-massive({
-	host: MASSIVE_HOST,
-	port: +MASSIVE_PORT,
-	database: MASSIVE_DATABASE,
-	user: MASSIVE_USER,
-	password: MASSIVE_PASSWORD,
-	ssl: true,
-})
-	.then((dbInstance) => {
-		app.set("db", dbInstance)
-		console.log("Database running, cool game is coming!!!")
-	})
-	.catch((err) => console.log("Database error", err))
+initMassive()
+
+// massive({
+// 	host: MASSIVE_HOST,
+// 	port: +MASSIVE_PORT,
+// 	database: MASSIVE_DATABASE,
+// 	user: MASSIVE_USER,
+// 	password: MASSIVE_PASSWORD,
+// 	ssl: true,
+// })
+// 	.then((dbInstance) => {
+// 		app.set("db", dbInstance)
+// 		console.log("Database running, cool game is coming!!!")
+// 	})
+// 	.catch((err) => console.log("Database error", err))
 
 app.use(cors())
 app.use(express.json())
+app.use(express.static(path.resolve(__dirname, "../react-ui/build")))
 
-const server = http.createServer(app)
+const server = https.createServer(app)
 const gameServer = new Server({
 	server: server,
 })

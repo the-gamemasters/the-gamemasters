@@ -15,7 +15,8 @@
 		"build": "cd react-ui/ && npm install && npm run build",
 		"clean": "node node_modules/rimraf/bin lib",
 		"test": "mocha --require ts-node/register test/**/*test.ts --exit --timeout 15000",
-		"format": "npx prettier --write ."
+		"format": "npx prettier --write .",
+		"dev": "ts-node-dev --respawn --transpile-only server/src/index.ts"
 	},
 	"author": "",
 	"license": "UNLICENSED",
@@ -53,7 +54,9 @@
 		"cors": "^2.8.5",
 		"express": "^4.16.4",
 		"express-session": "^1.17.2",
+		"greenlock-express": "^4.0.3",
 		"massive": "^6.10.0",
+		"pg-connection-string": "^2.5.0",
 		"ts-node": "^8.10.2"
 	}
 }
