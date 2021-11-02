@@ -61,11 +61,8 @@ interface Props {}
 export default function User(props: Props): ReactElement {
 	const [dropDownEnabled, setDropDownEnabled] = useState(false)
 
-<<<<<<< HEAD
 	const dispatch = useDispatch()
 
-=======
->>>>>>> master
 	const handleClickAvatar = () => {
 		setDropDownEnabled(!dropDownEnabled)
 	}
@@ -85,7 +82,6 @@ export default function User(props: Props): ReactElement {
 				if (newWindow) newWindow.opener = null
 				break
 			case "logout":
-<<<<<<< HEAD
 				axios
 					.post("/api/logout")
 					.then(() => {
@@ -97,8 +93,6 @@ export default function User(props: Props): ReactElement {
 						console.log(err)
 					})
 
-=======
->>>>>>> master
 				break
 		}
 	}
@@ -115,25 +109,6 @@ export default function User(props: Props): ReactElement {
 				<DropDownMenu>
 					<DropDownList>
 						<DropDownItem
-<<<<<<< HEAD
-							onClick={() => handleClickDropDownItem("account")}
-						>
-							Account
-						</DropDownItem>
-						<DropDownItem
-							onClick={() => handleClickDropDownItem("settings")}
-						>
-							Settings
-						</DropDownItem>
-						<DropDownItem
-							onClick={() => handleClickDropDownItem("info")}
-						>
-							Info
-						</DropDownItem>
-						<DropDownItem
-							onClick={() => handleClickDropDownItem("logout")}
-						>
-=======
 							onClick={() => handleClickDropDownItem("account")}>
 							Account
 						</DropDownItem>
@@ -147,7 +122,6 @@ export default function User(props: Props): ReactElement {
 						</DropDownItem>
 						<DropDownItem
 							onClick={() => handleClickDropDownItem("logout")}>
->>>>>>> master
 							Logout
 						</DropDownItem>
 					</DropDownList>
