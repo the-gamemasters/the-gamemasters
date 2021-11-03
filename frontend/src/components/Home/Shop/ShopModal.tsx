@@ -5,8 +5,14 @@ import ShopLeft from "./ShopLeft"
 import ShopRight from "./ShopRight"
 import styled from "styled-components"
 import axios from "axios"
-import { useAppSelector } from "../../../redux/reduxHooks"
-import { selectCharId, selectUserId } from "../../../redux/userSlice"
+import { useAppSelector, useAppDispatch } from "../../../redux/reduxHooks"
+import {
+	selectCharId,
+	selectUserId,
+	selectCharInfo,
+	setCharGold,
+	selectCharGold,
+} from "../../../redux/userSlice"
 
 const shopModalStyles = {
 	overlay: {
@@ -111,6 +117,8 @@ export default function ShopModal(props: Props): ReactElement {
 	const [gold, setGold] = useState(0)
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
+	const charGold = useAppSelector(selectCharGold)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		axios.get(`/api/items`).then((response) => {
@@ -121,9 +129,9 @@ export default function ShopModal(props: Props): ReactElement {
 			})
 		})
 
+		setGold(charGold)
 		//TODO get gold amount from characters table
-	}, [charId])
-
+	}, [charId, charGold])
 	const handleClickItem = (item: Item) => {
 		setActiveItem(item)
 	}
@@ -136,6 +144,14 @@ export default function ShopModal(props: Props): ReactElement {
 			})
 			.then((response) => {
 				setCharItems(response.data.characterItems)
+				setGold(gold - item.item_cost)
+				dispatch(setCharGold(gold - item.item_cost))
+				axios
+					.put(`/api/character`, { gold })
+					.then(() => {
+						console.log("character gold updated")
+					})
+					.catch((err) => console.log(err))
 				// update gold on store and retrieve
 			})
 	}

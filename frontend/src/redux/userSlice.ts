@@ -3,7 +3,7 @@ import type { RootState } from "./store"
 
 interface Info {
 	charName?: string
-	gold?: number
+	gold: number
 	experience?: number
 	level?: number
 	strength?: number
@@ -52,15 +52,19 @@ export const userSlice = createSlice({
 		setInventory: (state, action: PayloadAction<[]>) => {
 			state.inventory = [...action.payload]
 		},
+		setCharGold: (state, action: PayloadAction<number>) => {
+			state.charInfo.gold = action.payload
+		},
 	},
 })
 
-export const { setUserId, setCharId, setCharInfo, setInventory } =
+export const { setUserId, setCharId, setCharInfo, setInventory, setCharGold } =
 	userSlice.actions
 
 export const selectUserId = (state: RootState) => state.user.userId
 export const selectCharId = (state: RootState) => state.user.charId
 export const selectCharInfo = (state: RootState) => state.user.charInfo
 export const selectInventory = (state: RootState) => state.user.inventory
+export const selectCharGold = (state: RootState) => state.user.charInfo.gold
 
 export default userSlice.reducer
