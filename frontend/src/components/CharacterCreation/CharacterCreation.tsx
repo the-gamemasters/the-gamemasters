@@ -188,8 +188,7 @@ export default function CharacterCreation(props: Props): ReactElement {
 											.character_key
 									)
 								)
-							}}
-						>
+							}}>
 							Select
 						</button>
 					</Link>

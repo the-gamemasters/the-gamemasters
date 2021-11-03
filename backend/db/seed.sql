@@ -28,7 +28,7 @@ CREATE TABLE characters (
     gold INT,
     experience INT,
     level INT,
-    myDefault BOOLEAN
+    myDefault BOOLEAN DEFAULT true
 );
 
 CREATE TABLE charStats (
