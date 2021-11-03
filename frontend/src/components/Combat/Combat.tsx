@@ -12,6 +12,8 @@ import {
 	selectUserId,
 	selectCharInfo,
 	selectInventory,
+	selectArmor,
+	selectWeapon,
 	setCharId,
 	setUserId,
 	setCharInfo,
@@ -20,6 +22,7 @@ import BackgroundMusic from "../General/BackgroundMusic"
 import SFX from "../General/SFX"
 import "./styles/combat.css"
 import { CombatState, Player } from "./CombatState"
+import { isIfStatement } from "typescript"
 
 interface Props {}
 
@@ -90,9 +93,9 @@ export default function Combat(props: Props): ReactElement {
 	const charId = useAppSelector(selectCharId)
 	const charInfo = useAppSelector(selectCharInfo)
 	const inventory = useAppSelector(selectInventory)
+	const armor = useAppSelector(selectArmor)
+	const weapon = useAppSelector(selectWeapon)
 	const dispatch = useAppDispatch()
-
-	useEffect(() => {}, [])
 
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
@@ -112,11 +115,23 @@ export default function Combat(props: Props): ReactElement {
 			}
 			return item
 		})
+
+		const armorMod = {
+			stat: armor.equipment_effect_stat,
+			value: armor.equipment_effect_stat_value,
+		}
+		const weaponMod = {
+			stat: weapon.equipment_effect_stat,
+			value: weapon.equipment_effect_stat_value,
+		}
+
 		const initRoom = async (client: Colyseus.Client) => {
 			setRoom(
 				await client.joinOrCreate("combat", {
 					charInfo,
 					combatItems,
+					armorMod,
+					weaponMod,
 				})
 			)
 		}

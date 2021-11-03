@@ -6,8 +6,13 @@ import InventoryList from "./InventoryList"
 import EquippedItems from "./EquippedItems"
 import styled from "styled-components"
 import axios from "axios"
-import { useAppSelector } from "../../../redux/reduxHooks"
-import { selectCharId, selectUserId } from "../../../redux/userSlice"
+import { useAppSelector, useAppDispatch } from "../../../redux/reduxHooks"
+import {
+	selectCharId,
+	selectUserId,
+	setArmor,
+	setWeapon,
+} from "../../../redux/userSlice"
 
 const inventoryModalStyles = {
 	overlay: {
@@ -115,6 +120,7 @@ export default function InventoryModal(props: Props): ReactElement {
 	const [equippedWeapon, setEquippedWeapon] = useState(blankEquipment)
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		//TODO make GET axios call to retrieve user's inventory
@@ -130,8 +136,11 @@ export default function InventoryModal(props: Props): ReactElement {
 					return e.equipped && e.slot === 2
 				}
 			)
+			console.log(eArmor, eWeapon)
 			setEquippedArmor(eArmor)
+			dispatch(setArmor(eArmor))
 			setEquippedWeapon(eWeapon)
+			dispatch(setWeapon(eWeapon))
 			setLoading(false)
 		})
 		//Placeholder
@@ -175,15 +184,13 @@ export default function InventoryModal(props: Props): ReactElement {
 		return (
 			<ReactModal
 				style={inventoryModalStyles}
-				isOpen={props.inventoryOpen}
-			></ReactModal>
+				isOpen={props.inventoryOpen}></ReactModal>
 		)
 	} else {
 		return (
 			<ReactModal
 				style={inventoryModalStyles}
-				isOpen={props.inventoryOpen}
-			>
+				isOpen={props.inventoryOpen}>
 				<CloseButton closeModal={props.closeModal} />
 				<h2 className="title nes-text is-success">Inventory</h2>
 				<ModalContent>
