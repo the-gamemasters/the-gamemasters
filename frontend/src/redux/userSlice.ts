@@ -50,7 +50,7 @@ export const userSlice = createSlice({
 			state.charInfo = action.payload
 		},
 		setInventory: (state, action: PayloadAction<[]>) => {
-			state.inventory = [...state.inventory, ...action.payload]
+			state.inventory = [...action.payload]
 		},
 	},
 })

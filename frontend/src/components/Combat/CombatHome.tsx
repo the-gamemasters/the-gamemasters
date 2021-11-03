@@ -8,7 +8,7 @@ function CombatHome({}: Props): ReactElement {
 	return (
 		<div>
 			<Combat />
-			<NPC />
+			{/* <NPC /> */}
 		</div>
 	)
 }

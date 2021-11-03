@@ -96,10 +96,17 @@ export default function Combat(props: Props): ReactElement {
 
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
-			const { item_name, item_effect, item_effect_value, quantity } = val
+			const {
+				item_name,
+				item_effect,
+				item_effect_stat,
+				item_effect_value,
+				quantity,
+			} = val
+			const effectName = ["-str", "-dex", "", "-int"]
 			const item = {
 				itemName: item_name,
-				effectType: item_effect,
+				effectType: `${item_effect}${effectName[item_effect_stat - 1]}`,
 				effectBase: item_effect_value,
 				inventoryQuantity: quantity,
 			}

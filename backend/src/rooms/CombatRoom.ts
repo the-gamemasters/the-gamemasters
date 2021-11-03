@@ -196,8 +196,6 @@ export class CombatRoom extends Room<CombatRoomState> {
 						inventoryQuantity,
 					} = playerItem
 
-					console.log(playerItem)
-
 					if (inventoryQuantity > 0) {
 						// Will need to add more effect type but most will just be a similar to buff-int
 						switch (effectType) {
@@ -256,7 +254,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						this.state[forceA].items[
 							itemIndexNumber
 						].inventoryQuantity -= 1
-
+						console.log(broadcastMessage, "broadcastMessage")
 						this.broadcast("item", [
 							this.state[forceA].displayName,
 							broadcastMessage,
@@ -301,12 +299,9 @@ export class CombatRoom extends Room<CombatRoomState> {
 		let party = this.state[force]
 		let { charInfo, combatItems } = options
 
-		// console.log(charInfo)
-
 		party.id = client.sessionId
 
 		if (force === "party1") {
-			console.log(party.items)
 			const {
 				charName,
 				gold,
@@ -325,6 +320,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 					effectBase: any
 					inventoryQuantity: any
 				}) => {
+					console.log(val.effectType, "effect type")
 					return new Items({
 						itemName: val.itemName,
 						effectType: val.effectType,
@@ -340,7 +336,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 			party.displayName = charName
 			party.spriteUrl = testURL
-			party.items.push(...playerItems)
+			party.items = playerItems
 			party.spells.push(...encounter.spells)
 			party.baseStats = new Stats({
 				strength,

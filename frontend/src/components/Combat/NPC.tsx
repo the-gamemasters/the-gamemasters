@@ -206,9 +206,5 @@ export default function NPC(props: Props): ReactElement {
 	// }
 
 	// console.log(currentTurn)
-	return (
-		<>
-			<div>test</div>
-		</>
-	)
+	return <></>
 }
