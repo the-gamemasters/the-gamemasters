@@ -147,7 +147,7 @@ export default function ShopModal(props: Props): ReactElement {
 				setGold(gold - item.item_cost)
 				dispatch(setCharGold(gold - item.item_cost))
 				axios
-					.put(`/api/character`, { gold })
+					.put(`/api/character`, { characterKey: charId, gold })
 					.then(() => {
 						console.log("character gold updated")
 					})
@@ -167,7 +167,7 @@ export default function ShopModal(props: Props): ReactElement {
 				setGold(gold + item.item_cost)
 				dispatch(setCharGold(gold + item.item_cost))
 				axios
-					.put(`/api/character`, { gold })
+					.put(`/api/character`, { characterKey: charId, gold })
 					.then(() => {
 						console.log("character gold updated")
 					})

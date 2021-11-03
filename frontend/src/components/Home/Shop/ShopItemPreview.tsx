@@ -122,11 +122,11 @@ export default function ShopItemPreview(props: Props): ReactElement {
 					<ShopItemPriceContainer>
 						<i className="nes-icon coin"></i>
 						<p>{item_cost}</p>
-						<ItemQuantity>
+						{/* <ItemQuantity>
 							{props.shopMode === "sell"
 								? `x${props.activeItem.quantity}`
 								: ""}
-						</ItemQuantity>
+						</ItemQuantity> */}
 					</ShopItemPriceContainer>
 				</div>
 			</PreviewContainer>
