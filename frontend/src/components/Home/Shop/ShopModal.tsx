@@ -164,6 +164,14 @@ export default function ShopModal(props: Props): ReactElement {
 			})
 			.then((response) => {
 				setCharItems(response.data.characterItems)
+				setGold(gold + item.item_cost)
+				dispatch(setCharGold(gold + item.item_cost))
+				axios
+					.put(`/api/character`, { gold })
+					.then(() => {
+						console.log("character gold updated")
+					})
+					.catch((err) => console.log(err))
 			})
 	}
 
