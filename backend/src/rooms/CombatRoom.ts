@@ -1,5 +1,5 @@
 import { Room, Client } from "colyseus"
-import CombatRoomState, { Stats } from "./schema/CombatRoomState"
+import CombatRoomState, { Stats, Items } from "./schema/CombatRoomState"
 import { encountersList } from "./encounters"
 
 const testSpellList = [
@@ -254,7 +254,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						this.state[forceA].items[
 							itemIndexNumber
 						].inventoryQuantity -= 1
-
+						console.log(broadcastMessage, "broadcastMessage")
 						this.broadcast("item", [
 							this.state[forceA].displayName,
 							broadcastMessage,
@@ -297,9 +297,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 		let randomEncounter = Math.floor((Math.random() / 2) * 10)
 		let encounter = encountersList[randomEncounter]
 		let party = this.state[force]
-		let { charInfo } = options
-
-		// console.log(charInfo)
+		let { charInfo, combatItems } = options
 
 		party.id = client.sessionId
 
@@ -314,13 +312,31 @@ export class CombatRoom extends Room<CombatRoomState> {
 				intelligence,
 				dexterity,
 			} = charInfo
+
+			let playerItems = combatItems.map(
+				(val: {
+					itemName: any
+					effectType: any
+					effectBase: any
+					inventoryQuantity: any
+				}) => {
+					console.log(val.effectType, "effect type")
+					return new Items({
+						itemName: val.itemName,
+						effectType: val.effectType,
+						effectBase: val.effectBase,
+						inventoryQuantity: val.inventoryQuantity,
+					})
+				}
+			)
+			// console.log(inventory, "inventory")
 			console.log(`${client.sessionId} joined as ${charInfo.charName}`)
 			const testURL =
 				"https://i.pinimg.com/originals/84/ac/64/84ac64ec309108fad6172ef6b6a869c7.gif"
 
 			party.displayName = charName
 			party.spriteUrl = testURL
-			party.items.push(...encounter.items)
+			party.items = playerItems
 			party.spells.push(...encounter.spells)
 			party.baseStats = new Stats({
 				strength,
