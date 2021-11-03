@@ -2,7 +2,7 @@ import { ReactElement, useState } from "react"
 import CharacterInfo from "./CharacterInfo"
 import { classList } from "./classes"
 import axios from "axios"
-import { Link } from "react-router-dom"
+import { Link, Redirect } from "react-router-dom"
 import styled from "styled-components"
 import BackgroundMusic from "../General/BackgroundMusic"
 // need to fix this to use the right dispatch
@@ -73,6 +73,14 @@ export default function CharacterCreation(props: Props): ReactElement {
 	const [description, setDescription] = useState<string>("")
 	const dispatch = useAppDispatch()
 	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
+
+	if (!userId) {
+		return <Redirect to="/" />
+	}
+	if (charId) {
+		return <Redirect to="/home" />
+	}
 
 	return (
 		<Background>

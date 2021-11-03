@@ -2,10 +2,11 @@ import { ReactElement, useState } from "react"
 import styled from "styled-components"
 import AccountCreation from "./AccountCreation"
 import BackgroundMusic from "../General/BackgroundMusic"
-import { Link } from "react-router-dom"
+import { Redirect } from "react-router-dom"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
-import { setCharId, setUserId } from "../../redux/userSlice"
+import { selectUserId, selectCharId, setCharId, setUserId } from "../../redux/userSlice"
+import { useAppSelector } from "../../redux/reduxHooks"
 
 const LoginContainer = styled.div`
 	padding: 4rem;
@@ -86,6 +87,16 @@ export default function Login(props: Props): ReactElement {
 					console.log(e)
 				})
 		}
+	}
+
+	const userId = useAppSelector(selectUserId)
+	const charId = useAppSelector(selectCharId)
+
+	if (userId) {
+		if (charId) {
+			return <Redirect to="/home" />
+		}
+		return <Redirect to="/char" />
 	}
 
 	return (
