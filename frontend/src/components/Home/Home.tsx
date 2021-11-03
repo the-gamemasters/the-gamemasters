@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from "react"
+import { Redirect } from "react-router-dom"
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
@@ -107,6 +108,15 @@ export default function Home(props: Props): ReactElement {
 
 	const getWorldName = () => {
 		return worldList[currentWorld - 1].world_name
+	}
+
+	const userId = useAppSelector(selectUserId)
+
+	if (!userId) {
+		return <Redirect to="/" />
+	}
+	if (!charId) {
+		return <Redirect to="/char" />
 	}
 
 	return (

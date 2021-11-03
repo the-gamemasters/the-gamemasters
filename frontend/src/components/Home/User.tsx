@@ -1,5 +1,8 @@
 import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
+import axios from "axios"
+import { useDispatch } from "react-redux"
+import { setCharId, setUserId } from "../../redux/userSlice"
 
 const UserContainer = styled.div`
 	display: flex;
@@ -58,6 +61,8 @@ interface Props {}
 export default function User(props: Props): ReactElement {
 	const [dropDownEnabled, setDropDownEnabled] = useState(false)
 
+	const dispatch = useDispatch()
+
 	const handleClickAvatar = () => {
 		setDropDownEnabled(!dropDownEnabled)
 	}
@@ -77,6 +82,16 @@ export default function User(props: Props): ReactElement {
 				if (newWindow) newWindow.opener = null
 				break
 			case "logout":
+				axios
+					.post("/api/logout")
+					.then(() => {
+						console.log("logout")
+						dispatch(setUserId(0))
+						dispatch(setCharId(0))
+					})
+					.catch((err) => {
+						console.log(err)
+					})
 				break
 		}
 	}
