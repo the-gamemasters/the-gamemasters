@@ -11,6 +11,7 @@ import {
 	setCharInfo,
 	setInventory,
 	selectInventory,
+	selectCharGold,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
@@ -67,6 +68,7 @@ const TopRight = styled.div`
 export default function Home(props: Props): ReactElement {
 	const [currentWorld, setCurrentWorld] = useState(2)
 	const charId = useAppSelector(selectCharId)
+	const charGold = useAppSelector(selectCharGold)
 
 	const dispatch = useAppDispatch()
 
