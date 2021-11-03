@@ -11,6 +11,8 @@ import {
 	setCharInfo,
 	setInventory,
 	selectInventory,
+	setArmor,
+	setWeapon,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
@@ -18,6 +20,7 @@ import HomeAction from "./HomeAction"
 import ShopPreview from "./ShopPreview"
 import User from "./User"
 import axios from "axios"
+import { Equipment } from "./Inventory/InventoryModal"
 
 interface Props {}
 
@@ -108,6 +111,25 @@ export default function Home(props: Props): ReactElement {
 					(val: {}) => val
 				)
 				dispatch(setInventory(inventory))
+			} catch (error) {
+				console.log(error)
+			}
+
+			try {
+				axios.get(`/api/equipment/${charId}`).then((response) => {
+					let eArmor = response.data.characterEquipment.find(
+						(e: Equipment) => {
+							return e.equipped && e.slot === 1
+						}
+					)
+					let eWeapon = response.data.characterEquipment.find(
+						(e: Equipment) => {
+							return e.equipped && e.slot === 2
+						}
+					)
+					dispatch(setArmor(eArmor))
+					dispatch(setWeapon(eWeapon))
+				})
 			} catch (error) {
 				console.log(error)
 			}

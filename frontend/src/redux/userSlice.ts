@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import type { RootState } from "./store"
+import { Equipment } from "../components/Home/Inventory/InventoryModal"
 
 interface Info {
 	charName?: string
@@ -17,6 +18,8 @@ interface UserState {
 	charId: number
 	charInfo: Info
 	inventory: []
+	armor: Equipment
+	weapon: Equipment
 }
 
 // Define the initial state using that type
@@ -34,6 +37,28 @@ const initialState: UserState = {
 		dexterity: 0,
 	},
 	inventory: [],
+	weapon: {
+		charactersequipment_key: 0,
+		equipment_key: 0,
+		slot: 0,
+		equipment_name: "",
+		equipment_description: "",
+		equipment_effect_stat: "",
+		equipment_effect_stat_value: 0,
+		equipped: false,
+		equipment_icon: "",
+	},
+	armor: {
+		charactersequipment_key: 0,
+		equipment_key: 0,
+		slot: 0,
+		equipment_name: "",
+		equipment_description: "",
+		equipment_effect_stat: "",
+		equipment_effect_stat_value: 0,
+		equipped: false,
+		equipment_icon: "",
+	},
 }
 
 export const userSlice = createSlice({
@@ -52,15 +77,29 @@ export const userSlice = createSlice({
 		setInventory: (state, action: PayloadAction<[]>) => {
 			state.inventory = [...action.payload]
 		},
+		setArmor: (state, action: PayloadAction<Equipment>) => {
+			state.armor = action.payload
+		},
+		setWeapon: (state, action: PayloadAction<Equipment>) => {
+			state.weapon = action.payload
+		},
 	},
 })
 
-export const { setUserId, setCharId, setCharInfo, setInventory } =
-	userSlice.actions
+export const {
+	setUserId,
+	setCharId,
+	setCharInfo,
+	setInventory,
+	setArmor,
+	setWeapon,
+} = userSlice.actions
 
 export const selectUserId = (state: RootState) => state.user.userId
 export const selectCharId = (state: RootState) => state.user.charId
 export const selectCharInfo = (state: RootState) => state.user.charInfo
 export const selectInventory = (state: RootState) => state.user.inventory
+export const selectArmor = (state: RootState) => state.user.armor
+export const selectWeapon = (state: RootState) => state.user.weapon
 
 export default userSlice.reducer
