@@ -4,19 +4,14 @@
 	"version": "1.0.0",
 	"description": "npm init template for bootstrapping an empty Colyseus project",
 	"main": "lib/index.js",
-	"engines": {
-		"node": "14.x",
-		"npm": "7.x"
-	},
 	"scripts": {
+		"start": "ts-node-dev --respawn --transpile-only src/index.ts",
 		"loadtest": "colyseus-loadtest loadtest/example.ts --room my_room --numClients 2",
-		"start": "node lib/index.js",
-		"postinstall": "tsc",
-		"build": "cd react-ui/ && npm install && npm run build",
+		"build": "npm run clean && tsc && node node_modules/copyfiles/copyfiles package.json ./lib && node node_modules/copyfiles/copyfiles arena.env ./lib",
 		"clean": "node node_modules/rimraf/bin lib",
 		"test": "mocha --require ts-node/register test/**/*test.ts --exit --timeout 15000",
-		"format": "npx prettier --write .",
-		"dev": "ts-node-dev --respawn --transpile-only server/src/index.ts"
+		"format": "npx prettier --write ."
+
 	},
 	"author": "",
 	"license": "UNLICENSED",
@@ -40,7 +35,7 @@
 		"prettier": "2.4.1",
 		"rimraf": "^2.7.1",
 		"ts-mocha": "^8.0.0",
-		"ts-node": "^8.10.2",
+		"ts-node": "^8.1.0",
 		"ts-node-dev": "^1.0.0-pre.63",
 		"typescript": "^3.4.5"
 	},
@@ -54,9 +49,6 @@
 		"cors": "^2.8.5",
 		"express": "^4.16.4",
 		"express-session": "^1.17.2",
-		"greenlock-express": "^4.0.3",
-		"massive": "^6.10.0",
-		"pg-connection-string": "^2.5.0",
-		"ts-node": "^8.10.2"
+		"massive": "^6.10.0"
 	}
 }
