@@ -16,6 +16,7 @@ interface UserState {
 	userId: number
 	charId: number
 	charInfo: Info
+	inventory: []
 }
 
 // Define the initial state using that type
@@ -32,6 +33,7 @@ const initialState: UserState = {
 		intelligence: 0,
 		dexterity: 0,
 	},
+	inventory: [],
 }
 
 export const userSlice = createSlice({
@@ -47,13 +49,18 @@ export const userSlice = createSlice({
 		setCharInfo: (state, action: PayloadAction<Info>) => {
 			state.charInfo = action.payload
 		},
+		setInventory: (state, action: PayloadAction<[]>) => {
+			state.inventory = [...state.inventory, ...action.payload]
+		},
 	},
 })
 
-export const { setUserId, setCharId, setCharInfo } = userSlice.actions
+export const { setUserId, setCharId, setCharInfo, setInventory } =
+	userSlice.actions
 
 export const selectUserId = (state: RootState) => state.user.userId
 export const selectCharId = (state: RootState) => state.user.charId
 export const selectCharInfo = (state: RootState) => state.user.charInfo
+export const selectInventory = (state: RootState) => state.user.inventory
 
 export default userSlice.reducer

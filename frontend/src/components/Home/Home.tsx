@@ -8,6 +8,8 @@ import {
 	setCharId,
 	setUserId,
 	setCharInfo,
+	setInventory,
+	selectInventory,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
@@ -97,7 +99,19 @@ export default function Home(props: Props): ReactElement {
 			} catch (error) {
 				console.log(error)
 			}
+
+			try {
+				const result = await axios.get(`/api/items/${charId}`)
+
+				const inventory = result.data.characterItems.map(
+					(val: {}) => val
+				)
+				dispatch(setInventory(inventory))
+			} catch (error) {
+				console.log(error)
+			}
 		}
+
 		keepCharacterInfoUpdatedOnRedux(charId)
 	})
 

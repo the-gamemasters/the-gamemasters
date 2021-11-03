@@ -11,6 +11,7 @@ import {
 	selectCharId,
 	selectUserId,
 	selectCharInfo,
+	selectInventory,
 	setCharId,
 	setUserId,
 	setCharInfo,
@@ -88,15 +89,27 @@ export default function Combat(props: Props): ReactElement {
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
 	const charInfo = useAppSelector(selectCharInfo)
+	const inventory = useAppSelector(selectInventory)
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {}, [])
 
 	useEffect(() => {
+		const combatItems = inventory.map((val) => {
+			const { item_name, item_effect, item_effect_value, quantity } = val
+			const item = {
+				itemName: item_name,
+				effectType: item_effect,
+				effectBase: item_effect_value,
+				inventoryQuantity: quantity,
+			}
+			return item
+		})
 		const initRoom = async (client: Colyseus.Client) => {
 			setRoom(
 				await client.joinOrCreate("combat", {
 					charInfo,
+					combatItems,
 				})
 			)
 		}
