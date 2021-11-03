@@ -6,9 +6,13 @@ import InventoryList from "./InventoryList"
 import EquippedItems from "./EquippedItems"
 import styled from "styled-components"
 import axios from "axios"
-import { useAppSelector } from "../../../redux/reduxHooks"
-import { selectCharId, selectUserId } from "../../../redux/userSlice"
-import { getByPlaceholderText } from "@testing-library/react"
+import { useAppSelector, useAppDispatch } from "../../../redux/reduxHooks"
+import {
+	selectCharId,
+	selectUserId,
+	setArmor,
+	setWeapon,
+} from "../../../redux/userSlice"
 
 const inventoryModalStyles = {
 	overlay: {
@@ -116,7 +120,7 @@ export default function InventoryModal(props: Props): ReactElement {
 	const [equippedWeapon, setEquippedWeapon] = useState(blankEquipment)
 	const userId = useAppSelector(selectUserId)
 	const charId = useAppSelector(selectCharId)
-	console.log(equippedArmor, "this is the armor")
+	const dispatch = useAppDispatch()
 
 	useEffect(() => {
 		//TODO make GET axios call to retrieve user's inventory
@@ -144,7 +148,9 @@ export default function InventoryModal(props: Props): ReactElement {
 			}
 
 			setEquippedArmor(eArmor)
+			dispatch(setArmor(eArmor))
 			setEquippedWeapon(eWeapon)
+			dispatch(setWeapon(eWeapon))
 			setLoading(false)
 		})
 		//Placeholder
