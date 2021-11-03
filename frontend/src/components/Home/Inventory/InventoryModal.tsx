@@ -126,17 +126,27 @@ export default function InventoryModal(props: Props): ReactElement {
 		//TODO make GET axios call to retrieve user's inventory
 		axios.get(`/api/equipment/${charId}`).then((response) => {
 			setInventoryItems(response.data.characterEquipment)
+
 			let eArmor = response.data.characterEquipment.find(
 				(e: Equipment) => {
+					console.log(e)
 					return e.equipped && e.slot === 1
 				}
 			)
+
 			let eWeapon = response.data.characterEquipment.find(
 				(e: Equipment) => {
 					return e.equipped && e.slot === 2
 				}
 			)
-			console.log(eArmor, eWeapon)
+
+			if (!eArmor) {
+				eArmor = blankEquipment
+			}
+			if (!eWeapon) {
+				eWeapon = blankEquipment
+			}
+
 			setEquippedArmor(eArmor)
 			dispatch(setArmor(eArmor))
 			setEquippedWeapon(eWeapon)
