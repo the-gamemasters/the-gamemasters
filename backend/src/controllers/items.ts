@@ -35,14 +35,28 @@ async function buyItem(req: any, res: any) {
 
 	const { itemKey, cost } = req.body
 
-	/* logic: 
+	const result = await db.Items.get_inventory([charKey])
+	let quantity: number = 0
+	let inventoryKey: number = 0
+
+	if (result.find((val: { item_key: number }) => val.item_key === itemKey)) {
+		quantity = result.find(
+			(val: { item_key: number }) => val.item_key === itemKey
+		).quantity
+		inventoryKey = result.find(
+			(val: { item_key: number }) => val.item_key === itemKey
+		).charactersinventory_key
+	}
+	/* logic:
 	1. if gold >= item_cost where charKey, continue. Else, return "cannot purchase"
-	2. if itemKey and charKey exist in inventory, UPDATE quantity +1. Else, INSERT INTO inventory. 
+	2. if itemKey and charKey exist in inventory, UPDATE quantity +1. Else, INSERT INTO inventory.
 	3. return char's new Inventory and gold count
 	*/
-
-	const bought = await db.Items.buy_items(charKey, itemKey)
-	console.log(bought)
+	if (quantity === 0) {
+		await db.Items.buy_items([charKey, itemKey, ++quantity])
+	} else {
+		await db.Items.edit_items([inventoryKey, ++quantity])
+	}
 	const newGold = await db.Items.set_gold(charKey, -cost)
 
 	const characterItems: Item[] = await db.Items.get_inventory(charKey)
@@ -57,14 +71,13 @@ async function sellItem(req: any, res: any) {
 
 	const { invKey, value } = req.body
 
-	/* logic: 
+	/* logic:
 	1. if gold >= item_cost where charKey, continue. Else, return "cannot purchase"
 	2. if itemKey and charKey exist in inventory, UPDATE quantity +1. Else, INSERT INTO inventory.
 	3. return char's new Inventory
 	*/
 
-	const sold = await db.Items.sell_items(invKey)
-	console.log(sold)
+	await db.Items.sell_items(invKey)
 	const newGold = await db.Items.set_gold(charKey, value)
 
 	const characterItems: Item[] = await db.Items.get_inventory(charKey)
