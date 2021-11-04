@@ -136,43 +136,31 @@ export default function ShopModal(props: Props): ReactElement {
 		setActiveItem(item)
 	}
 
-	const handleBuyItem = (item: Item) => {
-		axios
-			.post(`/api/items/${charId}`, {
-				invKey: item.charactersinventory_key,
-				cost: item.item_cost,
-			})
-			.then((response) => {
-				setCharItems(response.data.characterItems)
-				setGold(gold - item.item_cost)
-				dispatch(setCharGold(gold - item.item_cost))
-				axios
-					.put(`/api/character`, { characterKey: charId, gold })
-					.then(() => {
-						console.log("character gold updated")
-					})
-					.catch((err) => console.log(err))
-				// update gold on store and retrieve
-			})
+	const handleBuyItem = async (item: Item) => {
+		console.log(item)
+		const response = await axios.post(`/api/items/${charId}`, {
+			itemKey: item.item_key,
+			cost: item.item_cost,
+		})
+
+		console.log(response)
+
+		setCharItems(response.data.characterItems)
+
+		setGold(response.data.newGold[0].gold)
+		dispatch(setCharGold(response.data.newGold[0].gold))
+		// update gold on store and retrieve
 	}
 
-	const handleSellItem = (item: Item) => {
-		axios
-			.put(`/api/items/${charId}`, {
-				invKey: item.charactersinventory_key,
-				value: item.item_cost,
-			})
-			.then((response) => {
-				setCharItems(response.data.characterItems)
-				setGold(gold + item.item_cost)
-				dispatch(setCharGold(gold + item.item_cost))
-				axios
-					.put(`/api/character`, { characterKey: charId, gold })
-					.then(() => {
-						console.log("character gold updated")
-					})
-					.catch((err) => console.log(err))
-			})
+	const handleSellItem = async (item: Item) => {
+		const response = await axios.put(`/api/items/${charId}`, {
+			invKey: item.charactersinventory_key,
+			value: item.item_cost,
+		})
+
+		setCharItems(response.data.characterItems)
+		setGold(response.data.newGold[0].gold)
+		dispatch(setCharGold(response.data.newGold[0].gold))
 	}
 
 	const handleShopModeChange = () => {

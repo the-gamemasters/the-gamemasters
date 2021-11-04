@@ -87,7 +87,6 @@ export default function ShopItemPreview(props: Props): ReactElement {
 	const sanitizeItemEffect = () => {
 		let effect = item_effect.toLowerCase()
 		let writtenEffectStat = ""
-		console.log(item_effect_stat)
 		if (item_effect_stat === "1") {
 			writtenEffectStat = "Strength"
 		} else if (item_effect_stat === "2") {
