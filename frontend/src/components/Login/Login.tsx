@@ -5,7 +5,12 @@ import BackgroundMusic from "../General/BackgroundMusic"
 import { Redirect } from "react-router-dom"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
-import { selectUserId, selectCharId, setCharId, setUserId } from "../../redux/userSlice"
+import {
+	selectUserId,
+	selectCharId,
+	setCharId,
+	setUserId,
+} from "../../redux/userSlice"
 import { useAppSelector } from "../../redux/reduxHooks"
 
 const LoginContainer = styled.div`
@@ -133,15 +138,16 @@ export default function Login(props: Props): ReactElement {
 
 				<button
 					className="nes-btn is-primary"
-					onClick={() => submitLogin()}
-				>
+					onClick={(e) => {
+						e.preventDefault()
+						submitLogin()
+					}}>
 					Login
 				</button>
 			</LoginForm>
 			<button
 				className="nes-btn is-success"
-				onClick={() => setNewUser(!newUser)}
-			>
+				onClick={() => setNewUser(!newUser)}>
 				Create an Account
 			</button>
 

@@ -297,7 +297,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 		let randomEncounter = Math.floor((Math.random() / 2) * 10)
 		let encounter = encountersList[randomEncounter]
 		let party = this.state[force]
-		let { charInfo, combatItems } = options
+		let { charInfo, combatItems, armorMod, weaponMod } = options
 
 		party.id = client.sessionId
 
@@ -320,7 +320,6 @@ export class CombatRoom extends Room<CombatRoomState> {
 					effectBase: any
 					inventoryQuantity: any
 				}) => {
-					console.log(val.effectType, "effect type")
 					return new Items({
 						itemName: val.itemName,
 						effectType: val.effectType,
@@ -341,7 +340,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 			party.baseStats = new Stats({
 				strength,
 				dexterity,
-				constitution,
+				constitution: constitution + armorMod.value,
 				intelligence,
 			})
 			party.tempStats = new Stats({
@@ -352,9 +351,25 @@ export class CombatRoom extends Room<CombatRoomState> {
 			})
 			party.baseHp = party.baseStats.constitution * 10
 			party.tempHp = party.baseHp
-			party.weaponBonus = encounter.weaponBonus
+			party.weaponBonus = 0
 			party.baseDodgeChance = encounter.baseDodgeChance
 			party.tempDodgeChance = party.baseDodgeChance
+
+			switch (weaponMod.stat) {
+				case "str":
+					party.weaponBonus += weaponMod.value
+					break
+				case "int":
+					party.tempStats.intelligence += weaponMod.value
+					break
+			}
+
+			console.log(
+				party.baseStats.constitution,
+				party.tempStats.constitution,
+				"did the weapon mod work",
+				party.weaponBonus
+			)
 		} else {
 			console.log(
 				`${client.sessionId} joined as ${force} as a ${encounter.displayName}`
