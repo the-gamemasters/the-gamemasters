@@ -179,6 +179,7 @@ export default function CharacterCreation(props: Props): ReactElement {
 										intelligence:
 											classList[currentClass].int,
 										dexterity: classList[currentClass].dex,
+										gold: 0,
 									})
 								)
 
