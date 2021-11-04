@@ -97,6 +97,8 @@ export default function Combat(props: Props): ReactElement {
 	const weapon = useAppSelector(selectWeapon)
 	const dispatch = useAppDispatch()
 
+	console.log(armor, weapon)
+
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
 			const {
@@ -115,14 +117,24 @@ export default function Combat(props: Props): ReactElement {
 			}
 			return item
 		})
+		let armorMod = {}
+		let weaponMod = {}
 
-		const armorMod = {
-			stat: armor.equipment_effect_stat,
-			value: armor.equipment_effect_stat_value,
+		if (armor) {
+			armorMod = {
+				stat: armor.equipment_effect_stat,
+				value: armor.equipment_effect_stat_value,
+			}
+		} else {
+			armorMod = { stat: "con", value: 0 }
 		}
-		const weaponMod = {
-			stat: weapon.equipment_effect_stat,
-			value: weapon.equipment_effect_stat_value,
+		if (weapon) {
+			weaponMod = {
+				stat: weapon.equipment_effect_stat,
+				value: weapon.equipment_effect_stat_value,
+			}
+		} else {
+			weaponMod = { stat: "str", value: 0 }
 		}
 
 		const initRoom = async (client: Colyseus.Client) => {
