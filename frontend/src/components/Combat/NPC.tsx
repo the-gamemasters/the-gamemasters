@@ -144,10 +144,11 @@ export default function NPC(props: Props): ReactElement {
 	// 	console.log("end")
 	// })
 
-	room?.onStateChange.once((state: any) => {
-		setRoom(room)
-		setState(state)
-	})
+	// room?.onStateChange.once((state: any) => {
+	// 	console.log("once")
+	// 	setRoom(room)
+	// 	setState(state)
+	// })
 
 	room?.onStateChange((state: any) => {
 		// console.log(currentTurn, "currentTurn", state.currentTurn)

@@ -266,7 +266,7 @@ export default function Combat(props: Props): ReactElement {
 			if (result === "dc") {
 				return "Your opponent disconnected. You are victorious!"
 			} else {
-				if (myParty === "party1") {
+				if (myParty === "party2") {
 					if (result === myParty) {
 						return `You vanquished ${state.party2.displayName}!`
 					} else {

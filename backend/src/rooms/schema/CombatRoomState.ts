@@ -27,6 +27,7 @@ export class Items extends Schema {
 export class Player extends Schema {
 	@type("string") id: string
 	@type("string") displayName: string
+	@type("string") role: string
 	@type("string") spriteUrl: string
 	@type([Items]) items = new ArraySchema<Items>()
 	@type([Spells]) spells = new ArraySchema<Spells>()
