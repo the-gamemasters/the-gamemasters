@@ -66,10 +66,13 @@ async function getCharacterInfo(req: any, res: any) {
 	const { charKey } = req.params
 
 	let result = await db.Characters.findCharacter([charKey])
+	if (!result) {
+		res.redirect("/")
+	}
 	const { char_name, gold, experience, level, class: role } = result[0]
 
-	result = await db.Characters.findCharacterStats([charKey])
-	const { strength, constitution, intelligence, dexterity } = result[0]
+	let nextResult = await db.Characters.findCharacterStats([charKey])
+	const { strength, constitution, intelligence, dexterity } = nextResult[0]
 
 	res.status(200).json({
 		char_name,

@@ -38,10 +38,11 @@ export class Player extends Schema {
 	@type("number") weaponBonus: number
 	@type("number") baseDodgeChance: number
 	@type("number") tempDodgeChance: number
+	@type("number") xpReward: number
 }
 export default class CombatRoomState extends Schema {
 	@type("string") currentTurn: party = "party1"
-	@type("string") winner?: Player
+	@type("string") winner?: party
 	@type(Player) party1 = new Player()
 	@type(Player) party2 = new Player()
 }

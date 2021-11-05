@@ -1,29 +1,25 @@
+import axios from "axios"
 import React, { ReactElement, useEffect, useState } from "react"
 import { Redirect } from "react-router-dom"
 import styled from "styled-components"
 import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
+	selectCharGold,
 	selectCharId,
 	selectUserId,
-	selectCharInfo,
 	selectWorld,
-	setCharId,
-	setUserId,
+	setArmor,
 	setCharInfo,
 	setInventory,
-	selectInventory,
-	selectCharGold,
-	setArmor,
 	setWeapon,
 	setWorld,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
 import HomeAction from "./HomeAction"
+import { Equipment } from "./Inventory/InventoryModal"
 import ShopPreview from "./ShopPreview"
 import User from "./User"
-import axios from "axios"
-import { Equipment } from "./Inventory/InventoryModal"
 
 interface Props {}
 
@@ -82,9 +78,12 @@ export default function Home(props: Props): ReactElement {
 
 	useEffect(() => {
 		const keepCharacterInfoUpdatedOnRedux = async (charId: number) => {
+			if (charId === 0) {
+				return
+			} else {
+			}
 			try {
 				const result = await axios.get(`/api/character/${charId}`)
-				console.log(result)
 				const {
 					char_name: charName,
 					gold,
@@ -125,27 +124,27 @@ export default function Home(props: Props): ReactElement {
 			}
 
 			try {
-				axios.get(`/api/equipment/${charId}`).then((response) => {
-					let eArmor = response.data.characterEquipment.find(
-						(e: Equipment) => {
-							return e.equipped && e.slot === 1
-						}
-					)
-					let eWeapon = response.data.characterEquipment.find(
-						(e: Equipment) => {
-							return e.equipped && e.slot === 2
-						}
-					)
-					dispatch(setArmor(eArmor))
-					dispatch(setWeapon(eWeapon))
-				})
+				const result = await axios.get(`/api/equipment/${charId}`)
+
+				const eArmor = result.data.characterEquipment.find(
+					(e: Equipment) => {
+						return e.equipped && e.slot === 1
+					}
+				)
+				const eWeapon = result.data.characterEquipment.find(
+					(e: Equipment) => {
+						return e.equipped && e.slot === 2
+					}
+				)
+				dispatch(setArmor(eArmor))
+				dispatch(setWeapon(eWeapon))
 			} catch (error) {
 				console.log(error)
 			}
 		}
 
 		keepCharacterInfoUpdatedOnRedux(charId)
-	})
+	}, [charId])
 
 	const handleWorldChange = (world: number) => {
 		setCurrentWorld(world)

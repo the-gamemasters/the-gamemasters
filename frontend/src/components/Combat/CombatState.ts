@@ -33,6 +33,7 @@ export interface Player {
 	weaponBonus: number
 	baseDodgeChance: number
 	tempDodgeChance: number
+	xpReward: number
 }
 export interface CombatState {
 	currentTurn: "party1" | "party2"

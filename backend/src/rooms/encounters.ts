@@ -44,6 +44,7 @@ export const encountersList = [
 		weaponBonus: 1,
 		baseDodgeChance: 0,
 		tempDodgeChance: 0,
+		xpReward: 8,
 	},
 	{
 		id: "",
@@ -87,8 +88,9 @@ export const encountersList = [
 			intelligence: 3,
 		}),
 		weaponBonus: 4,
-		baseDodgeChance: 0.5,
+		baseDodgeChance: 0.2,
 		tempDodgeChance: 0,
+		xpReward: 3,
 	},
 	{
 		id: "",
@@ -134,6 +136,7 @@ export const encountersList = [
 		weaponBonus: 3,
 		baseDodgeChance: 0,
 		tempDodgeChance: 0,
+		xpReward: 5,
 	},
 	{
 		id: "",
@@ -185,8 +188,9 @@ export const encountersList = [
 			intelligence: 15,
 		}),
 		weaponBonus: 4,
-		baseDodgeChance: 0.5,
+		baseDodgeChance: 0.2,
 		tempDodgeChance: 0,
+		xpReward: 15,
 	},
 	{
 		id: "",
@@ -230,7 +234,8 @@ export const encountersList = [
 			intelligence: 3,
 		}),
 		weaponBonus: 4,
-		baseDodgeChance: 0.5,
+		baseDodgeChance: 0.1,
 		tempDodgeChance: 0,
+		xpReward: 10,
 	},
 ]

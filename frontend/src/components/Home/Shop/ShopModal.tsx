@@ -126,17 +126,20 @@ export default function ShopModal(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		axios.get(`/api/items`).then((response) => {
-			setShopItems(response.data.shopItems)
-			axios.get(`/api/items/${charId}`).then((response) => {
-				setCharItems(response.data.characterItems)
-				setLoading(false)
+		if (props.shopOpen === true) {
+			axios.get(`/api/items`).then((response) => {
+				setShopItems(response.data.shopItems)
+				axios.get(`/api/items/${charId}`).then((response) => {
+					setCharItems(response.data.characterItems)
+					setLoading(false)
+				})
 			})
-		})
 
-		setGold(charGold)
+			setGold(charGold)
+		}
+
 		//TODO get gold amount from characters table
-	}, [charId, charGold])
+	}, [charGold])
 	const handleClickItem = (item: Item) => {
 		setActiveItem(item)
 	}
