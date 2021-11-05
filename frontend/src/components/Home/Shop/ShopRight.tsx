@@ -2,6 +2,8 @@ import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
 import { Item } from "./ShopModal"
 import SFX from "../../General/SFX"
+import { useAppSelector } from "../../../redux/reduxHooks"
+import { selectCharGold } from "../../../redux/userSlice"
 
 import ShopItemPreview from "./ShopItemPreview"
 import { render } from "@testing-library/react"
@@ -27,8 +29,12 @@ const ShopRightContainer = styled.div`
 
 export default function ShopRight(props: Props): ReactElement {
 	const [activeSFX, setActiveSFX] = useState(false)
+	const gold = useAppSelector(selectCharGold)
 
 	const handleButtonClick = (action: "buy" | "sell") => {
+		if (action === "buy" && props.activeItem.item_cost > gold) {
+			return alert(`You don't have enough Gold!`)
+		}
 		if (!activeSFX) {
 			setActiveSFX(true)
 		}
