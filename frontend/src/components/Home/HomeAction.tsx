@@ -1,6 +1,7 @@
 import React, { ReactElement } from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { NPCPrompts } from "./NPCPrompts"
 
 const HomeActionContainer = styled.div`
 	background-color: #6dc074;
@@ -31,13 +32,21 @@ const HomeActionBottom = styled.div`
 interface Props {}
 
 export default function HomeAction(props: Props): ReactElement {
+
+	const myWorld = 3
+	
+	function findPrompt(myWorld: number){
+		const promptsFromWorld = NPCPrompts.filter(myPrompt => myPrompt.world === myWorld)
+		return promptsFromWorld[Math.floor(promptsFromWorld.length * Math.random())]
+	}
+
+	const dispPrompt = findPrompt(myWorld)
+
 	return (
 		<HomeActionContainer>
 			<HomeActionTop>
 				<p>
-					"I saw a group of suspicious-looking individuals with swords
-					poking around the Tomb of the Clockmaster. Go make sure they
-					don't disturb the dead, please."
+					{dispPrompt.body}
 				</p>
 			</HomeActionTop>
 			<HomeActionBottom>
