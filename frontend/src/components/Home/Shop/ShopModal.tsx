@@ -70,6 +70,11 @@ const ModalContentBottom = styled.div`
 	grid-row-gap: 0px;
 `
 
+const PurseImg = styled.img`
+	height: 3rem;
+	margin-right: 1rem;
+`
+
 export interface Item {
 	item_key: number
 	item_name: string
@@ -189,7 +194,10 @@ export default function ShopModal(props: Props): ReactElement {
 							Switch Shop Mode
 						</SwitchModeBtn>
 						<div>
-							<img alt="purse"></img>
+							<PurseImg
+								src={"/icons/items/purse.png"}
+								alt="purse"
+							/>
 							<span>{gold}</span>
 						</div>
 					</ModalContentTop>

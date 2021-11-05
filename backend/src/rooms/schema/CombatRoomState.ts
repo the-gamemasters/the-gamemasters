@@ -40,6 +40,7 @@ export class Player extends Schema {
 }
 export default class CombatRoomState extends Schema {
 	@type("string") currentTurn: party = "party1"
+	@type("string") winner?: Player
 	@type(Player) party1 = new Player()
 	@type(Player) party2 = new Player()
 }

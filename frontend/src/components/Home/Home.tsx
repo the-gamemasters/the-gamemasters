@@ -6,6 +6,7 @@ import {
 	selectCharId,
 	selectUserId,
 	selectCharInfo,
+	selectWorld,
 	setCharId,
 	setUserId,
 	setCharInfo,
@@ -14,6 +15,7 @@ import {
 	selectCharGold,
 	setArmor,
 	setWeapon,
+	setWorld,
 } from "../../redux/userSlice"
 import Character from "./Character"
 import Community from "./Community"
@@ -69,9 +71,12 @@ const TopRight = styled.div`
 `
 
 export default function Home(props: Props): ReactElement {
-	const [currentWorld, setCurrentWorld] = useState(2)
+	const [currentWorld, setCurrentWorld] = useState(
+		useAppSelector(selectWorld)
+	)
 	const charId = useAppSelector(selectCharId)
 	const charGold = useAppSelector(selectCharGold)
+	const world = useAppSelector(selectWorld)
 
 	const dispatch = useAppDispatch()
 
@@ -142,6 +147,7 @@ export default function Home(props: Props): ReactElement {
 
 	const handleWorldChange = (world: number) => {
 		setCurrentWorld(world)
+		dispatch(setWorld(world))
 	}
 
 	const getWorldName = () => {

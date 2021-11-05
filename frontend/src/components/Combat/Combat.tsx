@@ -14,6 +14,7 @@ import {
 	selectInventory,
 	selectArmor,
 	selectWeapon,
+	selectWorld,
 	setCharId,
 	setUserId,
 	setCharInfo,
@@ -50,9 +51,7 @@ const PageContainer = styled.div`
 	grid-template-rows: 2fr 3fr 2fr;
 	grid-column-gap: 0px;
 	grid-row-gap: 0px;
-	background: url(https://64.media.tumblr.com/00ec803404f6e9d6583f92d8870b5fb8/tumblr_p7k8f3fMWS1wvbydeo1_1280.png)
-		no-repeat fixed;
-	background-size: cover;
+
 	padding: 2em;
 `
 
@@ -96,6 +95,7 @@ export default function Combat(props: Props): ReactElement {
 	const armor = useAppSelector(selectArmor)
 	const weapon = useAppSelector(selectWeapon)
 	const dispatch = useAppDispatch()
+	const world = useAppSelector(selectWorld)
 
 	console.log(armor, weapon)
 
@@ -239,6 +239,41 @@ export default function Combat(props: Props): ReactElement {
 		setCurrentTurn(state.currentTurn)
 	})
 
+	const getBackground = () => {
+		switch (world) {
+			case 1:
+				return "https://64.media.tumblr.com/00ec803404f6e9d6583f92d8870b5fb8/tumblr_p7k8f3fMWS1wvbydeo1_1280.png"
+			case 2:
+				return "https://cdna.artstation.com/p/assets/images/images/008/322/658/large/helen-boyko-ruins2.jpg?1511995428"
+			case 3:
+				return "https://i.pinimg.com/originals/4b/b0/72/4bb07279630a9ea5601a5022dc461623.png"
+			case 4:
+				return "https://wallpapercave.com/wp/wp7991864.jpg"
+			case 5:
+				return "https://wi.wallpapertip.com/wsimgs/138-1384359_city-rain-pixel-art.jpg"
+
+			default:
+				return
+		}
+	}
+
+	const getMusic = () => {
+		switch (world) {
+			case 1:
+				return "track8-adventure.mp3"
+			case 2:
+				return "track10-egypt.mp3"
+			case 3:
+				return "track2-castle.mp3"
+			case 4:
+				return "track1-retro.mp3"
+			case 5:
+				return "track6-funk.mp3"
+			default:
+				return
+		}
+	}
+
 	const handleEndSFX = () => {
 		setActiveSFX("")
 	}
@@ -250,12 +285,6 @@ export default function Combat(props: Props): ReactElement {
 		}
 		if (room) {
 			room.send("turn", message)
-		}
-	}
-
-	const handleDebug = (party: string) => {
-		if (room) {
-			room.send("debug", party)
 		}
 	}
 
@@ -293,14 +322,22 @@ export default function Combat(props: Props): ReactElement {
 		return <PageContainer></PageContainer>
 	} else if (ready === false) {
 		return (
-			<PageContainer>
+			<PageContainer
+				style={{
+					background: `url(${getBackground()}) no-repeat fixed`,
+					backgroundSize: "cover",
+				}}>
 				<LoadingModal ready={ready} />
 			</PageContainer>
 		)
 	} else {
 		return (
-			<PageContainer>
-				<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
+			<PageContainer
+				style={{
+					background: `url(${getBackground()}) no-repeat fixed`,
+					backgroundSize: "cover",
+				}}>
+				<BackgroundMusic musicSrc={`audio/music/${getMusic()}`} />
 				{activeSFX === "" ? (
 					""
 				) : (
@@ -308,7 +345,6 @@ export default function Combat(props: Props): ReactElement {
 				)}
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
-					<h6>Room ID: {room.id}</h6>
 					<Link to="/home">
 						<button>Go back to the home page</button>
 					</Link>
@@ -398,12 +434,6 @@ export default function Combat(props: Props): ReactElement {
 						<span className="hp-text">
 							{state.party1.tempHp} / {state.party1.baseHp}
 						</span>
-						<button
-							type="button"
-							className="nes-btn"
-							onClick={() => handleDebug("party1")}>
-							Debug P1
-						</button>
 					</div>
 
 					<div className="bottom-center">
@@ -444,12 +474,6 @@ export default function Combat(props: Props): ReactElement {
 						<span className="hp-text">
 							{state.party2.tempHp} / {state.party2.baseHp}
 						</span>
-						<button
-							type="button"
-							className="nes-btn"
-							onClick={() => handleDebug("party2")}>
-							Debug P2
-						</button>
 					</div>
 				</div>
 			</PageContainer>

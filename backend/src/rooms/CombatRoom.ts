@@ -1,6 +1,7 @@
 import { Room, Client } from "colyseus"
 import CombatRoomState, { Stats, Items } from "./schema/CombatRoomState"
 import { encountersList } from "./encounters"
+import massive from "massive"
 
 const testSpellList = [
 	{
@@ -119,6 +120,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						if (this.state[forceZ].tempHp <= 0) {
 							this.state[forceZ].tempHp = 0
 							this.broadcast("victory", forceA)
+							this.state.winner = this.state[forceA]
 							// this.disconnect()
 						}
 					}
@@ -158,6 +160,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 								if (this.state[forceZ].tempHp <= 0) {
 									this.state[forceZ].tempHp = 0
 									this.broadcast("victory", forceA)
+									this.state.winner = this.state[forceA]
 									// this.disconnect()
 								}
 							}
@@ -406,54 +409,12 @@ export class CombatRoom extends Room<CombatRoomState> {
 		console.log("they left")
 	}
 
-	onDispose() {
-		// return new Promise((resolve, reject) => {
-		//     // doDatabaseOperation((err, data) => {
-		//     //     if (err) {
-		//     //         reject(err);
-		//     //     } else {
-		//     //         resolve(data);
-		//     //     }
-		//     // });
-		// });
+	async onDispose() {
+		await handleDbUpdate(this.state.winner)
 		console.log("room", this.roomId, "disposing...")
 	}
 }
 
-// {
-//     id: "",
-//     displayName: "Giant Rat",
-//     items: [
-//         {
-//             itemName: "Cheese",
-//             effectType: "heal",
-//             effectBase: 20,
-//             inventoryQuantity: 1,
-//         },
-//     ],
-//     spells: [
-//         {
-//             spellName: "Scurry",
-//             spellSchool: "none",
-//             effectType: "buff-dex",
-//             effectBase: 2,
-//             effectDuration: 3,
-//             cooldownTurns: 7,
-//         },
-//     ],
-//     baseStats: {
-//         strength: 5,
-//         dexterity: 9,
-//         constitution: 13,
-//         intelligence: 3,
-//     },
-//     tempStats: {
-//         strength: 5,
-//         dexterity: 9,
-//         constitution: 13,
-//         intelligence: 3,
-//     },
-//     weaponBonus: 4,
-//     baseDodgeChance: 0.5,
-//     tempDodgeChance: 0,
-// }
+const handleDbUpdate = (winner: any) => {
+	console.log(winner)
+}
