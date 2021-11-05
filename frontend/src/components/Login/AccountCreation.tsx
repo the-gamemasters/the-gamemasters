@@ -112,7 +112,7 @@ export default function AccountCreation(props: Props): ReactElement {
 					</label>
 					<input
 						className="nes-input"
-						type="text"
+						type="password"
 						id="password"
 						required
 						value={password}
@@ -126,7 +126,7 @@ export default function AccountCreation(props: Props): ReactElement {
 					</label>
 					<input
 						className="nes-input"
-						type="text"
+						type="password"
 						id="confirm"
 						required
 						value={passwordConfirm}
