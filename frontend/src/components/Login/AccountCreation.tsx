@@ -73,7 +73,11 @@ export default function AccountCreation(props: Props): ReactElement {
 		<AccountCreationContainer>
 			<CloseButton closeModal={() => props.closeModal()} />
 
-			<AccountCreationForm onSubmit={() => submitNewUser()}>
+			<AccountCreationForm
+				onSubmit={(e) => {
+					e.preventDefault()
+					submitNewUser()
+				}}>
 				<div className="nes-field">
 					<label htmlFor="email">
 						<p className="nes-text is-primary">Email</p>
@@ -108,7 +112,7 @@ export default function AccountCreation(props: Props): ReactElement {
 					</label>
 					<input
 						className="nes-input"
-						type="text"
+						type="password"
 						id="password"
 						required
 						value={password}
@@ -122,7 +126,7 @@ export default function AccountCreation(props: Props): ReactElement {
 					</label>
 					<input
 						className="nes-input"
-						type="text"
+						type="password"
 						id="confirm"
 						required
 						value={passwordConfirm}

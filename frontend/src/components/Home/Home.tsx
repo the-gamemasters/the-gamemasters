@@ -79,7 +79,7 @@ export default function Home(props: Props): ReactElement {
 		const keepCharacterInfoUpdatedOnRedux = async (charId: number) => {
 			try {
 				const result = await axios.get(`/api/character/${charId}`)
-
+				console.log(result)
 				const {
 					char_name: charName,
 					gold,
@@ -89,6 +89,7 @@ export default function Home(props: Props): ReactElement {
 					constitution,
 					intelligence,
 					dexterity,
+					role,
 				} = result.data
 				dispatch(
 					setCharInfo({
@@ -100,6 +101,7 @@ export default function Home(props: Props): ReactElement {
 						constitution,
 						intelligence,
 						dexterity,
+						role,
 					})
 				)
 			} catch (error) {
