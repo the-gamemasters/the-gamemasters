@@ -45,9 +45,9 @@ export default function NPC(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
+		console.log("npm turn", currentTurn)
 		if (currentTurn === "party1") return
-		console.log("use Effect")
-		setTimeout(() => handleAction("attack", ""), 500)
+		setTimeout(() => handleAction("attack", ""), 1500)
 	}, [currentTurn])
 
 	useEffect(() => {
@@ -151,9 +151,9 @@ export default function NPC(props: Props): ReactElement {
 
 	room?.onStateChange((state: any) => {
 		// console.log(currentTurn, "currentTurn", state.currentTurn)
-		setState(state)
+		// setState(state)
 		setCurrentTurn(state.currentTurn)
-		setTurnCount(turnCount + 1)
+		// setTurnCount(turnCount + 1)
 	})
 
 	const handleEndSFX = () => {
