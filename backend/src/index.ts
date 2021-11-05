@@ -75,7 +75,6 @@ app.use(express.json())
 const server = http.createServer(app)
 const gameServer = new Server({
 	server: server,
-	express: app,
 })
 
 gameServer.define("combat", CombatRoom)

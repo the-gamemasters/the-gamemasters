@@ -97,8 +97,6 @@ export default function Combat(props: Props): ReactElement {
 	const weapon = useAppSelector(selectWeapon)
 	const dispatch = useAppDispatch()
 
-	console.log(armor, weapon)
-
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
 			const {
@@ -166,6 +164,7 @@ export default function Combat(props: Props): ReactElement {
 	})
 
 	room?.onMessage("attack", (message: any) => {
+		console.log("attack")
 		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
 		if (activeSFX) {
 			return
@@ -230,14 +229,16 @@ export default function Combat(props: Props): ReactElement {
 	})
 
 	room?.onStateChange.once((state: any) => {
+		console.log("onstatechange once")
 		setRoom(room)
 		setState(state)
 	})
 
-	room?.onStateChange((state: any) => {
-		setState(state)
-		setCurrentTurn(state.currentTurn)
-	})
+	// room?.onStateChange((state: any) => {
+	// 	console.log("onstatechange", state)
+	// 	// setState(state)
+	// 	setCurrentTurn(state.currentTurn)
+	// })
 
 	const handleEndSFX = () => {
 		setActiveSFX("")
