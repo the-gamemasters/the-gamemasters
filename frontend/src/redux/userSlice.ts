@@ -11,6 +11,7 @@ interface Info {
 	constitution?: number
 	intelligence?: number
 	dexterity?: number
+	role?: string
 }
 
 interface UserState {
@@ -37,6 +38,7 @@ const initialState: UserState = {
 		constitution: 0,
 		intelligence: 0,
 		dexterity: 0,
+		role: "",
 	},
 	inventory: [],
 	weapon: {

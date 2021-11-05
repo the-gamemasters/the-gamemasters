@@ -5,10 +5,11 @@ import NPC from "./NPC"
 interface Props {}
 
 function CombatHome({}: Props): ReactElement {
+	console.log("combat home")
 	return (
 		<div>
 			<Combat />
-			{/* <NPC /> */}
+			<NPC />
 		</div>
 	)
 }

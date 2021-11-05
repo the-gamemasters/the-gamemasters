@@ -127,7 +127,7 @@ export default function Login(props: Props): ReactElement {
 						<p className="nes-text is-primary">Password</p>
 					</label>
 					<input
-						type="text"
+						type="password"
 						placeholder="Enter Password"
 						id="password"
 						value={password}

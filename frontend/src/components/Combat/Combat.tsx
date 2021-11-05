@@ -97,8 +97,6 @@ export default function Combat(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 	const world = useAppSelector(selectWorld)
 
-	console.log(armor, weapon)
-
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
 			const {
@@ -166,6 +164,7 @@ export default function Combat(props: Props): ReactElement {
 	})
 
 	room?.onMessage("attack", (message: any) => {
+		console.log("attack")
 		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
 		if (activeSFX) {
 			return
@@ -230,14 +229,16 @@ export default function Combat(props: Props): ReactElement {
 	})
 
 	room?.onStateChange.once((state: any) => {
+		console.log("onstatechange once")
 		setRoom(room)
 		setState(state)
 	})
 
-	room?.onStateChange((state: any) => {
-		setState(state)
-		setCurrentTurn(state.currentTurn)
-	})
+	// room?.onStateChange((state: any) => {
+	// 	console.log("onstatechange", state)
+	// 	// setState(state)
+	// 	setCurrentTurn(state.currentTurn)
+	// })
 
 	const getBackground = () => {
 		switch (world) {
@@ -294,7 +295,7 @@ export default function Combat(props: Props): ReactElement {
 			if (result === "dc") {
 				return "Your opponent disconnected. You are victorious!"
 			} else {
-				if (myParty === "party1") {
+				if (myParty === "party2") {
 					if (result === myParty) {
 						return `You vanquished ${state.party2.displayName}!`
 					} else {

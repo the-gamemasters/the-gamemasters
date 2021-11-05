@@ -142,18 +142,15 @@ export default function ShopModal(props: Props): ReactElement {
 	}
 
 	const handleBuyItem = async (item: Item) => {
-		console.log(item)
 		const response = await axios.post(`/api/items/${charId}`, {
 			itemKey: item.item_key,
 			cost: item.item_cost,
 		})
 
-		console.log(response)
-
 		setCharItems(response.data.characterItems)
-
 		setGold(response.data.newGold[0].gold)
 		dispatch(setCharGold(response.data.newGold[0].gold))
+
 		// update gold on store and retrieve
 	}
 

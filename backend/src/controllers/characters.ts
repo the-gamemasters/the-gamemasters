@@ -7,6 +7,7 @@ interface Character {
 	gold: number
 	experience: number
 	level: number
+	role: string
 }
 
 interface CharStats {
@@ -30,6 +31,7 @@ async function createCharacter(req: any, res: any) {
 		gold = 0,
 		experience = 0,
 		level = 1,
+		role = "",
 	}: Character = req.body
 
 	const { strength, constitution, intelligence, dexterity }: CharStats =
@@ -43,6 +45,7 @@ async function createCharacter(req: any, res: any) {
 		gold,
 		experience,
 		level,
+		role,
 	])
 
 	const { character_key: characterKey } = characterInfo[0]
@@ -63,7 +66,7 @@ async function getCharacterInfo(req: any, res: any) {
 	const { charKey } = req.params
 
 	let result = await db.Characters.findCharacter([charKey])
-	const { char_name, gold, experience, level } = result[0]
+	const { char_name, gold, experience, level, class: role } = result[0]
 
 	result = await db.Characters.findCharacterStats([charKey])
 	const { strength, constitution, intelligence, dexterity } = result[0]
@@ -73,6 +76,7 @@ async function getCharacterInfo(req: any, res: any) {
 		gold,
 		experience,
 		level,
+		role,
 		strength,
 		constitution,
 		intelligence,

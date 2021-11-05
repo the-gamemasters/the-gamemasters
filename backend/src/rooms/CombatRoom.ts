@@ -91,12 +91,17 @@ export class CombatRoom extends Room<CombatRoomState> {
 			let forceA: party = this.state.currentTurn
 			let forceZ: party = forceA === "party1" ? "party2" : "party1"
 			let broadcastMessage = ""
-			let turnCount: number = 0
+			// Passive function added to attack and spell attacks where if the user is a mage or knight there is a 50% chance of doing double damage.  I always multiply the damge done by passive.
+			let passive = (role: string) => {
+				if (role === "KNIGHT" || role === "MAGE") {
+					return Math.random() >= 0.5 ? 2 : 1
+				}
+				return 1
+			}
 
 			switch (message.action) {
 				case "attack":
 					let randomChanceDodge = Math.random()
-
 					if (
 						this.state[forceZ].tempDodgeChance >= randomChanceDodge
 					) {
@@ -106,10 +111,12 @@ export class CombatRoom extends Room<CombatRoomState> {
 							this.state[forceZ].displayName,
 						])
 					} else {
+						// str + weapon bonus plus or minus 20% * passive
 						let damageDealt = Math.floor(
 							(this.state[forceA].tempStats.strength +
 								this.state[forceA].weaponBonus) *
-								(Math.random() * (1.2 - 0.8) + 0.8)
+								(Math.random() * (1.2 - 0.8) + 0.8) *
+								passive(this.state[forceA].role)
 						)
 						this.broadcast("attack", [
 							this.state[forceA].displayName,
@@ -124,8 +131,8 @@ export class CombatRoom extends Room<CombatRoomState> {
 							// this.disconnect()
 						}
 					}
-					this.state[forceZ].tempDodgeChance =
-						this.state[forceZ].baseDodgeChance
+					// this.state[forceZ].tempDodgeChance =
+					// 	this.state[forceZ].baseDodgeChance
 					this.state.currentTurn = forceZ
 
 					break
@@ -151,8 +158,10 @@ export class CombatRoom extends Room<CombatRoomState> {
 								let damageDealt = Math.floor(
 									(this.state[forceA].tempStats.intelligence +
 										currentSpell.effectBase) *
-										(Math.random() * (1.3 - 0.7) + 0.7)
+										(Math.random() * (1.3 - 0.7) + 0.7) *
+										passive(this.state[forceA].role)
 								)
+
 								broadcastMessage = `${this.state[forceA].displayName} casts ${currentSpell.spellName} for ${damageDealt} damage!`
 
 								this.state[forceZ].tempHp -= damageDealt
@@ -167,6 +176,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 							break
 						case "heal":
+							// should create a heal function
 							let damageHealed = currentSpell.effectBase
 
 							this.state[forceA].tempHp += damageHealed
@@ -203,6 +213,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						// Will need to add more effect type but most will just be a similar to buff-int
 						switch (effectType) {
 							case "heal":
+								// should create a heal function
 								this.state[forceA].tempHp += effectBase
 								if (
 									this.state[forceA].tempHp >
@@ -257,7 +268,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 						this.state[forceA].items[
 							itemIndexNumber
 						].inventoryQuantity -= 1
-						console.log(broadcastMessage, "broadcastMessage")
+
 						this.broadcast("item", [
 							this.state[forceA].displayName,
 							broadcastMessage,
@@ -281,6 +292,23 @@ export class CombatRoom extends Room<CombatRoomState> {
 					this.state.currentTurn = forceZ
 
 					break
+			}
+
+			// this is the passive it is a 50% chance of healing the barbarian 10% of max health
+			if (this.state[forceA].role === "BARBARIAN") {
+				console.log("bar passive")
+				if (Math.random() >= 0.5) {
+					console.log(
+						this.state[forceA].tempHp,
+						this.state[forceA].baseStats.constitution
+					)
+					// should create a heal function
+					this.state[forceA].tempHp +=
+						this.state[forceA].baseStats.constitution
+					if (this.state[forceA].tempHp > this.state[forceA].baseHp) {
+						this.state[forceA].tempHp = this.state[forceA].baseHp
+					}
+				}
 			}
 		})
 
@@ -314,6 +342,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 				constitution,
 				intelligence,
 				dexterity,
+				role,
 			} = charInfo
 
 			let playerItems = combatItems.map(
@@ -338,6 +367,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 
 			party.displayName = charName
 			party.spriteUrl = testURL
+			party.role = role
 			party.items = playerItems
 			party.spells.push(...encounter.spells)
 			party.baseStats = new Stats({
@@ -355,7 +385,10 @@ export class CombatRoom extends Room<CombatRoomState> {
 			party.baseHp = party.baseStats.constitution * 10
 			party.tempHp = party.baseHp
 			party.weaponBonus = 0
-			party.baseDodgeChance = encounter.baseDodgeChance
+			party.baseDodgeChance = 0
+			if (party.role === "ROUGE") {
+				party.tempDodgeChance = (party.baseStats.dexterity * 2) / 100
+			}
 			party.tempDodgeChance = party.baseDodgeChance
 
 			switch (weaponMod.stat) {
@@ -366,13 +399,6 @@ export class CombatRoom extends Room<CombatRoomState> {
 					party.tempStats.intelligence += weaponMod.value
 					break
 			}
-
-			console.log(
-				party.baseStats.constitution,
-				party.tempStats.constitution,
-				"did the weapon mod work",
-				party.weaponBonus
-			)
 		} else {
 			console.log(
 				`${client.sessionId} joined as ${force} as a ${encounter.displayName}`
