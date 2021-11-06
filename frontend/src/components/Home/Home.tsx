@@ -66,6 +66,18 @@ const TopRight = styled.div`
 	border-bottom: 2px solid black;
 `
 
+const blankEquipment: Equipment = {
+	charactersequipment_key: 0,
+	equipment_key: 0,
+	slot: 1,
+	equipment_name: "",
+	equipment_description: "",
+	equipment_effect_stat: "",
+	equipment_effect_stat_value: 0,
+	equipped: false,
+	equipment_icon: "item-placeholder.png",
+}
+
 export default function Home(props: Props): ReactElement {
 	const [currentWorld, setCurrentWorld] = useState(
 		useAppSelector(selectWorld)
@@ -126,16 +138,24 @@ export default function Home(props: Props): ReactElement {
 			try {
 				const result = await axios.get(`/api/equipment/${charId}`)
 
-				const eArmor = result.data.characterEquipment.find(
+				let eArmor = result.data.characterEquipment.find(
 					(e: Equipment) => {
 						return e.equipped && e.slot === 1
 					}
 				)
-				const eWeapon = result.data.characterEquipment.find(
+				let eWeapon = result.data.characterEquipment.find(
 					(e: Equipment) => {
 						return e.equipped && e.slot === 2
 					}
 				)
+
+				if (!eArmor) {
+					eArmor = blankEquipment
+				}
+				if (!eWeapon) {
+					eWeapon = blankEquipment
+				}
+
 				dispatch(setArmor(eArmor))
 				dispatch(setWeapon(eWeapon))
 			} catch (error) {

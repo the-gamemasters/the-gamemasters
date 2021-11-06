@@ -1,4 +1,4 @@
-import React, { ReactElement, useState } from "react"
+import React, { ReactElement, useState, useEffect } from "react"
 import styled from "styled-components"
 import InventoryModal from "./Inventory/InventoryModal"
 import { useAppSelector } from "../../redux/reduxHooks"
@@ -65,8 +65,15 @@ interface Props {}
 
 export default function Character(props: Props): ReactElement {
 	const [inventoryOpen, setInventoryOpen] = useState(false)
+	const weapon = useAppSelector(selectArmor)
+	const armor = useAppSelector(selectWeapon)
 	const [eWeapon, setEWeapon] = useState(useAppSelector(selectWeapon))
 	const [eArmor, setEArmor] = useState(useAppSelector(selectArmor))
+
+	useEffect(() => {
+		setEWeapon(weapon)
+		setEArmor(armor)
+	}, [weapon, armor])
 
 	const handleOpenInventory = () => {
 		setInventoryOpen(true)

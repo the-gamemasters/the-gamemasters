@@ -130,6 +130,7 @@ export default function ShopModal(props: Props): ReactElement {
 			axios.get(`/api/items`).then((response) => {
 				setShopItems(response.data.shopItems)
 				axios.get(`/api/items/${charId}`).then((response) => {
+					console.log("second axios call")
 					setCharItems(response.data.characterItems)
 					setLoading(false)
 				})
@@ -137,7 +138,8 @@ export default function ShopModal(props: Props): ReactElement {
 
 			setGold(charGold)
 		}
-
+		// I don't know why this fixes it but if you don't have a console.log() here the use effect doesn't run.
+		// console.log(props.shopOpen, "")
 		//TODO get gold amount from characters table
 	}, [charGold])
 	const handleClickItem = (item: Item) => {
