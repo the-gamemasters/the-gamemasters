@@ -20,6 +20,7 @@ import {
 	editEquipment,
 } from "./controllers/equipment"
 import { getItems, buyItem, getInventory, sellItem } from "./controllers/items"
+import { rewardWinner } from "./controllers/combat"
 
 //require("./controllers/passport/passportConfig")
 
@@ -125,6 +126,8 @@ app.get("/api/items/:charKey", getInventory)
 app.post("/api/items/:charKey", buyItem)
 
 app.put("/api/items/:charKey", sellItem)
+
+app.put("/api/combat/:charKey", rewardWinner)
 
 app.post("/api/register", register)
 app.put("/api/login", login)

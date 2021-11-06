@@ -17,6 +17,7 @@ interface Info {
 interface UserState {
 	userId: number
 	charId: number
+	world: number
 	charInfo: Info
 	inventory: []
 	armor: Equipment
@@ -27,6 +28,7 @@ interface UserState {
 const initialState: UserState = {
 	userId: 0,
 	charId: 0,
+	world: 1,
 	charInfo: {
 		charName: "",
 		gold: 0,
@@ -89,6 +91,9 @@ export const userSlice = createSlice({
 		setWeapon: (state, action: PayloadAction<Equipment>) => {
 			state.weapon = action.payload
 		},
+		setWorld: (state, action: PayloadAction<number>) => {
+			state.world = action.payload
+		},
 	},
 })
 
@@ -100,6 +105,7 @@ export const {
 	setCharGold,
 	setArmor,
 	setWeapon,
+	setWorld,
 } = userSlice.actions
 
 export const selectUserId = (state: RootState) => state.user.userId
@@ -109,5 +115,6 @@ export const selectInventory = (state: RootState) => state.user.inventory
 export const selectCharGold = (state: RootState) => state.user.charInfo.gold
 export const selectArmor = (state: RootState) => state.user.armor
 export const selectWeapon = (state: RootState) => state.user.weapon
+export const selectWorld = (state: RootState) => state.user.world
 
 export default userSlice.reducer

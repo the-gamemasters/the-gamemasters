@@ -2,7 +2,11 @@ import React, { ReactElement, useState } from "react"
 import styled from "styled-components"
 import InventoryModal from "./Inventory/InventoryModal"
 import { useAppSelector } from "../../redux/reduxHooks"
-import { selectCharInfo } from "../../redux/userSlice"
+import {
+	selectCharInfo,
+	selectArmor,
+	selectWeapon,
+} from "../../redux/userSlice"
 
 const CharacterContainer = styled.div`
 	background-color: #a0a0a0;
@@ -34,7 +38,7 @@ const CharacterAvatar = styled.img`
 const CharacterItemsBox = styled.div`
 	display: grid;
 	grid-template-columns: repeat(2, 1fr);
-	grid-template-rows: repeat(2, 1fr);
+	grid-template-rows: 1fr;
 	grid-column-gap: 10px;
 	grid-row-gap: 10px;
 `
@@ -61,6 +65,8 @@ interface Props {}
 
 export default function Character(props: Props): ReactElement {
 	const [inventoryOpen, setInventoryOpen] = useState(false)
+	const [eWeapon, setEWeapon] = useState(useAppSelector(selectWeapon))
+	const [eArmor, setEArmor] = useState(useAppSelector(selectArmor))
 
 	const handleOpenInventory = () => {
 		setInventoryOpen(true)
@@ -80,16 +86,16 @@ export default function Character(props: Props): ReactElement {
 				</CharacterCenteredDiv>
 				<CharacterItemsBox>
 					<CharacterCenteredDiv>
-						<CharacterItem src="https://www.seekpng.com/png/detail/113-1134090_trojan-helmet-helmet-8-bit.png" />
+						<CharacterItem
+							src={`/icons/equipment/${eArmor.equipment_icon}`}
+							alt="current armor"
+						/>
 					</CharacterCenteredDiv>
 					<CharacterCenteredDiv>
-						<CharacterItem src="https://static.wikia.nocookie.net/theabyssmod/images/8/8d/Grid_Phantom_Chestplate.png" />
-					</CharacterCenteredDiv>
-					<CharacterCenteredDiv>
-						<CharacterItem src="https://static.wikia.nocookie.net/minecraft_gamepedia/images/1/1c/Iron_Leggings_%28item%29_JE2_BE2.png" />
-					</CharacterCenteredDiv>
-					<CharacterCenteredDiv>
-						<CharacterItem src="https://images.cdn2.stockunlimited.net/preview1300/pixel-art-magic-boots_1959552.jpg" />
+						<CharacterItem
+							src={`/icons/equipment/${eWeapon.equipment_icon}`}
+							alt="current weapon"
+						/>
 					</CharacterCenteredDiv>
 				</CharacterItemsBox>
 			</CharacterLeft>
@@ -106,8 +112,7 @@ export default function Character(props: Props): ReactElement {
 					<button
 						onClick={() => handleOpenInventory()}
 						type="button"
-						className="nes-btn is-success"
-					>
+						className="nes-btn is-success">
 						Open Inventory
 					</button>
 					{inventoryOpen === true ? (

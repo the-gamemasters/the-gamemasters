@@ -104,6 +104,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 					if (
 						this.state[forceZ].tempDodgeChance >= randomChanceDodge
 					) {
+						this.state.currentTurn = forceZ
 						this.broadcast("miss", [
 							"attack",
 							this.state[forceA].displayName,
@@ -124,14 +125,18 @@ export class CombatRoom extends Room<CombatRoomState> {
 						this.state[forceZ].tempHp -= damageDealt
 
 						if (this.state[forceZ].tempHp <= 0) {
-							this.state[forceZ].tempHp = 0
 							this.broadcast("victory", forceA)
+							this.state[forceZ].tempHp = 0
+							this.state.winner = forceA
+
 							// this.disconnect()
 						}
 					}
 					// this.state[forceZ].tempDodgeChance =
 					// 	this.state[forceZ].baseDodgeChance
-					this.state.currentTurn = forceZ
+					if (!this.state.winner) {
+						this.state.currentTurn = forceZ
+					}
 
 					break
 
@@ -165,10 +170,15 @@ export class CombatRoom extends Room<CombatRoomState> {
 								this.state[forceZ].tempHp -= damageDealt
 
 								if (this.state[forceZ].tempHp <= 0) {
-									this.state[forceZ].tempHp = 0
 									this.broadcast("victory", forceA)
+									this.state[forceZ].tempHp = 0
+									this.state.winner = forceA
+
 									// this.disconnect()
 								}
+							}
+							if (!this.state.winner) {
+								this.state.currentTurn = forceZ
 							}
 
 							break
@@ -270,7 +280,9 @@ export class CombatRoom extends Room<CombatRoomState> {
 							this.state[forceA].displayName,
 							broadcastMessage,
 						])
-						this.state.currentTurn = forceZ
+						if (!this.state.winner) {
+							this.state.currentTurn = forceZ
+						}
 					} else {
 						//If you have 0 items
 						this.broadcast("item", [
@@ -286,7 +298,9 @@ export class CombatRoom extends Room<CombatRoomState> {
 							this.state[forceA].baseDodgeChance) /
 						100
 					this.broadcast("evade", this.state[forceA].displayName)
-					this.state.currentTurn = forceZ
+					if (!this.state.winner) {
+						this.state.currentTurn = forceZ
+					}
 
 					break
 			}
@@ -308,14 +322,6 @@ export class CombatRoom extends Room<CombatRoomState> {
 				}
 			}
 		})
-
-		this.onMessage("debug", (client, message) => {
-			if (message === "party1") {
-				console.log(JSON.stringify(this.state.party1))
-			} else if (message === "party2") {
-				console.log(JSON.stringify(this.state.party2))
-			}
-		})
 	}
 
 	onJoin(client: Client, options: any) {
@@ -325,8 +331,22 @@ export class CombatRoom extends Room<CombatRoomState> {
 		let randomEncounter = Math.floor((Math.random() / 2) * 10)
 		let encounter = encountersList[randomEncounter]
 		let party = this.state[force]
-		let { charInfo, combatItems, armorMod, weaponMod } = options
+		let { charInfo, combatItems, armorMod, weaponMod, world } = options
 
+		function getEncounter() {
+			switch (world) {
+				case 1:
+					return
+				case 2:
+					return
+				case 3:
+					return
+				case 4:
+					return
+				case 5:
+					return
+			}
+		}
 		party.id = client.sessionId
 
 		if (force === "party1") {
@@ -383,6 +403,8 @@ export class CombatRoom extends Room<CombatRoomState> {
 			party.tempHp = party.baseHp
 			party.weaponBonus = 0
 			party.baseDodgeChance = 0
+			party.xpReward = 0
+
 			if (party.role === "ROUGE") {
 				party.tempDodgeChance = (party.baseStats.dexterity * 2) / 100
 			}
@@ -411,6 +433,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 			party.weaponBonus = encounter.weaponBonus
 			party.baseDodgeChance = encounter.baseDodgeChance
 			party.tempDodgeChance = party.baseDodgeChance
+			party.xpReward = encounter.xpReward
 		}
 
 		client.send("assignment", force)
@@ -430,56 +453,10 @@ export class CombatRoom extends Room<CombatRoomState> {
 	onLeave(client: Client, consented: boolean) {
 		this.broadcast("disconnect")
 		console.log("they left")
+		this.disconnect()
 	}
 
 	onDispose() {
-		// return new Promise((resolve, reject) => {
-		//     // doDatabaseOperation((err, data) => {
-		//     //     if (err) {
-		//     //         reject(err);
-		//     //     } else {
-		//     //         resolve(data);
-		//     //     }
-		//     // });
-		// });
 		console.log("room", this.roomId, "disposing...")
 	}
 }
-
-// {
-//     id: "",
-//     displayName: "Giant Rat",
-//     items: [
-//         {
-//             itemName: "Cheese",
-//             effectType: "heal",
-//             effectBase: 20,
-//             inventoryQuantity: 1,
-//         },
-//     ],
-//     spells: [
-//         {
-//             spellName: "Scurry",
-//             spellSchool: "none",
-//             effectType: "buff-dex",
-//             effectBase: 2,
-//             effectDuration: 3,
-//             cooldownTurns: 7,
-//         },
-//     ],
-//     baseStats: {
-//         strength: 5,
-//         dexterity: 9,
-//         constitution: 13,
-//         intelligence: 3,
-//     },
-//     tempStats: {
-//         strength: 5,
-//         dexterity: 9,
-//         constitution: 13,
-//         intelligence: 3,
-//     },
-//     weaponBonus: 4,
-//     baseDodgeChance: 0.5,
-//     tempDodgeChance: 0,
-// }

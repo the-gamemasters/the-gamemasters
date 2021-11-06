@@ -1,25 +1,12 @@
 import * as Colyseus from "colyseus.js"
-import React, { ReactElement, useState, useEffect } from "react"
-import ReactModal from "react-modal"
-import { Link } from "react-router-dom"
-import styled from "styled-components"
-import MoveBox from "./MoveBox"
-import SelectModal from "./SelectModal"
-import LoadingModal from "./LoadingModal"
+import React, { ReactElement, useEffect, useState } from "react"
 import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
 	selectCharId,
-	selectUserId,
 	selectCharInfo,
-	setCharId,
-	setUserId,
-	setCharInfo,
+	selectUserId,
 } from "../../redux/userSlice"
-import BackgroundMusic from "../General/BackgroundMusic"
-import SFX from "../General/SFX"
 import "./styles/combat.css"
-import { CombatState, Player } from "./CombatState"
-import { current } from "@reduxjs/toolkit"
 
 interface Props {}
 
@@ -45,121 +32,111 @@ export default function NPC(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		console.log("npm turn", currentTurn)
-		if (currentTurn === "party1") return
+		if (currentTurn === "party1" || result !== undefined) {
+			return
+		}
+
 		setTimeout(() => handleAction("attack", ""), 1500)
 	}, [currentTurn])
 
 	useEffect(() => {
 		const initRoom = async (client: Colyseus.Client) => {
-			setRoom(
-				await client.joinOrCreate("combat", {
-					charInfo,
-				})
-			)
+			const firstRoom = await client.joinOrCreate("combat", {
+				charInfo,
+			})
+			firstRoom.onMessage("ready", () => {
+				setTimeout(() => {
+					setReady(true)
+				}, 500)
+			})
+
+			firstRoom.onMessage("assignment", (message: any) => {
+				if (message === "party1") {
+					setMyParty("party1")
+				} else {
+					setMyParty("party2")
+				}
+			})
+
+			firstRoom.onMessage("attack", (message: any) => {
+				// console.log("attack")
+				setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-hit.wav")
+				}
+			})
+
+			firstRoom.onMessage("spell", (message: any) => {
+				setCombatLog(message)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+
+			firstRoom.onMessage("item", (message: any) => {
+				setCombatLog(`${message[0]} ${message[1]}`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-heal.wav")
+				}
+			})
+
+			firstRoom.onMessage("evade", (message: any) => {
+				setCombatLog(`${message} prepares to evade!`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+
+			firstRoom.onMessage("miss", (message: any) => {
+				if (message[0] === "attack") {
+					setCombatLog(
+						`${message[1]} attacked but ${message[2]} dodged it!`
+					)
+				} else {
+					setCombatLog(
+						`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
+					)
+				}
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-evade.wav")
+				}
+			})
+
+			firstRoom.onMessage("victory", (message: any) => {
+				setResult(message)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+			// firstRoom?.listen("currentTurn", (val: string, prevVal: string) => {
+			// 	console.log(val)
+			// })
+
+			firstRoom.onMessage("disconnect", () => {
+				setResult("dc")
+			})
+
+			firstRoom.onStateChange((state: any) => {
+				setState(state)
+				setCurrentTurn(state.currentTurn)
+			})
+			setRoom(firstRoom)
 		}
 
 		initRoom(new Colyseus.Client("ws://localhost:3553"))
 	}, [])
-
-	room?.onMessage("ready", () => {
-		setTimeout(() => {
-			setReady(true)
-		}, 500)
-	})
-
-	room?.onMessage("assignment", (message: any) => {
-		if (message === "party1") {
-			setMyParty("party1")
-		} else {
-			setMyParty("party2")
-		}
-	})
-
-	room?.onMessage("attack", (message: any) => {
-		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-hit.wav")
-		}
-	})
-
-	room?.onMessage("spell", (message: any) => {
-		setCombatLog(message)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
-		}
-	})
-
-	room?.onMessage("item", (message: any) => {
-		setCombatLog(`${message[0]} ${message[1]}`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-heal.wav")
-		}
-	})
-
-	room?.onMessage("evade", (message: any) => {
-		setCombatLog(`${message} prepares to evade!`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
-		}
-	})
-
-	room?.onMessage("miss", (message: any) => {
-		if (message[0] === "attack") {
-			setCombatLog(`${message[1]} attacked but ${message[2]} dodged it!`)
-		} else {
-			setCombatLog(
-				`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
-			)
-		}
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-evade.wav")
-		}
-	})
-
-	// room?.onMessage("victory", (message: any) => {
-	// 	setResult(message)
-	// 	if (activeSFX) {
-	// 		return
-	// 	} else {
-	// 		setActiveSFX("audio/sfx/sfx-shop-buy.wav")
-	// 	}
-	// })
-
-	room?.onMessage("disconnect", () => {
-		setResult("dc")
-	})
-
-	// room?.onMessage("end", (message: any) => {
-	// 	console.log("end")
-	// })
-
-	// room?.onStateChange.once((state: any) => {
-	// 	console.log("once")
-	// 	setRoom(room)
-	// 	setState(state)
-	// })
-
-	room?.onStateChange((state: any) => {
-		// console.log(currentTurn, "currentTurn", state.currentTurn)
-		// setState(state)
-		setCurrentTurn(state.currentTurn)
-		// setTurnCount(turnCount + 1)
-	})
-
-	const handleEndSFX = () => {
-		setActiveSFX("")
-	}
 
 	const handleAction = (move: string, moveData: string) => {
 		let message = {

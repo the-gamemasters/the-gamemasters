@@ -21,6 +21,9 @@ const ShopListContainer = styled.div`
 const List = styled.ul`
 	list-style: none;
 	padding: 0;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	height: 25rem;
 `
 
 export default function ShopList(props: Props): ReactElement {

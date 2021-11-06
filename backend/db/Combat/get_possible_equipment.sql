@@ -1,0 +1,1 @@
+SELECT equipment_key, equipment_name FROM equipment WHERE slot = $1 AND world = $2;
