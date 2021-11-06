@@ -138,6 +138,8 @@ export default function ShopModal(props: Props): ReactElement {
 			setGold(charGold)
 		}
 
+		console.log(props.shopOpen)
+
 		//TODO get gold amount from characters table
 	}, [charGold])
 	const handleClickItem = (item: Item) => {
