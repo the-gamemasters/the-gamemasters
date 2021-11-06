@@ -126,18 +126,18 @@ export default function ShopModal(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		if (props.shopOpen === true) {
-			axios.get(`/api/items`).then((response) => {
-				setShopItems(response.data.shopItems)
-				axios.get(`/api/items/${charId}`).then((response) => {
-					console.log("second axios call")
-					setCharItems(response.data.characterItems)
-					setLoading(false)
-				})
+		// if (props.shopOpen === true) {
+		axios.get(`/api/items`).then((response) => {
+			setShopItems(response.data.shopItems)
+			axios.get(`/api/items/${charId}`).then((response) => {
+				console.log("second axios call")
+				setCharItems(response.data.characterItems)
+				setLoading(false)
 			})
+		})
 
-			setGold(charGold)
-		}
+		setGold(charGold)
+		// }
 		// I don't know why this fixes it but if you don't have a console.log() here the use effect doesn't run.
 		// console.log(props.shopOpen, "")
 		//TODO get gold amount from characters table
@@ -177,6 +177,7 @@ export default function ShopModal(props: Props): ReactElement {
 			setShopMode("buy")
 		}
 	}
+	//might get rid of
 	if (loading === true) {
 		return (
 			<ReactModal
