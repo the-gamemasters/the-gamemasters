@@ -139,9 +139,9 @@ export default function ShopModal(props: Props): ReactElement {
 		})
 
 		setGold(charGold)
-		// }
-		// I don't know why this fixes it but if you don't have a console.log() here the use effect doesn't run.
-		// console.log(props.shopOpen, "")
+
+		console.log(props.shopOpen)
+
 		//TODO get gold amount from characters table
 	}, [gold])
 	const handleClickItem = (item: Item) => {

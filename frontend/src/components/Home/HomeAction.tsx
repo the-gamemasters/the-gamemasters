@@ -1,6 +1,9 @@
 import React, { ReactElement } from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
+import { NPCPrompts } from "./NPCPrompts"
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
+import { selectWorld } from "../../redux/userSlice"
 
 const HomeActionContainer = styled.div`
 	background-color: #6dc074;
@@ -28,16 +31,26 @@ const HomeActionBottom = styled.div`
 	grid-template-rows: 1fr;
 `
 
+
+
 interface Props {}
 
 export default function HomeAction(props: Props): ReactElement {
+
+	const world = useAppSelector(selectWorld)
+	
+	function findPrompt(myWorld: number){
+		const promptsFromWorld = NPCPrompts.filter(myPrompt => myPrompt.world === myWorld)
+		return promptsFromWorld[Math.floor(promptsFromWorld.length * Math.random())]
+	}
+
+	const dispPrompt = findPrompt(world)
+
 	return (
 		<HomeActionContainer>
 			<HomeActionTop>
 				<p>
-					"I saw a group of suspicious-looking individuals with swords
-					poking around the Tomb of the Clockmaster. Go make sure they
-					don't disturb the dead, please."
+					{dispPrompt.body}
 				</p>
 			</HomeActionTop>
 			<HomeActionBottom>
