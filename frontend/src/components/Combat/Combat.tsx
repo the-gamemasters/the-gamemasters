@@ -302,7 +302,7 @@ export default function Combat(props: Props): ReactElement {
 				if (myParty === "party2") {
 					if (result === myParty) {
 						setResultMessage(
-							`You vanquished ${state.party2.displayName}!`
+							`You vanquished ${state.party1.displayName}!`
 						)
 					} else {
 						setResultMessage(
@@ -312,7 +312,7 @@ export default function Combat(props: Props): ReactElement {
 				} else {
 					if (result === myParty) {
 						setResultMessage(
-							`You vanquished ${state.party1.displayName}!`
+							`You vanquished ${state.party2.displayName}!`
 						)
 					} else {
 						setResultMessage(
