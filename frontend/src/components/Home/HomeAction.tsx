@@ -2,6 +2,8 @@ import React, { ReactElement } from "react"
 import styled from "styled-components"
 import { Link } from "react-router-dom"
 import { NPCPrompts } from "./NPCPrompts"
+import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
+import { selectWorld } from "../../redux/userSlice"
 
 const HomeActionContainer = styled.div`
 	background-color: #6dc074;
@@ -29,18 +31,20 @@ const HomeActionBottom = styled.div`
 	grid-template-rows: 1fr;
 `
 
+
+
 interface Props {}
 
 export default function HomeAction(props: Props): ReactElement {
 
-	const myWorld = 3
+	const world = useAppSelector(selectWorld)
 	
 	function findPrompt(myWorld: number){
 		const promptsFromWorld = NPCPrompts.filter(myPrompt => myPrompt.world === myWorld)
 		return promptsFromWorld[Math.floor(promptsFromWorld.length * Math.random())]
 	}
 
-	const dispPrompt = findPrompt(myWorld)
+	const dispPrompt = findPrompt(world)
 
 	return (
 		<HomeActionContainer>
