@@ -386,6 +386,7 @@ export class CombatRoom extends Room<CombatRoomState> {
 			party.spriteUrl = testURL
 			party.role = role
 			party.items = playerItems
+			console.log(playerItems)
 			party.spells.push(...encounter.spells)
 			party.baseStats = new Stats({
 				strength,

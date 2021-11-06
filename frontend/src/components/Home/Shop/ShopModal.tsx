@@ -11,6 +11,8 @@ import {
 	selectUserId,
 	selectCharInfo,
 	setCharGold,
+	setInventory,
+	selectInventory,
 	selectCharGold,
 } from "../../../redux/userSlice"
 
@@ -126,22 +128,22 @@ export default function ShopModal(props: Props): ReactElement {
 	const dispatch = useAppDispatch()
 
 	useEffect(() => {
-		if (props.shopOpen === true) {
-			axios.get(`/api/items`).then((response) => {
-				setShopItems(response.data.shopItems)
-				axios.get(`/api/items/${charId}`).then((response) => {
-					setCharItems(response.data.characterItems)
-					setLoading(false)
-				})
+		// if (props.shopOpen === true) {
+		axios.get(`/api/items`).then((response) => {
+			setShopItems(response.data.shopItems)
+			axios.get(`/api/items/${charId}`).then((response) => {
+				console.log("second axios call")
+				setCharItems(response.data.characterItems)
+				setLoading(false)
 			})
+		})
 
-			setGold(charGold)
-		}
+		setGold(charGold)
 
 		console.log(props.shopOpen)
 
 		//TODO get gold amount from characters table
-	}, [charGold])
+	}, [gold])
 	const handleClickItem = (item: Item) => {
 		setActiveItem(item)
 	}
@@ -152,6 +154,8 @@ export default function ShopModal(props: Props): ReactElement {
 			cost: item.item_cost,
 		})
 
+		// console.log(response, "buy item")
+		dispatch(setInventory(response.data.characterItems))
 		setCharItems(response.data.characterItems)
 		setGold(response.data.newGold[0].gold)
 		dispatch(setCharGold(response.data.newGold[0].gold))
@@ -165,6 +169,8 @@ export default function ShopModal(props: Props): ReactElement {
 			value: item.item_cost,
 		})
 
+		// console.log(response, "sell item")
+		dispatch(setInventory(response.data.characterItems))
 		setCharItems(response.data.characterItems)
 		setGold(response.data.newGold[0].gold)
 		dispatch(setCharGold(response.data.newGold[0].gold))
@@ -177,6 +183,7 @@ export default function ShopModal(props: Props): ReactElement {
 			setShopMode("buy")
 		}
 	}
+	//might get rid of
 	if (loading === true) {
 		return (
 			<ReactModal
