@@ -1,28 +1,25 @@
+import axios from "axios"
 import * as Colyseus from "colyseus.js"
-import React, { ReactElement, useState, useEffect } from "react"
+import React, { ReactElement, useEffect, useState } from "react"
 import ReactModal from "react-modal"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
-import MoveBox from "./MoveBox"
-import SelectModal from "./SelectModal"
-import LoadingModal from "./LoadingModal"
 import { useAppDispatch, useAppSelector } from "../../redux/reduxHooks"
 import {
+	selectArmor,
 	selectCharId,
-	selectUserId,
 	selectCharInfo,
 	selectInventory,
-	selectArmor,
+	selectUserId,
 	selectWeapon,
-	setCharId,
-	setUserId,
-	setCharInfo,
+	selectWorld,
 } from "../../redux/userSlice"
 import BackgroundMusic from "../General/BackgroundMusic"
 import SFX from "../General/SFX"
+import LoadingModal from "./LoadingModal"
+import MoveBox from "./MoveBox"
+import SelectModal from "./SelectModal"
 import "./styles/combat.css"
-import { CombatState, Player } from "./CombatState"
-import { isIfStatement } from "typescript"
 
 interface Props {}
 
@@ -50,9 +47,7 @@ const PageContainer = styled.div`
 	grid-template-rows: 2fr 3fr 2fr;
 	grid-column-gap: 0px;
 	grid-row-gap: 0px;
-	background: url(https://64.media.tumblr.com/00ec803404f6e9d6583f92d8870b5fb8/tumblr_p7k8f3fMWS1wvbydeo1_1280.png)
-		no-repeat fixed;
-	background-size: cover;
+
 	padding: 2em;
 `
 
@@ -84,6 +79,7 @@ export default function Combat(props: Props): ReactElement {
 	const [result, setResult] = useState<
 		"party1" | "party2" | "dc" | undefined
 	>()
+	const [resultMessage, setResultMessage] = useState("")
 	const [room, setRoom] = useState<any>()
 	const [state, setState] = useState<any>()
 	const [selectOpen, setSelectOpen] = useState<boolean>(false)
@@ -96,6 +92,7 @@ export default function Combat(props: Props): ReactElement {
 	const armor = useAppSelector(selectArmor)
 	const weapon = useAppSelector(selectWeapon)
 	const dispatch = useAppDispatch()
+	const world = useAppSelector(selectWorld)
 
 	useEffect(() => {
 		const combatItems = inventory.map((val) => {
@@ -136,109 +133,148 @@ export default function Combat(props: Props): ReactElement {
 		}
 
 		const initRoom = async (client: Colyseus.Client) => {
-			setRoom(
-				await client.joinOrCreate("combat", {
-					charInfo,
-					combatItems,
-					armorMod,
-					weaponMod,
-				})
-			)
+			const firstRoom = await client.joinOrCreate("combat", {
+				charInfo,
+				combatItems,
+				armorMod,
+				weaponMod,
+				world,
+			})
+			firstRoom.onMessage("ready", () => {
+				setTimeout(() => {
+					setReady(true)
+				}, 500)
+			})
+
+			firstRoom.onMessage("assignment", (message: any) => {
+				if (message === "party1") {
+					setMyParty("party1")
+				} else {
+					setMyParty("party2")
+				}
+			})
+
+			firstRoom.onMessage("attack", (message: any) => {
+				setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-hit.wav")
+				}
+			})
+
+			firstRoom.onMessage("spell", (message: any) => {
+				setCombatLog(message)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+
+			firstRoom.onMessage("item", (message: any) => {
+				setCombatLog(`${message[0]} ${message[1]}`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-heal.wav")
+				}
+			})
+
+			firstRoom.onMessage("evade", (message: any) => {
+				setCombatLog(`${message} prepares to evade!`)
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+
+			firstRoom.onMessage("miss", (message: any) => {
+				if (message[0] === "attack") {
+					setCombatLog(
+						`${message[1]} attacked but ${message[2]} dodged it!`
+					)
+				} else {
+					setCombatLog(
+						`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
+					)
+				}
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-combat-evade.wav")
+				}
+			})
+
+			firstRoom.onMessage("victory", (message: any) => {
+				console.log("victory message sent")
+				if (result !== message) {
+					setResult(message)
+				}
+
+				if (activeSFX) {
+					return
+				} else {
+					setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+				}
+			})
+
+			firstRoom.onMessage("disconnect", () => {
+				setResult("dc")
+			})
+
+			firstRoom.onStateChange.once((state: any) => {
+				console.log(state)
+				console.log("onstatechange once")
+				setState(state)
+			})
+			setRoom(firstRoom)
 		}
 
 		initRoom(new Colyseus.Client("ws://localhost:3553"))
 	}, [])
 
-	room?.onMessage("ready", () => {
-		setTimeout(() => {
-			setReady(true)
-		}, 500)
-	})
-
-	room?.onMessage("assignment", (message: any) => {
-		if (message === "party1") {
-			setMyParty("party1")
-		} else {
-			setMyParty("party2")
+	useEffect(() => {
+		getResultMessage()
+		if (result) {
+			handleCombatEnd()
 		}
-	})
+	}, [result])
 
-	room?.onMessage("attack", (message: any) => {
-		console.log("attack")
-		setCombatLog(`${message[0]} attacks for ${message[1]} damage!`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-hit.wav")
+	const getBackground = () => {
+		switch (world) {
+			case 1:
+				return "https://64.media.tumblr.com/00ec803404f6e9d6583f92d8870b5fb8/tumblr_p7k8f3fMWS1wvbydeo1_1280.png"
+			case 2:
+				return "https://cdna.artstation.com/p/assets/images/images/008/322/658/large/helen-boyko-ruins2.jpg?1511995428"
+			case 3:
+				return "https://i.pinimg.com/originals/4b/b0/72/4bb07279630a9ea5601a5022dc461623.png"
+			case 4:
+				return "https://wallpapercave.com/wp/wp7991864.jpg"
+			case 5:
+				return "https://wi.wallpapertip.com/wsimgs/138-1384359_city-rain-pixel-art.jpg"
+			default:
+				return
 		}
-	})
+	}
 
-	room?.onMessage("spell", (message: any) => {
-		setCombatLog(message)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
+	const getMusic = () => {
+		switch (world) {
+			case 1:
+				return "track8-adventure.mp3"
+			case 2:
+				return "track10-egypt.mp3"
+			case 3:
+				return "track2-castle.mp3"
+			case 4:
+				return "track1-retro.mp3"
+			case 5:
+				return "track6-funk.mp3"
+			default:
+				return
 		}
-	})
-
-	room?.onMessage("item", (message: any) => {
-		setCombatLog(`${message[0]} ${message[1]}`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-heal.wav")
-		}
-	})
-
-	room?.onMessage("evade", (message: any) => {
-		setCombatLog(`${message} prepares to evade!`)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
-		}
-	})
-
-	room?.onMessage("miss", (message: any) => {
-		if (message[0] === "attack") {
-			setCombatLog(`${message[1]} attacked but ${message[2]} dodged it!`)
-		} else {
-			setCombatLog(
-				`${message[1]} tried to cast ${message[0]} but ${message[2]} dodged it!`
-			)
-		}
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-combat-evade.wav")
-		}
-	})
-
-	room?.onMessage("victory", (message: any) => {
-		setResult(message)
-		if (activeSFX) {
-			return
-		} else {
-			setActiveSFX("audio/sfx/sfx-shop-buy.wav")
-		}
-	})
-
-	room?.onMessage("disconnect", () => {
-		setResult("dc")
-	})
-
-	room?.onStateChange.once((state: any) => {
-		console.log("onstatechange once")
-		setRoom(room)
-		setState(state)
-	})
-
-	// room?.onStateChange((state: any) => {
-	// 	console.log("onstatechange", state)
-	// 	// setState(state)
-	// 	setCurrentTurn(state.currentTurn)
-	// })
+	}
 
 	const handleEndSFX = () => {
 		setActiveSFX("")
@@ -254,33 +290,50 @@ export default function Combat(props: Props): ReactElement {
 		}
 	}
 
-	const handleDebug = (party: string) => {
-		if (room) {
-			room.send("debug", party)
-		}
-	}
-
 	const getResultMessage = () => {
-		if (result !== undefined) {
-			console.log(result)
+		if (result === undefined) {
+			return
+		} else {
 			if (result === "dc") {
-				return "Your opponent disconnected. You are victorious!"
+				setResultMessage(
+					"Your opponent disconnected. You are victorious!"
+				)
 			} else {
 				if (myParty === "party2") {
 					if (result === myParty) {
-						return `You vanquished ${state.party2.displayName}!`
+						setResultMessage(
+							`You vanquished ${state.party2.displayName}!`
+						)
 					} else {
-						return `You were defeated by ${state.party1.displayName}!`
+						setResultMessage(
+							`You were defeated by ${state.party1.displayName}!`
+						)
 					}
 				} else {
 					if (result === myParty) {
-						return `You vanquished ${state.party1.displayName}!`
+						setResultMessage(
+							`You vanquished ${state.party1.displayName}!`
+						)
 					} else {
-						return `You were defeated by ${state.party2.displayName}!`
+						setResultMessage(
+							`You were defeated by ${state.party2.displayName}!`
+						)
 					}
 				}
 			}
 		}
+	}
+
+	const handleCombatEnd = async () => {
+		axios
+			.put(`/api/combat/${charId}`, {
+				xpReward: state.party2.xpReward,
+				world: world,
+			})
+			.then((response) => {
+				console.log(response)
+			})
+			.catch((error) => console.error(error))
 	}
 
 	const controlSelectModal = (selectType?: "spell" | "item") => {
@@ -290,18 +343,32 @@ export default function Combat(props: Props): ReactElement {
 		setSelectOpen(!selectOpen)
 	}
 
+	const leaveCombat = () => {
+		if (room) {
+			room.leave()
+		}
+	}
+
 	if (room === undefined) {
 		return <PageContainer></PageContainer>
 	} else if (ready === false) {
 		return (
-			<PageContainer>
+			<PageContainer
+				style={{
+					background: `url(${getBackground()}) no-repeat fixed`,
+					backgroundSize: "cover",
+				}}>
 				<LoadingModal ready={ready} />
 			</PageContainer>
 		)
 	} else {
 		return (
-			<PageContainer>
-				<BackgroundMusic musicSrc={"audio/music/track3-time.mp3"} />
+			<PageContainer
+				style={{
+					background: `url(${getBackground()}) no-repeat fixed`,
+					backgroundSize: "cover",
+				}}>
+				<BackgroundMusic musicSrc={`audio/music/${getMusic()}`} />
 				{activeSFX === "" ? (
 					""
 				) : (
@@ -309,9 +376,10 @@ export default function Combat(props: Props): ReactElement {
 				)}
 				<div className="combat-top">
 					<h1 className="nes-text">Combat</h1>
-					<h6>Room ID: {room.id}</h6>
 					<Link to="/home">
-						<button>Go back to the home page</button>
+						<button onClick={() => leaveCombat()}>
+							Go back to the home page
+						</button>
 					</Link>
 				</div>
 				<div className="combat-mid">
@@ -339,10 +407,13 @@ export default function Combat(props: Props): ReactElement {
 										Defeat!
 									</p>
 								)}
-								<p>{getResultMessage()}</p>
+								<p>{resultMessage}</p>
+
 								<menu className="dialog-menu flex-dialog-menu">
 									<Link to="/home">
-										<button className="nes-btn dialog-btn">
+										<button
+											onClick={() => leaveCombat()}
+											className="nes-btn dialog-btn">
 											Return Home
 										</button>
 									</Link>
@@ -399,12 +470,6 @@ export default function Combat(props: Props): ReactElement {
 						<span className="hp-text">
 							{state.party1.tempHp} / {state.party1.baseHp}
 						</span>
-						<button
-							type="button"
-							className="nes-btn"
-							onClick={() => handleDebug("party1")}>
-							Debug P1
-						</button>
 					</div>
 
 					<div className="bottom-center">
@@ -445,12 +510,6 @@ export default function Combat(props: Props): ReactElement {
 						<span className="hp-text">
 							{state.party2.tempHp} / {state.party2.baseHp}
 						</span>
-						<button
-							type="button"
-							className="nes-btn"
-							onClick={() => handleDebug("party2")}>
-							Debug P2
-						</button>
 					</div>
 				</div>
 			</PageContainer>
