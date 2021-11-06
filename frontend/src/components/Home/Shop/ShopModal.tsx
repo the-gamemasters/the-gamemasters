@@ -11,6 +11,8 @@ import {
 	selectUserId,
 	selectCharInfo,
 	setCharGold,
+	setInventory,
+	selectInventory,
 	selectCharGold,
 } from "../../../redux/userSlice"
 
@@ -141,7 +143,7 @@ export default function ShopModal(props: Props): ReactElement {
 		// I don't know why this fixes it but if you don't have a console.log() here the use effect doesn't run.
 		// console.log(props.shopOpen, "")
 		//TODO get gold amount from characters table
-	}, [charGold])
+	}, [gold])
 	const handleClickItem = (item: Item) => {
 		setActiveItem(item)
 	}
@@ -152,6 +154,8 @@ export default function ShopModal(props: Props): ReactElement {
 			cost: item.item_cost,
 		})
 
+		// console.log(response, "buy item")
+		dispatch(setInventory(response.data.characterItems))
 		setCharItems(response.data.characterItems)
 		setGold(response.data.newGold[0].gold)
 		dispatch(setCharGold(response.data.newGold[0].gold))
@@ -165,6 +169,8 @@ export default function ShopModal(props: Props): ReactElement {
 			value: item.item_cost,
 		})
 
+		// console.log(response, "sell item")
+		dispatch(setInventory(response.data.characterItems))
 		setCharItems(response.data.characterItems)
 		setGold(response.data.newGold[0].gold)
 		dispatch(setCharGold(response.data.newGold[0].gold))
